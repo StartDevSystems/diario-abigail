@@ -1,18 +1,17 @@
 # ⚙️ Documentación Funcional (v1.1.0)
 
-## 1. Flujo de Acceso (Auth Flow)
-1. **Public/Auth View:** El usuario llega a una pantalla de acceso. Puede alternar entre "Entrar" y "Registrarse".
-2. **Welcome Experience:** Tras el login, si es la primera vez en el día, se dispara el modal de sentimientos y versículo.
-3. **Dashboard:** Acceso al diario con el nombre del usuario cargado dinámicamente.
+## 1. Lógica de Negocio de Racha (Estilo Duolingo)
+El sistema valida la constancia del usuario siguiendo estas reglas:
+- **Éxito:** Si el último registro fue ayer y el usuario marca hoy, la racha sube +1.
+- **Fallo:** Si pasan más de 24h sin marcar el ánimo, la racha vuelve a 0.
+- **Disparador:** La racha solo aumenta con el primer registro de "Mood" del día.
 
-## 2. Módulos Avanzados
-### 2.1 Módulo Admin Supremo
-- **Acceso:** Solo visible si el campo `role` en Firestore es `admin`.
-- **Funcionalidad:** Vista de pájaro de la base de datos de usuarios (IDs, ánimos, agradecimientos).
+## 2. Módulo de Administración Supremo
+Interfaz exclusiva (`/admin`) que permite:
+- Visualizar la base de datos de usuarios registrados.
+- Consultar el ID único, el último ánimo y los agradecimientos generales.
+- Acceso restringido mediante roles en la base de datos.
 
-### 2.2 Gestión de Hábitos (Lógica de Negocio)
-- **Restricción Temporal:** El sistema calcula el `currentDayIdx` y deshabilita los botones que no coincidan con el día actual del usuario.
-- **Modo Edición:** Permite mutar el objeto `Habit` (nombre/emoji) sin alterar el array de progreso `completedDays`.
-
-### 2.3 Devocional Extendido
-- Se han añadido campos para Peticiones, Agradecimientos de oración y Decretos, permitiendo una experiencia espiritual de 360 grados.
+## 3. Optimización de Vistas (PC/Mobile)
+- **PC:** Tabla de hábitos con resaltado de columna "Hoy" y modo edición integrado en celda.
+- **Mobile:** Sistema de tarjetas individuales con botones de gran formato para pulgares.

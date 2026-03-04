@@ -1,18 +1,13 @@
 # 🏗 Documentación de Arquitectura (v1.1.0)
 
-## 1. Arquitectura Cloud-Native
-La aplicación ha evolucionado de una arquitectura local a una **Cloud-Native SPA** apoyada en servicios administrados.
+## 1. Estructura de Proyecto Actualizada
+Se ha realizado una refactorización crítica para la estabilidad en la nube:
+- `src/app`: Rutas y Layout base de Next.js.
+- `src/views`: Contiene la lógica de las secciones (antes `pages`) para evitar errores de pre-renderizado en el build de producción.
+- `src/lib`: Punto de conexión con Firebase.
 
-## 2. Capa de Datos (Sincronización)
-- **Patrón Observador:** `onAuthStateChanged` monitorea la sesión.
-- **Persistencia Reactiva:** Se utiliza un `useEffect` en `JournalContext` que realiza un `setDoc` en Firestore cada vez que el estado local cambia, manteniendo la nube siempre actualizada.
-
-## 3. Seguridad de Capas (RBAC)
-- **Front-end:** El componente `Layout` renderiza condicionalmente el botón de Admin basado en el estado `isAdmin`.
-- **Back-end:** Firebase Security Rules valida el UID y el rol antes de permitir cualquier operación de lectura/escritura en Firestore.
-
-## 4. Diagrama de Carpetas Actualizado
-- `src/app`: Enrutamiento y Layout base.
-- `src/views`: Componentes de pantalla (vistas lógicas).
-- `src/components`: UI atómica y 3D.
-- `src/lib`: Configuración de servicios externos (Firebase).
+## 2. Flujo de Datos en Tiempo Real
+1. El usuario interactúa con la UI.
+2. `JournalContext` recibe la acción y actualiza el estado local.
+3. Simultáneamente, se dispara una petición asíncrona a Firestore para persistir el dato.
+4. El sistema `Keep-Alive` vía GitHub Actions mantiene el túnel de Render abierto cada 10 minutos.
