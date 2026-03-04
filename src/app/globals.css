@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --font-inter: 'var(--font-inter)', 'Inter', sans-serif;
+  --font-playfair: 'var(--font-playfair)', 'Playfair Display', serif;
+
+  --color-rose-pastel: #fdf2f2;
+  --color-lavender-pastel: #f5f3ff;
+  --color-cream-pastel: #fffcf2;
+  --color-accent-pink: #fbcfe8;
+  --color-accent-lavender: #ddd6fe;
+  --color-soft-text: #4b5563; /* Gris suave original */
+  --color-deep-rose: #db2777; /* Rosa Abigail */
+}
+
+@layer base {
+  body {
+    color: #4b5563;
+    background-color: #fffcf2;
+    font-family: var(--font-inter);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-playfair);
+    color: #db2777;
+  }
+}
+
+.journal-shadow {
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+}
+
+.floral-pattern {
+  background-image: radial-gradient(#fbcfe8 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #fbcfe8;
+  border-radius: 10px;
+}

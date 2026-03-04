@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-rose-pastel: #fdf2f2;
+  --color-lavender-pastel: #f5f3ff;
+  --color-cream-pastel: #fffcf2;
+  --color-accent-pink: #fbcfe8;
+  --color-accent-lavender: #ddd6fe;
+  --color-soft-text: #4b5563;
+  --color-deep-rose: #db2777;
+}
+
+:root {
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #4b5563;
+  background-color: #fffcf2; /* Cream pastel */
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.journal-shadow {
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+}
+
+.floral-pattern {
+  background-image: radial-gradient(#fbcfe8 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #fbcfe8;
+  border-radius: 10px;
+}
