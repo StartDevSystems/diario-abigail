@@ -7,6 +7,7 @@ import FloralDecoration from './FloralDecoration';
 import Scene3D from './Scene3D';
 import gsap from 'gsap';
 import { useJournal } from '@/context/JournalContext';
+import Image from 'next/image';
 
 const TABS = [
   { id: 'hoy', name: 'Hoy', icon: Home },
@@ -44,8 +45,18 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
       
       {/* SIDEBAR */}
       <aside ref={sidebarRef} className="hidden md:flex flex-col w-72 bg-white/40 backdrop-blur-2xl border-r border-rose-pastel/50 journal-shadow z-20">
-        <div className="p-10">
-          <h1 className="text-3xl font-serif text-deep-rose italic font-bold leading-tight">Diario de <br/> Abigail</h1>
+        <div className="p-10 flex flex-col items-center text-center">
+          {/* LOGO COMPLETO */}
+          <div className="mb-6 relative w-24 h-24 rounded-full overflow-hidden border-2 border-rose-pastel shadow-sm bg-white p-1">
+            <Image 
+              src="/logo-full.png" 
+              alt="Logo Diario de Abigail" 
+              fill 
+              className="object-contain"
+            />
+          </div>
+          
+          <h1 className="text-2xl font-serif text-deep-rose italic font-bold leading-tight">Diario de <br/> Abigail</h1>
           <div className="w-10 h-1 bg-accent-pink mt-4 rounded-full opacity-40" />
           {user?.displayName && <p className="text-[10px] uppercase tracking-widest font-bold text-soft-text/40 mt-4">{user.displayName}</p>}
         </div>
@@ -59,7 +70,6 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
             </button>
           ))}
 
-          {/* BOTON ADMIN - Solo visible para el Admin Supremo */}
           {isAdmin && (
             <button onClick={() => setActiveTab('admin')}
               className={`w-full flex items-center space-x-4 px-5 py-4 rounded-[1.25rem] transition-all duration-300 border-2 ${activeTab === 'admin' ? 'bg-deep-rose text-white border-deep-rose shadow-lg scale-105' : 'border-rose-pastel/30 text-deep-rose/60 hover:bg-rose-pastel/20'}`}>
@@ -79,7 +89,12 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
       {/* MAIN CONTENT */}
       <main ref={mainRef} className="flex-1 flex flex-col min-h-screen relative overflow-y-auto z-10 w-full">
         <header className="md:hidden p-6 bg-white/80 backdrop-blur-md border-b border-rose-pastel flex justify-between items-center sticky top-0 z-30">
-          <h1 className="text-xl font-serif text-deep-rose italic font-bold">Diario de Abigail</h1>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full overflow-hidden border border-rose-pastel shadow-sm bg-white p-0.5 relative">
+              <Image src="/logo-full.png" alt="Logo" fill className="object-contain" />
+            </div>
+            <h1 className="text-xl font-serif text-deep-rose italic font-bold leading-none">Diario de Abigail</h1>
+          </div>
           <div className="flex items-center gap-2">
             {isAdmin && <button onClick={() => setActiveTab('admin')} className={`p-2 rounded-full ${activeTab === 'admin' ? 'bg-deep-rose text-white' : 'text-deep-rose/40'}`}><ShieldCheck size={20}/></button>}
             <button onClick={logout} className="p-2 text-soft-text/30"><LogOut size={20}/></button>
@@ -95,7 +110,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
         </div>
 
         {/* BOTTOM NAV - MOBILE */}
-        <nav className="md:hidden fixed bottom-8 left-6 right-6 bg-white/95 backdrop-blur-xl border border-rose-pastel/50 rounded-[2.5rem] flex justify-around p-3 journal-shadow z-40">
+        <nav className="md:hidden fixed bottom-8 left-6 right-6 bg-white/95 backdrop-blur-xl border border-rose-pastel/50 rounded-[2.5rem] flex justify-around p-3 journal-shadow z-40 ring-8 ring-rose-pastel/5">
           {TABS.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className={`p-3 rounded-[1.5rem] transition-all ${activeTab === tab.id ? 'text-deep-rose bg-rose-pastel/50' : 'text-soft-text/40'}`}>

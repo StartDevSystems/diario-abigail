@@ -4,9 +4,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { JournalState, Habit, Note, DayData } from '../types/index';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-const INITIAL_DAY_DATA: DayData = {
+const getInitialDayData = (): DayData => ({
   date: new Date().toISOString(),
   mood: null,
   priorities: ['', '', ''],
@@ -18,10 +18,10 @@ const INITIAL_DAY_DATA: DayData = {
   prayerThanks: '',
   prayerAsk: '',
   prayerDecree: '',
-};
+});
 
-const INITIAL_STATE: JournalState = {
-  today: INITIAL_DAY_DATA,
+const getInitialState = (): JournalState => ({
+  today: getInitialDayData(),
   habits: [
     { id: '1', name: 'Beber agua', emoji: '💧', completedDays: Array(7).fill(false) },
     { id: '2', name: 'Meditar', emoji: '🧘‍♀️', completedDays: Array(7).fill(false) },
@@ -29,13 +29,13 @@ const INITIAL_STATE: JournalState = {
   ],
   notes: [],
   streak: 0,
-};
+});
 
 interface JournalContextType {
   state: JournalState;
   user: User | null;
-  isAdmin: boolean;
   loading: boolean;
+  isAdmin: boolean;
   updateToday: (data: Partial<DayData>) => void;
   toggleHabitDay: (habitId: string, dayIndex: number) => void;
   addHabit: (name: string, emoji: string) => void;
@@ -44,19 +44,30 @@ interface JournalContextType {
   addNote: (content: string) => void;
   deleteNote: (id: string) => void;
   logout: () => void;
-  getAllUsersData: () => Promise<any[]>; // Solo para Admin
+  getAllUsersData: () => Promise<any[]>;
 }
 
 const JournalContext = createContext<JournalContextType | undefined>(undefined);
 
 export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, setState] = useState<JournalState>(INITIAL_STATE);
+  const [state, setState] = useState<JournalState>(getInitialState());
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Sincronización con Firestore
+  const saveToFirebase = async (newState: JournalState, currentUser: User) => {
+    try {
+      const docRef = doc(db, "users", currentUser.uid);
+      await setDoc(docRef, newState, { merge: true });
+    } catch (e) {
+      console.error("Error saving to Firebase", e);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(true);
       setUser(currentUser);
       
       if (currentUser) {
@@ -64,24 +75,54 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          const cloudData = docSnap.data() as any;
-          setIsAdmin(cloudData.role === 'admin'); // Detectar si es admin
+          const rawData = docSnap.data() as any;
+          setIsAdmin(rawData.role === 'admin');
           
-          const todayStr = new Date().toLocaleDateString();
-          const savedDateStr = new Date(cloudData.today?.date || new Date()).toLocaleDateString();
+          // --- LIMPIEZA PROFUNDA ---
+          const cleanHabits = Array.isArray(rawData.habits) 
+            ? rawData.habits.map((h: any) => ({
+                ...h,
+                completedDays: Array.isArray(h.completedDays) ? h.completedDays : (Array.isArray(h.completed_days) ? h.completed_days : Array(7).fill(false))
+              }))
+            : getInitialState().habits;
+
+          const mergedState: JournalState = {
+            ...getInitialState(),
+            ...rawData,
+            habits: cleanHabits,
+            today: { ...getInitialDayData(), ...(rawData.today || {}) },
+            notes: Array.isArray(rawData.notes) ? rawData.notes : []
+          };
+
+          const now = new Date();
+          const todayStr = now.toLocaleDateString();
+          const lastDate = new Date(mergedState.today.date || now);
           
-          if (todayStr !== savedDateStr) {
-            setState({
-              ...cloudData,
-              today: { ...INITIAL_DAY_DATA, date: new Date().toISOString() },
-            });
+          if (todayStr !== lastDate.toLocaleDateString()) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            let newStreak = mergedState.streak || 0;
+            if (lastDate.toLocaleDateString() !== yesterday.toLocaleDateString() || !mergedState.today.mood) {
+              newStreak = 0;
+            }
+
+            const newState = {
+              ...mergedState,
+              streak: newStreak,
+              today: { ...getInitialDayData(), date: now.toISOString() },
+            };
+            setState(newState);
           } else {
-            setState(cloudData);
+            setState(mergedState);
           }
         } else {
-          await setDoc(docRef, { ...INITIAL_STATE, role: 'user' });
-          setState(INITIAL_STATE);
+          const freshState = getInitialState();
+          await setDoc(docRef, { ...freshState, role: 'user' });
+          setState(freshState);
         }
+      } else {
+        setState(getInitialState());
       }
       setLoading(false);
     });
@@ -89,50 +130,93 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (user && !loading) {
-      const saveToCloud = async () => {
-        const docRef = doc(db, "users", user.uid);
-        await setDoc(docRef, state, { merge: true });
-      };
-      saveToCloud();
-    }
-  }, [state, user, loading]);
+  const updateToday = (data: Partial<DayData>) => {
+    setState(prev => {
+      const currentToday = prev.today || getInitialDayData();
+      let extra = {};
+      if (data.mood && !currentToday.mood) {
+        extra = { streak: (prev.streak || 0) + 1 };
+      }
+      const newState = { ...prev, ...extra, today: { ...currentToday, ...data } };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
+  const toggleHabitDay = (habitId: string, dayIndex: number) => {
+    setState(prev => {
+      const habits = Array.isArray(prev.habits) ? prev.habits : [];
+      const newHabits = habits.map(h => {
+        if (h.id !== habitId) return h;
+        const currentDays = Array.isArray(h.completedDays) ? h.completedDays : Array(7).fill(false);
+        const newDays = [...currentDays];
+        newDays[dayIndex] = !newDays[dayIndex];
+        return { ...h, completedDays: newDays };
+      });
+      const newState = { ...prev, habits: newHabits };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
+  const addHabit = (name: string, emoji: string) => {
+    setState(prev => {
+      const newHabit = { id: Date.now().toString(), name, emoji, completedDays: Array(7).fill(false) };
+      const newState = { ...prev, habits: [...(Array.isArray(prev.habits) ? prev.habits : []), newHabit] };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
+  const updateHabit = (id: string, name: string, emoji: string) => {
+    setState(prev => {
+      const habits = Array.isArray(prev.habits) ? prev.habits : [];
+      const newHabits = habits.map(h => h.id === id ? { ...h, name, emoji } : h);
+      const newState = { ...prev, habits: newHabits };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
+  const deleteHabit = (id: string) => {
+    setState(prev => {
+      const newState = { ...prev, habits: (Array.isArray(prev.habits) ? prev.habits : []).filter(h => h.id !== id) };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
+  const addNote = (content: string) => {
+    setState(prev => {
+      const newNote = { id: Date.now().toString(), date: new Date().toISOString(), content };
+      const newState = { ...prev, notes: [newNote, ...(Array.isArray(prev.notes) ? prev.notes : [])] };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
+  const deleteNote = (id: string) => {
+    setState(prev => {
+      const newState = { ...prev, notes: (Array.isArray(prev.notes) ? prev.notes : []).filter(n => n.id !== id) };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
+  const logout = () => auth.signOut();
 
   const getAllUsersData = async () => {
-    if (!isAdmin) return [];
+    const { collection, getDocs } = await import('firebase/firestore');
     const querySnapshot = await getDocs(collection(db, "users"));
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   };
-
-  const updateToday = (data: Partial<DayData>) => setState(prev => ({ ...prev, today: { ...prev.today, ...data } }));
-  const toggleHabitDay = (habitId: string, dayIndex: number) => {
-    setState(prev => ({
-      ...prev,
-      habits: prev.habits.map(h => h.id === habitId ? { ...h, completedDays: h.completedDays.map((d, i) => i === dayIndex ? !d : d) } : h)
-    }));
-  };
-  const addHabit = (name: string, emoji: string) => {
-    const newHabit = { id: Date.now().toString(), name, emoji, completedDays: Array(7).fill(false) };
-    setState(prev => ({ ...prev, habits: [...prev.habits, newHabit] }));
-  };
-  const updateHabit = (id: string, name: string, emoji: string) => {
-    setState(prev => ({ ...prev, habits: prev.habits.map(h => h.id === id ? { ...h, name, emoji } : h) }));
-  };
-  const deleteHabit = (id: string) => setState(prev => ({ ...prev, habits: prev.habits.filter(h => h.id !== id) }));
-  const addNote = (content: string) => {
-    const newNote = { id: Date.now().toString(), date: new Date().toISOString(), content };
-    setState(prev => ({ ...prev, notes: [newNote, ...prev.notes] }));
-  };
-  const deleteNote = (id: string) => setState(prev => ({ ...prev, notes: prev.notes.filter(n => n.id !== id) }));
-  const logout = () => auth.signOut();
 
   return (
     <JournalContext.Provider value={{ 
       state, user, isAdmin, loading, updateToday, toggleHabitDay, 
       addHabit, updateHabit, deleteHabit, addNote, deleteNote, logout, getAllUsersData 
     }}>
-      {!loading && children}
+      {children}
     </JournalContext.Provider>
   );
 };

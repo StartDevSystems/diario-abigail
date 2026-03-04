@@ -1,18 +1,15 @@
-# 🛠 Documentación Técnica
+# 🛠 Documentación Técnica (v1.1.0)
 
-## 1. Especificaciones de Implementación
-- **Lenguaje:** TypeScript 5.x (Tipado estricto).
-- **Runtime:** Node.js v20+ para entorno de compilación.
-- **Framework UI:** React 18+ (Integrado en Next.js).
-- **Bundler:** TurboPack (Entorno de desarrollo Next.js).
+## 1. Infraestructura de Backend
+- **Firebase SDK v10.x:** Implementado para manejar la comunicación con los servicios de Google.
+- **Firebase Auth:** Proveedor de identidad para el manejo de sesiones.
+- **Cloud Firestore:** Base de Datos NoSQL basada en documentos.
 
-## 2. Componentes Críticos
-- **Context Provider (`JournalContext`):** Maneja el estado global y los reducers de datos.
-- **Layout Orquestador:** Controla el renderizado condicional de vistas basado en el estado `activeTab`.
+## 2. Gestión de Entorno
+- **Variables de Entorno:** Se utiliza un archivo `.env.local` (local) y el dashboard de Render (producción) para inyectar las credenciales mediante el prefijo `NEXT_PUBLIC_`.
 
-## 3. Manejo de Estado (State Management)
-Se ha optado por un patrón de **Levantamiento de Estado** centralizado en un Contexto para evitar el "prop drilling". 
+## 3. Cambios en la Estructura de Archivos
+- **Refactorización `views/`:** Se movieron los componentes de página de `src/pages` a `src/views` para evitar conflictos con el prerendering automático de Next.js en componentes que requieren Contexto de Cliente.
 
-## 4. Optimización de Assets
-- **Fuentes:** Uso de `next/font/google` para evitar Layout Shift (CLS).
-- **Iconos:** Importación directa de `lucide-react` para permitir Tree-shaking.
+## 4. Scripts de Construcción
+- **Comando Build:** `npm install --force; npm run build`. El flag `--force` es necesario para resolver conflictos de peer dependencies entre React 19 y Lucide React.

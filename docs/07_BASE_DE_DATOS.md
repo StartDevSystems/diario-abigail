@@ -1,32 +1,28 @@
-# 🗄 Documentación de Base de Datos (Persistencia Local)
+# 🗄 Documentación de Base de Datos (Cloud Firestore)
 
-## 1. Motor de Persistencia
-Se utiliza la API nativa de **LocalStorage** de los navegadores modernos. 
+## 1. Modelo NoSQL
+El diario utiliza **Cloud Firestore** para el almacenamiento de datos en tiempo real. Los datos se organizan en documentos dentro de colecciones.
 
-## 2. Esquema de Datos (JSON)
-Los datos se almacenan bajo la clave `diario_abigail_data` con la siguiente estructura:
+## 2. Colecciones y Esquemas
+### Colección: `users`
+Cada documento utiliza el **UID de Firebase Auth** como identificador único para garantizar el aislamiento.
 
-```json
-{
-  "today": {
-    "date": "string",
-    "mood": "string",
-    "priorities": ["string", "string", "string"],
-    "tasks": [
-      { "id": "string", "text": "string", "completed": "boolean" }
-    ],
-    "gratitude": ["string", "string", "string"]
-  },
-  "habits": [
-    { "id": "string", "name": "string", "completedDays": [false, false, ...] }
-  ]
+| Campo | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `role` | `string` | 'user' o 'admin'. Determina permisos. |
+| `streak` | `number` | Contador de días consecutivos. |
+| `today` | `map` | Objeto con el estado del día actual. |
+| `habits` | `array` | Lista de objetos de hábitos. |
+| `notes` | `array` | Lista de objetos de notas con IDs y fechas. |
+
+## 3. Lógica de Multi-inquilino (Multi-tenancy)
+Cada vez que un usuario se autentica, el sistema carga el documento correspondiente a su UID. Si no existe, se inicializa un perfil base automáticamente.
+
+## 4. Reglas de Acceso (Firestore Rules)
+Se ha implementado el siguiente candado lógico:
+```javascript
+match /users/{userId} {
+  allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
 }
 ```
-
-## 3. Estrategia de Sincronización
-- **Efecto de Escritura:** Cada vez que el estado de React cambia, se dispara un `useEffect` que serializa el estado y lo guarda en LocalStorage.
-- **Efecto de Lectura:** Solo se ejecuta una vez al montar el componente raíz (`mounted: true`).
-
-## 4. Limitaciones Actuales
-- Límite de ~5MB impuesto por el navegador.
-- Los datos no se sincronizan entre diferentes dispositivos/navegadores.
+Esto permite que cada usuario sea dueño de su dato, pero habilita al Administrador Supremo a visualizar la información para soporte técnico o moderación.

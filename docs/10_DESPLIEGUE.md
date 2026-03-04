@@ -1,15 +1,22 @@
-# 🚀 Documentación de Despliegue
+# 🚀 Documentación de Despliegue (Render.com)
 
-## 1. Entorno de Producción
-Se recomienda el despliegue en la plataforma **Vercel** debido a su optimización nativa para Next.js.
+## 1. Configuración de la Instancia
+- **Servicio:** Web Service.
+- **Runtime:** Node.js.
+- **Plan:** Free Tier.
 
-## 2. Proceso de Build
-1. Ejecutar `npm install` para resolver dependencias.
-2. Ejecutar `npm run build`.
-3. El comando genera una carpeta optimizada `.next`.
+## 2. Variables de Entorno (Environment Variables)
+Es obligatorio configurar las siguientes llaves en el panel de Render para que la aplicación funcione:
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- ... (todas las listadas en `.env.local`).
 
-## 3. Variables de Entorno
-Actualmente, no se requieren variables secretas (`.env`) ya que todo el procesamiento es client-side. En la v2.0 se requerirán las API Keys de Firebase.
+## 3. Pipeline de Despliegue
+1. **Trigger:** Cada vez que se hace un `git push origin main`.
+2. **Build:** Render ejecuta `npm install --force; npm run build`.
+3. **Start:** Si el build es exitoso, se ejecuta `npm run start`.
 
-## 4. Despliegue Continuo (CI/CD)
-Integración mediante GitHub Actions para despliegue automático al hacer push a la rama `main`.
+## 4. Troubleshooting de Despliegue
+- **Error "Next: not found":** Asegurarse de que `dependencies` incluya `next`.
+- **Error de Peer Dependencies:** El flag `--force` en el comando de instalación es crítico.

@@ -1,0 +1,14 @@
+name: Keep Alive Diario
+
+on:
+  schedule:
+    # Se ejecuta cada 10 minutos
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Permite activarlo manualmente para probar
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pinging Render Server
+        run: curl -s https://diario-abigail.onrender.com > /dev/null

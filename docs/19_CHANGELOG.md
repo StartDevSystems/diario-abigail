@@ -1,13 +1,19 @@
 # 📜 Registro de Cambios (Changelog)
 
-## [1.0.0] - 2026-03-03
+## [1.1.0] - 2026-03-04
 ### Añadido
-- Interfaz completa de 5 secciones (Hoy, Semana, Hábitos, Devocional, Notas).
-- Animaciones fluidas con GSAP y Framer Motion.
-- Fondo 3D interactivo con Three.js.
-- Persistencia total en LocalStorage.
-- Documentación profesional de 20 puntos.
+- **Integración con Firebase:** Autenticación real y base de datos en la nube.
+- **Sistema de Roles:** Implementación de 'Admin Supremo' y 'User'.
+- **Panel Admin:** Nueva vista protegida para gestión de plataforma.
+- **Lógica de Hábitos:** Bloqueo de días pasados/futuros y modo edición.
+- **Versículos Dinámicos:** Conexión con Bible API externa.
+- **Personalización:** El sistema saluda al usuario por su nombre real.
 
 ### Cambios
-- Migración de Vite a Next.js 14 para mayor estabilidad.
-- Configuración de Tailwind CSS v4 con variables nativas.
+- **Refactorización de Carpetas:** `pages` movido a `views` para compatibilidad con Next.js build.
+- **Despliegue:** Migración oficial a Render.com con CD (Continuous Deployment).
+- **Seguridad:** Implementación de variables de entorno y reglas de Firestore.
+
+## [1.0.0] - 2026-03-03
+- Lanzamiento inicial (Beta local).
+- Diseño responsivo y animaciones básicas.

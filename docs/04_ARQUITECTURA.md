@@ -1,16 +1,18 @@
-# 🏗 Documentación de Arquitectura
+# 🏗 Documentación de Arquitectura (v1.1.0)
 
-## 1. Patrón de Arquitectura
-El proyecto sigue una arquitectura de **App Router** de Next.js, basada en componentes del servidor y del cliente (Server/Client Components).
+## 1. Arquitectura Cloud-Native
+La aplicación ha evolucionado de una arquitectura local a una **Cloud-Native SPA** apoyada en servicios administrados.
 
-## 2. Diagrama de Capas
-1. **Capa de Aplicación (`/src/app`):** Define el esqueleto global y el ruteo.
-2. **Capa de Vistas (`/src/pages`):** Componentes de alto nivel que representan las pantallas.
-3. **Capa de Negocio (`/src/context`):** Lógica de manipulación de datos y persistencia.
-4. **Capa de Presentación (`/src/components`):** UI atómica y decoraciones.
-5. **Capa de Dominio (`/src/types`):** Definición de modelos de datos.
+## 2. Capa de Datos (Sincronización)
+- **Patrón Observador:** `onAuthStateChanged` monitorea la sesión.
+- **Persistencia Reactiva:** Se utiliza un `useEffect` en `JournalContext` que realiza un `setDoc` en Firestore cada vez que el estado local cambia, manteniendo la nube siempre actualizada.
 
-## 3. Decisiones de Diseño Arquitectónico (ADR)
-- **ADR-001:** Uso de Client-Side Rendering (CSR) para la interactividad del diario, dado que depende del estado del navegador (LocalStorage).
-- **ADR-002:** Implementación de Three.js en una capa independiente para no bloquear el hilo principal de la UI.
-- **ADR-003:** Estructura modular de páginas para facilitar la futura migración a rutas reales de Next.js (`/hoy`, `/semana`).
+## 3. Seguridad de Capas (RBAC)
+- **Front-end:** El componente `Layout` renderiza condicionalmente el botón de Admin basado en el estado `isAdmin`.
+- **Back-end:** Firebase Security Rules valida el UID y el rol antes de permitir cualquier operación de lectura/escritura en Firestore.
+
+## 4. Diagrama de Carpetas Actualizado
+- `src/app`: Enrutamiento y Layout base.
+- `src/views`: Componentes de pantalla (vistas lógicas).
+- `src/components`: UI atómica y 3D.
+- `src/lib`: Configuración de servicios externos (Firebase).

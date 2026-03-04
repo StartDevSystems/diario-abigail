@@ -25,7 +25,7 @@ const FEELINGS: {
 interface WelcomeScreenProps { onEnter: () => void; }
 
 export default function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
-  const { updateToday, user } = useJournal(); // Extraemos 'user'
+  const { updateToday, user } = useJournal();
   const [screen, setScreen] = useState<"feelings"|"verse">("feelings");
   const [selected, setSelected] = useState<typeof FEELINGS[0]|null>(null);
   const [verseText, setVerseText] = useState("");
@@ -33,6 +33,8 @@ export default function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
   const [loading, setLoading] = useState(false);
 
   const fecha = new Date().toLocaleDateString("es-ES", { weekday:"long", day:"numeric", month:"long" });
+  
+  // EXTRAER EL NOMBRE REAL AQUÍ
   const firstName = user?.displayName?.split(' ')[0] || "Abigail";
 
   async function pickFeeling(f: typeof FEELINGS[0]) {

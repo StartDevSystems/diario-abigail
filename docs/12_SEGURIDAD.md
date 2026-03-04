@@ -1,11 +1,16 @@
-# 🔐 Documentación de Seguridad
+# 🔐 Documentación de Seguridad (Cloud Security)
 
-## 1. Privacidad por Diseño
-- **Almacenamiento Local:** Los datos sensibles de Abigail (reflexiones, notas) no se envían a ningún servidor externo. Residen 100% en el hardware del usuario.
-- **Sanitización:** Los inputs de texto son procesados por React para prevenir ataques de Cross-Site Scripting (XSS).
+## 1. Autenticación Robusta
+Se utiliza **Firebase Authentication**, lo que delega a Google el manejo seguro de contraseñas, encriptación y sesiones.
 
-## 2. Integridad del Sistema
-- **CSP (Content Security Policy):** Configuración básica para permitir solo scripts de fuentes confiables (Google Fonts, Vercel).
+## 2. Reglas de Seguridad del Lado del Servidor (Server-Side)
+No confiamos en el cliente. Firestore bloquea cualquier acceso que no cumpla con:
+- `request.auth != null` (Debe estar logueado).
+- `request.auth.uid == userId` (Solo acceso a sus datos).
+- `isAdmin()` (Excepción para el administrador).
 
-## 3. Futuras Consideraciones
-- Implementación de reglas de seguridad de Firestore para evitar accesos no autorizados en la base de datos en la nube.
+## 3. Protección de Credenciales
+Las llaves de Firebase se inyectan en tiempo de construcción (build-time) mediante variables de entorno, evitando que queden expuestas en el código fuente de GitHub.
+
+## 4. Aislamiento de Red
+Render proporciona certificados SSL (HTTPS) automáticos para encriptar el tráfico entre el navegador de Abigail y los servidores.

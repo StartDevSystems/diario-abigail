@@ -1,20 +1,14 @@
-# 🔌 Documentación de API e Interfaz de Contexto
+# 🔌 Documentación de API e Interfaz de Datos
 
-## 1. Definición de la "API" de Contexto
-En la v1.0.0, la aplicación no consume endpoints REST externos, sino que utiliza una interfaz de Contexto (`JournalContext`) que expone métodos de manipulación de datos a toda la aplicación.
+## 1. Interfaz de Firebase
+Aunque no existe una API REST propia, el sistema consume los servicios de Firebase mediante métodos asíncronos en el `JournalContext`.
 
-## 2. Métodos Expuestos
-### `updateToday(data: Partial<DayData>)`
-- **Uso:** Actualiza los campos de la sección 'Hoy'.
-- **Payload:** Objeto con cambios parciales.
+## 2. Operaciones de Escritura (SetDoc)
+- **Persistencia de Estado:** Se realiza una escritura atómica en `users/{userId}`.
+- **Merge Strategy:** Se utiliza `{ merge: true }` para asegurar que el campo `role` no se sobrescriba accidentalmente desde el cliente.
 
-### `toggleHabitDay(habitId: string, dayIndex: number)`
-- **Uso:** Alterna el estado (true/false) de un día específico de un hábito.
-- **Parámetros:** ID único del hábito e índice del día (0-6).
+## 3. Consultas de Administrador (getDocs)
+- **Método `getAllUsersData()`:** Realiza un barrido de la colección `users`. Solo retorna resultados si el token de autenticación del solicitante tiene los permisos adecuados en el servidor.
 
-### `addHabit(name: string)`
-- **Uso:** Crea una nueva instancia de hábito en el estado global.
-
-## 3. Manejo de Errores
-- Validación interna para evitar que se guarden strings vacíos en prioridades críticas.
-- Try/Catch implementado en la carga inicial de LocalStorage para prevenir fallos si el JSON está corrupto.
+## 4. Integraciones de Terceros
+- **Bible API:** `https://bible-api.com/` se utiliza para obtener versículos dinámicos basados en la referencia bíblica asociada a cada sentimiento.

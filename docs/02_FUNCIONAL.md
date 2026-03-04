@@ -1,29 +1,18 @@
-# ⚙️ Documentación Funcional
+# ⚙️ Documentación Funcional (v1.1.0)
 
-## 1. Descripción del Sistema
-El "Diario de Abigail" es un orquestador de bienestar personal. Funciona de manera atómica, dividiendo la experiencia en 5 módulos principales accesibles mediante un menú persistente.
+## 1. Flujo de Acceso (Auth Flow)
+1. **Public/Auth View:** El usuario llega a una pantalla de acceso. Puede alternar entre "Entrar" y "Registrarse".
+2. **Welcome Experience:** Tras el login, si es la primera vez en el día, se dispara el modal de sentimientos y versículo.
+3. **Dashboard:** Acceso al diario con el nombre del usuario cargado dinámicamente.
 
-## 2. Descripción de Módulos
-### 2.1 Módulo Hoy
-- **Lógica:** Captura datos del día actual (Date ISO).
-- **Inputs:** Selectores de botones para Mood, text-inputs para prioridades.
-- **Feedback:** Los agradecimientos se guardan en un array de 3 posiciones.
+## 2. Módulos Avanzados
+### 2.1 Módulo Admin Supremo
+- **Acceso:** Solo visible si el campo `role` en Firestore es `admin`.
+- **Funcionalidad:** Vista de pájaro de la base de datos de usuarios (IDs, ánimos, agradecimientos).
 
-### 2.2 Módulo Semana
-- **Lógica:** Gestión de metas de mediano plazo.
-- **Visualización:** Tarjeta expandida con enfoque en tipografía serif.
+### 2.2 Gestión de Hábitos (Lógica de Negocio)
+- **Restricción Temporal:** El sistema calcula el `currentDayIdx` y deshabilita los botones que no coincidan con el día actual del usuario.
+- **Modo Edición:** Permite mutar el objeto `Habit` (nombre/emoji) sin alterar el array de progreso `completedDays`.
 
-### 2.3 Módulo Hábitos
-- **Lógica:** Array de objetos `{name, status: [7]}`.
-- **Cálculo:** Función reductora para contar los `true` en el array de completitud y mostrar el ratio x/7.
-
-### 2.4 Módulo Devocional
-- **Lógica:** Visualización de versículo destacado y dos áreas de reflexión persistente.
-
-### 2.5 Módulo Notas
-- **Lógica:** Lista dinámica de strings con opción de borrado (TrashIcon).
-
-## 3. Flujos de Usuario (User Journeys)
-- **Inicio del día:** El usuario abre la app, marca su ánimo y define 3 prioridades.
-- **Cierre del día:** El usuario marca tareas completadas y escribe sus agradecimientos.
-- **Reflexión:** El usuario usa la pestaña Devocional para su tiempo de oración/estudio.
+### 2.3 Devocional Extendido
+- Se han añadido campos para Peticiones, Agradecimientos de oración y Decretos, permitiendo una experiencia espiritual de 360 grados.
