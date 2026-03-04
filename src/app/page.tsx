@@ -11,12 +11,13 @@ import FloralDecoration from "@/components/FloralDecoration";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import AuthScreen from "@/components/AuthScreen";
 
-import Hoy from "@/pages/Hoy";
-import Semana from "@/pages/Semana";
-import Habitos from "@/pages/Habitos";
-import Devocional from "@/pages/Devocional";
-import Notas from "@/pages/Notas";
-import Admin from "@/pages/Admin"; // Importar Admin
+// Cambiamos @/pages por @/views
+import Hoy from "@/views/Hoy";
+import Semana from "@/views/Semana";
+import Habitos from "@/views/Habitos";
+import Devocional from "@/views/Devocional";
+import Notas from "@/views/Notas";
+import Admin from "@/views/Admin";
 
 function HomeContent() {
   const { state, isAdmin } = useJournal();
@@ -53,7 +54,7 @@ function HomeContent() {
       case "habitos":    return <Habitos />;
       case "devocional": return <Devocional />;
       case "notas":      return <Notas />;
-      case "admin":      return <Admin />; // Nueva ruta
+      case "admin":      return <Admin />;
       default:           return <Hoy />;
     }
   };
