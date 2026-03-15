@@ -360,8 +360,10 @@ const Devocional: React.FC = () => {
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @media(max-width:540px){
           .dev-grid{grid-template-columns:1fr !important}
-          .dev-jesus{font-size:3.4rem !important}
+          .dev-jesus{font-size:2.8rem !important}
           .dev-verse-text{font-size:inherit}
+          .dev-header-top{flex-direction:column !important; align-items:center !important; text-align:center}
+          .dev-header-top .dev-cross-section{align-items:center !important}
         }
       `}</style>
 
@@ -377,15 +379,15 @@ const Devocional: React.FC = () => {
 
       <div className="dev-fade" style={{ maxWidth:680, margin:"0 auto", display:"flex", flexDirection:"column", gap:"1.5rem", paddingBottom:"3rem", fontFamily:"'DM Sans',sans-serif", color:"#2d0a1e" }}>
 
-        <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:"1rem" }}>
-          <div style={{ display:"flex", flexDirection:"column", gap:".35rem" }}>
+        <div className="dev-header-top" style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:"1rem", flexWrap:"wrap" }}>
+          <div style={{ display:"flex", flexDirection:"column", gap:".35rem", flexShrink:0 }}>
             <span style={{ background:"#e11d74", color:"white", fontWeight:900, fontSize:".85rem", letterSpacing:".04em", padding:".4rem 1.1rem", borderRadius:999, display:"inline-block" }}>Devocional</span>
             <span style={{ background:"white", color:"#e11d74", border:"2px solid #ffd6e7", fontWeight:700, fontSize:".85rem", padding:".35rem 1.1rem", borderRadius:999, display:"inline-block", marginLeft:".6rem" }}>Diario</span>
           </div>
-          <div style={{ textAlign:"center", flex:1 }}>
+          <div style={{ textAlign:"center", flex:1, minWidth:120 }}>
             <span className="dev-jesus" style={{ fontFamily:"'Great Vibes',cursive", fontSize:"5.2rem", color:"#2d0a1e", lineHeight:1, opacity:.88, display:"block" }}>Jesús</span>
           </div>
-          <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:".4rem" }}>
+          <div className="dev-cross-section" style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:".4rem", flexShrink:0 }}>
             <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
               <line x1="26" y1="4" x2="26" y2="28" stroke="#2d0a1e" strokeWidth="2.5" strokeLinecap="round"/>
               <line x1="14" y1="13" x2="38" y2="13" stroke="#2d0a1e" strokeWidth="2.5" strokeLinecap="round"/>

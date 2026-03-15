@@ -236,6 +236,34 @@ El PO reportó que en múltiples vistas se mostraba el UID de Firebase (`WqSzxRc
 
 ---
 
+### CR-010: Hotfix — Header Devocional roto en móvil (Tech Lead)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Tech Lead
+**Archivos modificados:** `src/views/Devocional.tsx`
+
+#### Problema detectado en QA visual
+El PO reportó que el logo con el texto "Jesús" en la sección Devocional se cortaba/rompía en pantallas móviles. Causa raíz: el header usaba `display:flex` con 3 columnas (badges, texto, cruz) sin adaptarse a viewports estrechos.
+
+#### Cambios realizados
+
+| Archivo | Cambio | Justificación |
+|:---|:---|:---|
+| `Devocional.tsx:363` | `dev-jesus` reducido de `3.4rem` a `2.8rem` en `@media(<540px)` | El tamaño anterior aún desbordaba en iPhone SE (375px) |
+| `Devocional.tsx:365-366` | Agregado media query `.dev-header-top{flex-direction:column; align-items:center}` | En móvil los 3 elementos se apilan verticalmente en vez de forzar 3 columnas |
+| `Devocional.tsx:382` | Agregado `flexWrap:"wrap"` y clase `dev-header-top` al contenedor | Fallback para pantallas intermedias (~500px) |
+| `Devocional.tsx:383` | `flexShrink:0` en badges | Previene que los pills "Devocional"/"Diario" se compriman |
+| `Devocional.tsx:389` | `minWidth:120` en contenedor de "Jesús" | Garantiza espacio mínimo antes de hacer wrap |
+| `Devocional.tsx:392` | `flexShrink:0` y clase `dev-cross-section` en sección de cruz | Previene compresión del ícono y fecha |
+
+#### Pruebas realizadas
+- `npx next build` exitoso
+- Verificación visual solicitada al PO en dispositivo móvil
+
+#### Veredicto
+**HOTFIX APLICADO** — Detectado por PO en prueba visual móvil. Layout del header ahora es responsive con stack vertical en pantallas <540px.
+
+---
+
 ## Checklist de QA para Dev-1
 
 Antes de entregar código para revisión, verificar:
