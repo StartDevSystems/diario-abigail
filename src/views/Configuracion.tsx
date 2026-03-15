@@ -175,8 +175,8 @@ const Configuracion: React.FC = () => {
                     users.map(u => (
                       <div key={u.id} className="py-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-[#fff0f5] border border-[#ffd6e7] flex items-center justify-center text-xs font-black text-[#e11d74]">{u.id[0]}</div>
-                          <p className="text-sm font-bold text-[#1d1d1f]">{u.id.slice(0,16)}...</p>
+                          <div className="w-10 h-10 rounded-xl bg-[#fff0f5] border border-[#ffd6e7] flex items-center justify-center text-xs font-black text-[#e11d74]">{(u.user?.name || 'U')[0]}</div>
+                          <p className="text-sm font-bold text-[#1d1d1f]">{u.user?.name || 'Sin nombre'}</p>
                         </div>
                         <span className="text-[9px] font-black uppercase px-3 py-1.5 bg-white/60 border border-[#ffd6e7]/30 rounded-lg text-[#1d1d1f]/60">{u.role || 'USER'}</span>
                       </div>

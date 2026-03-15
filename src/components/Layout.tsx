@@ -59,12 +59,13 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
 
   const currentFont = fontMap[state?.settings?.fontFamily || 'Lora'] || 'var(--font-lora)';
   
+  // ABI-11: Tamaños responsivos con clamp() para que "Grande" se sienta real en móvil
   const sizeMap: Record<string, string> = {
-    'small': '0.9rem',
-    'medium': '1rem',
-    'large': '1.1rem',
+    'small': 'clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem)',   // 13-14px
+    'medium': 'clamp(0.9375rem, 0.9rem + 0.2vw, 1rem)',        // 15-16px
+    'large': 'clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem)',     // 17-19px
   };
-  const currentSize = sizeMap[state?.settings?.fontSize || 'medium'] || '1rem';
+  const currentSize = sizeMap[state?.settings?.fontSize || 'medium'] || sizeMap['medium'];
 
   return (
     <div className="flex min-h-screen bg-[#fffcf2] overflow-hidden relative selection:bg-accent-pink/40 text-soft-text"
@@ -202,6 +203,12 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
               <tab.icon size={22} />
             </button>
           ))}
+          {isAdmin && (
+            <button onClick={() => setActiveTab('admin')}
+              className={`p-3 rounded-[1.5rem] transition-all ${activeTab === 'admin' ? 'text-white bg-deep-rose' : 'text-deep-rose/40'}`}>
+              <ShieldCheck size={22} />
+            </button>
+          )}
         </nav>
       </main>
     </div>

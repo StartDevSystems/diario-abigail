@@ -38,6 +38,14 @@
     0 0 1px rgba(0, 0, 0, 0.05);
   border-radius: 2.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 2rem; /* Padding base */
+}
+
+@media (max-width: 640px) {
+  .card-premium {
+    padding: 1.5rem; /* Padding reducido en móvil para dar espacio al texto */
+    border-radius: 2rem;
+  }
 }
 
 .card-premium:hover {
@@ -45,6 +53,31 @@
   box-shadow: 
     0 30px 60px -12px rgba(0, 0, 0, 0.15),
     0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+/* ABI-11: Utilidades para texto fluido y ajuste en móvil */
+.text-balance {
+  text-wrap: balance;
+}
+
+.hyphens-auto {
+  hyphens: auto;
+}
+
+/* Previene desbordamiento de texto largo en móvil */
+.text-safe {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+@media (max-width: 640px) {
+  /* Ajuste global: textos largos se adaptan al viewport */
+  p, span, textarea {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
 }
 
 .floral-pattern {

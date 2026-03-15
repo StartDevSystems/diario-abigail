@@ -191,7 +191,7 @@ const CelebrationOverlay = ({ onDone }: { onDone: () => void }) => {
           return <ellipse key={p.id} cx={px} cy={py} rx={p.size / 2} ry={p.size * 0.35} fill={p.color} opacity="0.88" transform={`rotate(${p.rotation} ${px} ${py})`} />;
         })}
       </svg>
-      <div className="card-premium px-10 py-8 flex flex-col items-center gap-5 text-center"
+      <div className="card-premium flex flex-col items-center gap-5 text-center"
         style={{ animation:"popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both" }}>
         <div style={{ fontSize:"3.5rem" }}>🏆</div>
         <div>
@@ -233,7 +233,7 @@ const WeeklySummary = ({ habits, currentDayIdx }: { habits: any[]; currentDayIdx
   ];
 
   return (
-    <div className="card-premium p-6">
+    <div className="card-premium">
       <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-4" style={{ color:"#c47aaa" }}>🌸 Resumen de la semana</p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         {stats.map((s, i) => (
@@ -305,13 +305,13 @@ const MobileCard = ({ habit, currentDayIdx, onToggle, onDelete, onEdit }: {
   let streak=0;
   for(let i=currentDayIdx;i>=0;i--){if(habit.completedDays?.[i])streak++;else break;}
   return (
-    <div className="card-premium p-5">
+    <div className="card-premium">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-3">
           <span className="text-2xl w-11 h-11 flex items-center justify-center rounded-2xl flex-shrink-0"
             style={{ background:"#fff0f5", border:"1px solid #ffd6e7" }}>{habit.emoji||"🌸"}</span>
-          <div>
-            <p className="font-bold text-base tracking-tight" style={{ color:"var(--color-soft-text)" }}>{habit.name}</p>
+          <div className="min-w-0">
+            <p className="font-bold text-base tracking-tight break-words" style={{ color:"var(--color-soft-text)" }}>{habit.name}</p>
             {streak>0&&(
               <div className="flex items-center gap-1 mt-0.5">
                 <Flame size={10} style={{ color:"#ff6b9d" }}/>
@@ -359,7 +359,7 @@ const DesktopCard = ({ habit, currentDayIdx, onToggle, onDelete, isEditing, edit
   let streak=0;
   for(let i=currentDayIdx;i>=0;i--){if(habit.completedDays?.[i])streak++;else break;}
   return (
-    <div className="card-premium p-8 group transition-all duration-300 hover:scale-[1.01] relative">
+    <div className="card-premium group transition-all duration-300 hover:scale-[1.01] relative">
       <div className="absolute top-5 right-5 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         {isEditing?(
           <>
@@ -383,7 +383,7 @@ const DesktopCard = ({ habit, currentDayIdx, onToggle, onDelete, isEditing, edit
         <div className="flex-1 min-w-0">
           {isEditing
             ? <input value={editName} onChange={e=>onEditNameChange(e.target.value)} onKeyDown={e=>e.key==="Enter"&&onEditSave()} autoFocus className="text-2xl font-bold bg-transparent outline-none w-full pb-1" style={{ color:"var(--color-soft-text)", borderBottom:"2px solid #e8447a" }}/>
-            : <h3 className="text-2xl font-bold tracking-tight truncate" style={{ color:"var(--color-soft-text)" }}>{habit.name}</h3>}
+            : <h3 className="text-2xl font-bold tracking-tight break-words" style={{ color:"var(--color-soft-text)" }}>{habit.name}</h3>}
           <div className="flex items-center gap-4 mt-2 flex-wrap">
             {streak>0&&(
               <div className="flex items-center gap-1.5">
@@ -482,12 +482,12 @@ const Habitos: React.FC = () => {
           {habits.map(habit=>(
             <div key={habit.id}>
               {editingId===habit.id?(
-                <div className="card-premium p-5 space-y-4" style={{ border:"2px solid #e8447a" }}>
+                <div className="card-premium space-y-4" style={{ border:"2px solid #e8447a" }}>
                   <p className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color:"#e8447a" }}>✦ Editando</p>
                   <div className="flex gap-2 items-center">
                     <EmojiPicker selected={editEmoji} onSelect={setEditEmoji}/>
                     <input value={editName} onChange={e=>setEditName(e.target.value)}
-                      className="flex-1 rounded-2xl px-4 py-3 outline-none font-bold bg-white/60 backdrop-blur-md" style={{ color:"var(--color-soft-text)", border:"1px solid #ffd6e7" }}/>
+                      className="flex-1 rounded-2xl px-4 py-3 outline-none font-bold bg-white/60 backdrop-blur-md" style={{ color:"var(--color-soft-text)", border:"1px solid #ffd6e7", fontSize: "inherit" }}/>
                   </div>
                   <div className="flex gap-2">
                     <button onClick={saveEdit} className="flex-1 py-3 rounded-2xl font-bold text-white flex items-center justify-center gap-2"
@@ -520,7 +520,7 @@ const Habitos: React.FC = () => {
 
         {/* FORMULARIO AÑADIR */}
         {showAdd?(
-          <div className="card-premium p-6 sm:p-8 space-y-5">
+          <div className="card-premium space-y-5">
             <p className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color:"#e8447a" }}>✦ Nuevo Hábito</p>
             <div className="flex gap-3 items-center flex-wrap">
               {/* EMOJI PICKER */}
@@ -528,8 +528,8 @@ const Habitos: React.FC = () => {
               <input value={newHabitName} onChange={e=>setNewHabitName(e.target.value)}
                 onKeyDown={e=>e.key==="Enter"&&handleAdd()}
                 placeholder="Nombre del hábito... 🌸"
-                className="flex-1 min-w-[160px] h-14 px-5 rounded-2xl text-sm sm:text-base font-semibold outline-none transition-all bg-white/60 backdrop-blur-md"
-                style={{ border:"1px solid #ffd6e7", color:"var(--color-soft-text)" }}/>
+                className="flex-1 min-w-[160px] h-14 px-5 rounded-2xl font-semibold outline-none transition-all bg-white/60 backdrop-blur-md"
+                style={{ border:"1px solid #ffd6e7", color:"var(--color-soft-text)", fontSize: "inherit" }}/>
             </div>
             <div className="flex gap-3">
               <button onClick={handleAdd}

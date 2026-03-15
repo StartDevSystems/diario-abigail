@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
 import { useJournal } from "../context/JournalContext";
-import { BookOpen, Clock, FileText, HelpCircle, Heart, PenLine, X, Search, ChevronRight, Eye, Loader2 } from "lucide-react";
+import { BookOpen, Clock, FileText, HelpCircle, Heart, PenLine, X, Search, ChevronRight, Eye, Loader2, Copy, Check, Share2 } from "lucide-react";
 
 // ════════════════════════════════════════════════════════
 //  BIBLE DATA & MAPPING (RVR1960)
@@ -70,7 +70,7 @@ const SectionLabel = ({ icon, children }: { icon: React.ReactNode; children: Rea
 );
 const StyledTextarea = ({ value, onChange, placeholder, rows=5 }: { value:string; onChange:(v:string)=>void; placeholder:string; rows?:number }) => (
   <textarea value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} rows={rows}
-    style={{ width:"100%", background:"transparent", border:"none", outline:"none", resize:"none", fontFamily:"'DM Sans',sans-serif", fontSize:".9rem", color:"#2d0a1e", lineHeight:1.7, fontStyle:"italic" }}
+    style={{ width:"100%", background:"transparent", border:"none", outline:"none", resize:"none", fontFamily:"'DM Sans',sans-serif", fontSize:"inherit", color:"#2d0a1e", lineHeight:1.7, fontStyle:"italic", wordBreak: "break-word" }}
   />
 );
 
@@ -324,6 +324,22 @@ const Devocional: React.FC = () => {
   const { state, updateToday } = useJournal();
   const { today } = state;
   const [showBible, setShowBible] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (!today.devocionalVerse) return;
+    const text = `"${today.devocionalVerse}" — ${today.devocionalRef}`;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleWhatsApp = () => {
+    if (!today.devocionalVerse) return;
+    const text = `✨ "${today.devocionalVerse}" — ${today.devocionalRef} ✨\n\n📖 Enviado desde mi Diario de Abigail`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
 
   const fechaHoy = new Date().toLocaleDateString("es-ES", {
     weekday:"long", day:"numeric", month:"long", year:"numeric",
@@ -345,7 +361,7 @@ const Devocional: React.FC = () => {
         @media(max-width:540px){
           .dev-grid{grid-template-columns:1fr !important}
           .dev-jesus{font-size:3.4rem !important}
-          .dev-verse-text{font-size:1rem !important}
+          .dev-verse-text{font-size:inherit}
         }
       `}</style>
 
@@ -388,7 +404,7 @@ const Devocional: React.FC = () => {
           </div>
           <div style={{ padding:"3.8rem 2.5rem 1.8rem", display:"flex", flexDirection:"column", alignItems:"center", gap:".9rem", textAlign:"center" }}>
             <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"5rem", lineHeight:.5, color:"#ffd6e7", userSelect:"none" as const }}>"</span>
-            <p className="dev-verse-text" style={{ fontFamily:"'Playfair Display',serif", fontSize:"1.2rem", fontStyle:"italic", color:"var(--color-soft-text)", lineHeight:1.75, maxWidth:500 }}>
+            <p className="dev-verse-text" style={{ fontFamily:"'Playfair Display',serif", fontSize:"inherit", fontStyle:"italic", color:"var(--color-soft-text)", lineHeight:1.75, maxWidth:500, wordBreak: "break-word" }}>
               {today.devocionalVerse || "Aún no has elegido tu versículo de hoy..."}
             </p>
             {today.devocionalRef && (
@@ -396,16 +412,35 @@ const Devocional: React.FC = () => {
                 — {today.devocionalRef}
               </span>
             )}
-            <button className="dev-btn-change" onClick={() => setShowBible(true)}
-              style={{ display:"inline-flex", alignItems:"center", gap:".4rem", background:"#fff0f5", color:"#e11d74", border:"1.5px solid #ffd6e7", borderRadius:999, fontFamily:"'DM Sans',sans-serif", fontSize:".74rem", fontWeight:700, padding:".45rem 1.1rem", cursor:"pointer", marginTop:".3rem", transition:"background .18s,border-color .18s" }}>
-              <PenLine size={12}/>
-              {today.devocionalVerse ? "Cambiar versículo" : "Elegir versículo 🌸"}
-            </button>
+
+            <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap", justifyContent: "center", marginTop: ".8rem" }}>
+              <button className="dev-btn-change" onClick={() => setShowBible(true)}
+                style={{ display:"inline-flex", alignItems:"center", gap:".4rem", background:"#fff0f5", color:"#e11d74", border:"1.5px solid #ffd6e7", borderRadius:999, fontFamily:"'DM Sans',sans-serif", fontSize:".74rem", fontWeight:700, padding:".45rem 1.1rem", cursor:"pointer", transition:"background .18s,border-color .18s" }}>
+                <PenLine size={12}/>
+                {today.devocionalVerse ? "Cambiar versículo" : "Elegir versículo 🌸"}
+              </button>
+
+              {today.devocionalVerse && (
+                <>
+                  <button onClick={handleCopy}
+                    style={{ display:"inline-flex", alignItems:"center", gap:".4rem", background:"#fff0f5", color:copied ? "#10b981" : "#e11d74", border:`1.5px solid ${copied ? "#10b981" : "#ffd6e7"}`, borderRadius:999, fontFamily:"'DM Sans',sans-serif", fontSize:".74rem", fontWeight:700, padding:".45rem 1.1rem", cursor:"pointer", transition:"all .18s" }}>
+                    {copied ? <Check size={12}/> : <Copy size={12}/>}
+                    {copied ? "¡Copiado!" : "Copiar"}
+                  </button>
+
+                  <button onClick={handleWhatsApp}
+                    style={{ display:"inline-flex", alignItems:"center", gap:".4rem", background:"#25D366", color:"white", border:"none", borderRadius:999, fontFamily:"'DM Sans',sans-serif", fontSize:".74rem", fontWeight:900, padding:".45rem 1.1rem", cursor:"pointer", transition:"opacity .18s" }}>
+                    <Share2 size={12}/>
+                    WhatsApp
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
         <div className="dev-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1.2rem" }}>
-          <div className="card-premium p-[1.4rem] relative overflow-hidden">
+          <div className="card-premium relative overflow-hidden">
             <div className="dev-tape" style={{ position:"absolute", top:-13, left:"50%", transform:"translateX(-50%)", width:60, height:22, background:"#ff6b9d", borderRadius:4, opacity:.7 }}/>
             <div style={{ position:"absolute", top:".9rem", right:"1rem", fontSize:"1.1rem" }}>⭐⭐</div>
             <div style={{ marginTop:".4rem" }}>
@@ -435,7 +470,7 @@ const Devocional: React.FC = () => {
               <StyledTextarea value={today.prayerThanks ?? ""} onChange={v=>updateToday({prayerThanks:v})} placeholder="¿Qué aprendiste hoy?" rows={6}/>
             </div>
           </div>
-          <div className="card-premium p-[1.2rem] [1.4rem]">
+          <div className="card-premium">
             <div style={{ display:"flex", gap:".5rem", alignItems:"center", marginBottom:".6rem" }}>
               {[0,1,2,3,4,5,6,7].map(i=><Ring key={i}/>)}
             </div>
@@ -447,7 +482,7 @@ const Devocional: React.FC = () => {
           </div>
         </div>
 
-        <div className="card-premium p-[1.3rem] [1.4rem]">
+        <div className="card-premium">
           <SectionLabel icon={<span style={{ width:32, height:32, background:"#e11d74", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}><Heart size={15} color="white" fill="white"/></span>}>
             Mi Oración de Hoy
           </SectionLabel>

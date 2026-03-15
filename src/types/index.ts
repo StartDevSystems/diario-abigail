@@ -31,6 +31,7 @@ export interface Note {
   id: string;
   date: string;
   content: string;
+  tag?: 'oracion' | 'aprendizaje' | 'suenos' | 'general';
 }
 
 export interface JournalState {

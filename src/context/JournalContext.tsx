@@ -52,7 +52,7 @@ interface JournalContextType {
   addHabit: (name: string, emoji: string) => void;
   updateHabit: (id: string, name: string, emoji: string) => void;
   deleteHabit: (id: string) => void;
-  addNote: (content: string) => void;
+  addNote: (content: string, tag?: string) => void;
   deleteNote: (id: string) => void;
   logout: () => void;
   getAllUsersData: () => Promise<any[]>;
@@ -87,6 +87,14 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
         if (docSnap.exists()) {
           const rawData = docSnap.data() as any;
+
+          // Asignar admin por email autorizado
+          const ADMIN_EMAILS = ['michaelcs1093@gmail.com'];
+          if (currentUser.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) && rawData.role !== 'admin') {
+            await setDoc(docRef, { ...rawData, role: 'admin' }, { merge: true });
+            rawData.role = 'admin';
+          }
+
           setIsAdmin(rawData.role === 'admin');
           
           // --- LIMPIEZA PROFUNDA ---
@@ -213,10 +221,10 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
-  const addNote = (content: string) => {
+  const addNote = (content: string, tag?: string) => {
     setState(prev => {
-      const newNote = { id: Date.now().toString(), date: new Date().toISOString(), content };
-      const newState = { ...prev, notes: [newNote, ...(Array.isArray(prev.notes) ? prev.notes : [])] };
+      const newNote: Note = { id: Date.now().toString(), date: new Date().toISOString(), content, tag: (tag as any) || 'general' };
+      const newState: JournalState = { ...prev, notes: [newNote, ...(Array.isArray(prev.notes) ? prev.notes : [])] };
       if (user) saveToFirebase(newState, user);
       return newState;
     });

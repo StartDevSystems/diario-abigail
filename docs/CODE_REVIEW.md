@@ -1,0 +1,222 @@
+# Code Review & QA Log
+
+Registro de auditorías de código por sprint. Cada Pull Request o cambio significativo pasa por revisión técnica antes de ser aceptado.
+
+**Convenciones:**
+- Severidad: `CRITICAL` | `MAJOR` | `MINOR` | `INFO`
+- Estado: `OPEN` | `FIXED` | `WONTFIX` | `DEFERRED`
+- Desarrolladores: Dev-1, Dev-2, etc.
+
+---
+
+## Sprint 03 — PWA & Optimización de Lectura
+**Período:** 15 Mar - 22 Mar 2026
+**Reviewer:** Tech Lead
+
+---
+
+### CR-001: Review de ABI-11 (Texto "Grande" en móvil)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Dev-1
+**Archivos revisados:** `src/views/Hoy.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-001-01 | `MAJOR` | Labels de UI reducidos a `9px` (`text-[9px]`). Viola el mínimo de accesibilidad WCAG (10px para labels decorativos). En dispositivos con densidad baja, texto se vuelve ilegible. | `Hoy.tsx:53,60` | `FIXED` |
+| CR-001-02 | `MINOR` | Emoji de mood usa tamaño fijo `text-4xl` (36px). No se adapta al viewport móvil, creando desbalance visual cuando el usuario selecciona fuente "Grande". | `Hoy.tsx:51` | `FIXED` |
+| CR-001-03 | `MINOR` | `onKeyPress` es un evento deprecado en React 17+. Fue tocado en la misma línea pero no corregido. Regla del equipo: si tocas una línea, corriges lo que está roto. | `Hoy.tsx:114` | `FIXED` |
+| CR-001-04 | `INFO` | Buen uso de `break-words` en task text, `min-w-0` en input flex, y `shrink-0` en botón. Patrones correctos para prevenir overflow en modo "Grande". | `Hoy.tsx:109,114,115` | N/A |
+| CR-001-05 | `INFO` | Correctamente eliminó `p-8` inline de `.card-premium` para que el media query de CSS (`padding: 1.5rem` en <640px) tome efecto. | `Hoy.tsx:74,97` | N/A |
+
+#### Correcciones aplicadas por el Reviewer
+
+```
+Hoy.tsx:53  → text-[9px] revertido a text-[10px]
+Hoy.tsx:60  → text-[9px] revertido a text-[10px]
+Hoy.tsx:51  → text-4xl cambiado a text-3xl sm:text-4xl (responsive)
+Hoy.tsx:114 → onKeyPress cambiado a onKeyDown
+```
+
+#### Veredicto
+**APROBADO CON CORRECCIONES** (7/10)
+
+Dirección correcta y buenos patrones de responsive. Faltó ojo en accesibilidad (tamaños mínimos) y calidad técnica (deprecations). Se recomienda que Dev-1 valide siempre contra el checklist de QA antes de entregar.
+
+---
+
+### CR-002: Review de ABI-11 (Fix del sistema de font-size)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Tech Lead
+**Archivos modificados:** `src/components/Layout.tsx`, `src/views/Devocional.tsx`, `src/app/globals.css`
+
+#### Cambios realizados
+
+| Archivo | Cambio | Justificación |
+|:---|:---|:---|
+| `Layout.tsx:62-66` | `sizeMap` estático (`0.9/1.0/1.1rem`) reemplazado por `clamp()` responsivo | Los valores fijos no escalaban en viewport 375px. `clamp()` da un rango fluido: small 13-14px, medium 15-16px, large 17-19px |
+| `Devocional.tsx:348` | `.dev-verse-text{font-size:1rem !important}` cambiado a `font-size:inherit` | El `!important` mataba la preferencia del usuario al seleccionar "Grande". El texto del versículo se quedaba en 16px siempre |
+| `globals.css` | Agregado `overflow-wrap: break-word` y `word-break: break-word` para `<640px` | Previene que textos largos (versículos, notas) desborden los contenedores en móvil |
+
+#### Veredicto
+**AUTOREVIEW** — Validado con `npx next build` exitoso.
+
+---
+
+### CR-003: Review de ABI-11 (Devocional.tsx — Dev-1 segunda entrega)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Dev-1
+**Archivos revisados:** `src/views/Devocional.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-003-01 | `INFO` | `StyledTextarea` corregido: `fontSize:".9rem"` → `fontSize:"inherit"` + `wordBreak:"break-word"`. Todos los textareas del Devocional ahora respetan el setting del usuario. | `Devocional.tsx:73` | OK |
+| CR-003-02 | `INFO` | Versículo principal corregido: `fontSize:"1.2rem"` → `fontSize:"inherit"` + `wordBreak:"break-word"`. El texto sagrado ahora escala con la preferencia del usuario. | `Devocional.tsx:391` | OK |
+| CR-003-03 | `INFO` | Paddings inline eliminados correctamente: `p-[1.4rem]` (línea 408), `p-[1.2rem]` (línea 438), `p-[1.3rem]` (línea 450). El CSS `.card-premium` maneja el responsive. | `Devocional.tsx:408,438,450` | OK |
+| CR-003-04 | `INFO` | No tocó la línea 348 (`.dev-verse-text` CSS) ni `Layout.tsx` ni `globals.css`. Respetó las instrucciones. | — | OK |
+| CR-003-05 | `INFO` | No aplicó `text-balance` innecesario en SectionLabels. Siguió la guía correctamente. | — | OK |
+
+#### Veredicto
+**APROBADO** (9/10)
+
+Dev-1 siguió las instrucciones del Tech Lead al pie de la letra. Mejora notable respecto a CR-001. Sin hallazgos negativos. Build exitoso.
+
+**Nota:** Habitos.tsx fue revisado y no requiere cambios — los font-sizes hardcodeados son todos para emojis y elementos decorativos, no para contenido de lectura.
+
+---
+
+### CR-004: Review de ABI-14 (Copiar y compartir versículo — Dev-3)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Dev-3
+**Archivos revisados:** `src/views/Devocional.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-004-01 | `INFO` | Implementó `handleCopy` con `navigator.clipboard.writeText()` y feedback visual (icono Check verde + texto "¡Copiado!" por 2s). Correcto. | `Devocional.tsx:327-333` | OK |
+| CR-004-02 | `INFO` | Implementó `handleWhatsApp` con URL `wa.me` + `encodeURIComponent`. Texto incluye versículo, referencia y firma. Correcto. | `Devocional.tsx:335-340` | OK |
+| CR-004-03 | `INFO` | Botones condicionados a `today.devocionalVerse` existente. No se muestran sin versículo. Correcto. | `Devocional.tsx:425-439` | OK |
+| CR-004-04 | `INFO` | Contenedor flex con `flexWrap:wrap` y `justifyContent:center`. Responsive en móvil. | `Devocional.tsx:416` | OK |
+| CR-004-05 | `INFO` | Mantiene los fixes de ABI-11 (fontSize inherit, padding removido, wordBreak). No hubo regresión. | — | OK |
+| CR-004-06 | `MINOR` | El botón de WhatsApp usa `border:"none"` lo cual rompe la consistencia visual con los otros dos botones que sí tienen borde. No bloquea aprobación. | `Devocional.tsx:434` | `DEFERRED` |
+
+#### Veredicto
+**APROBADO** (9/10)
+
+Implementación limpia y funcional. Siguió instrucciones al pie de la letra. El detalle del borde en WhatsApp es cosmético y menor.
+
+---
+
+### CR-005: Review de ABI-13 (Panel Admin premium — Dev-2)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Dev-2
+**Archivos revisados:** `src/views/Admin.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-005-01 | `INFO` | Sección de métricas con 3 tarjetas (Usuarios Totales, Activos Hoy, Hábitos Logrados). Cálculos correctos desde el array `users`. Responsive con `sm:grid-cols-3`. | `Admin.tsx:44-59` | OK |
+| CR-005-02 | `INFO` | Logs mock con 5 eventos de ejemplo, estilo premium consistente, layout sidebar 4/12 cols. | `Admin.tsx:7-13` | OK |
+| CR-005-03 | `INFO` | Tarjeta "Salud de Red" con indicador Firestore ACTIVO y punto verde animado. Buen detalle visual. | `Admin.tsx:155-164` | OK |
+| CR-005-04 | `INFO` | Agregó `shrink-0`, `min-w-0`, `truncate`, `break-words` donde corresponde. Aprendió de CR-001. | Múltiples | OK |
+| CR-005-05 | `MINOR` | JSX almacena `<LogIn size={14} />` etc. directamente en el array `MOCK_LOGS`. Esto funciona pero es un anti-pattern: los iconos se re-crean en cada render y no se pueden serializar. Debería guardar el nombre del icono como string y renderizar con un map. No bloquea. | `Admin.tsx:8-12` | `DEFERRED` |
+| CR-005-06 | `MINOR` | `p-8` inline en tarjetas de usuario (`.card-premium p-8`). Viola la regla del equipo pero en Admin el contenido es diferente y necesita más padding. Aceptable como excepción documentada. | `Admin.tsx:75` | `WONTFIX` |
+
+#### Veredicto
+**APROBADO** (8/10)
+
+Buen trabajo. El panel se ve profesional y las métricas son funcionales. El anti-pattern del JSX en array es deuda técnica menor.
+
+---
+
+### CR-006: Review de ABI-16 (Categorización de notas — Dev-4)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Dev-4
+**Archivos revisados:** `src/types/index.ts`, `src/context/JournalContext.tsx`, `src/views/Notas.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-006-01 | `INFO` | Interface `Note` extendida con `tag?` opcional. Retrocompatible con notas existentes. | `types/index.ts:34` | OK |
+| CR-006-02 | `INFO` | `addNote()` acepta `tag` como segundo parámetro opcional, default `'general'`. No rompe usos existentes. | `JournalContext.tsx:216-218` | OK |
+| CR-006-03 | `INFO` | Filtro "Todas" + 4 tags con pills colorizados. Funcional y estilo premium. | `Notas.tsx:38-67` | OK |
+| CR-006-04 | `INFO` | Selector de tag en formulario con estilo consistente. Reset a 'general' después de crear nota. | `Notas.tsx:69-92` | OK |
+| CR-006-05 | `INFO` | Badge de etiqueta en cada tarjeta con color translúcido (`${color}20`). Elegante. | `Notas.tsx:112-119` | OK |
+| CR-006-06 | `MINOR` | Usa `tag as any` en JournalContext — cast innecesario. La interface ya tipea los valores posibles. Debería ser `tag as Note['tag']` o simplemente validar. No bloquea. | `JournalContext.tsx:218` | `DEFERRED` |
+| CR-006-07 | `INFO` | `break-words` en contenido de notas. `flex-wrap` en filtros. Responsive correcto. | `Notas.tsx:35,128` | OK |
+
+#### Veredicto
+**APROBADO** (9/10)
+
+Implementación sólida. La retrocompatibilidad con notas existentes funciona correctamente. El `as any` es el único detalle técnico menor.
+
+---
+
+### CR-007: Review de ABI-21 (Gestión de Roles — Dev-2)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Dev-2
+**Archivos revisados:** `src/views/Admin.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-007-01 | `INFO` | `toggleRole()` actualiza Firestore con `updateDoc` y refleja cambio en estado local sin reload. Patrón correcto. | `Admin.tsx:194-207` | OK |
+| CR-007-02 | `INFO` | Badge "Admin" con pill rosa en tarjeta de usuario. Buena identificación visual del rol. | `Admin.tsx:350-352` | OK |
+| CR-007-03 | `INFO` | Botones en flex container con colores diferenciados (verde promoción, rojo degradación). Responsive con `shrink-0`, `min-w-0`, `truncate`. | `Admin.tsx:372-390` | OK |
+| CR-007-04 | `MAJOR` | No había protección contra auto-degradación. Si el admin se quita su propio rol, pierde acceso al panel sin poder revertirlo. | `Admin.tsx:377` | `FIXED` |
+| CR-007-05 | `MINOR` | `text-[8px]` en badge Admin. Por debajo del mínimo 10px del checklist. Aceptable como badge decorativo. | `Admin.tsx:351` | `DEFERRED` |
+
+#### Correcciones aplicadas por el Reviewer
+
+```
+Admin.tsx:376-389 → Botón de toggle envuelto en condicional {u.id !== user?.uid && (...)}
+                     Previene que el admin se auto-degrade.
+```
+
+#### Veredicto
+**APROBADO CON CORRECCIONES** (7/10)
+
+Funcionalidad correcta. Bug crítico de auto-degradación corregido por el reviewer. Dev-2 debe considerar edge cases de seguridad en features de gestión de permisos.
+
+---
+
+### CR-008: Review de ABI-22 (Palabra del Día — Dev-3)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Dev-3
+**Archivos revisados:** `src/views/Admin.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-008-01 | `INFO` | `handleSendDailyWord()` valida input vacío, guarda en Firestore collection `announcements` con `serverTimestamp()`, limpia textarea y muestra feedback 2s. Correcto. | `Admin.tsx:174-192` | OK |
+| CR-008-02 | `INFO` | Textarea con límite 280 chars via `.slice(0, 280)` y contador visual `{length}/280`. Correcto. | `Admin.tsx:292,297` | OK |
+| CR-008-03 | `INFO` | Botón con 3 estados (normal/sending/success) usando spinner CSS + CheckCircle2. Buen UX. | `Admin.tsx:301-326` | OK |
+| CR-008-04 | `INFO` | `disabled` cuando vacío o enviando. Previene doble-click. Correcto. | `Admin.tsx:303` | OK |
+| CR-008-05 | `INFO` | Estilo premium consistente: gradient background, rounded-3xl, font-serif italic en textarea, deep-rose en botón. | `Admin.tsx:277-328` | OK |
+
+#### Veredicto
+**APROBADO** (9/10)
+
+Implementación limpia y funcional. Sin hallazgos negativos. Buen manejo de estados de carga y feedback visual. Build exitoso.
+
+---
+
+## Checklist de QA para Dev-1
+
+Antes de entregar código para revisión, verificar:
+
+- [ ] **Accesibilidad:** Ningún texto visible está por debajo de `10px` (`text-[10px]`)
+- [ ] **Responsive:** Probar en viewport 375px (iPhone SE) con fuente "Grande" activa
+- [ ] **Deprecations:** No usar APIs deprecadas (`onKeyPress`, `componentWillMount`, etc.)
+- [ ] **CSS Specificity:** No usar `!important` en font-sizes — conflictúa con el sistema de tamaños del usuario
+- [ ] **Flex overflow:** Todo input dentro de flex debe tener `min-w-0`, todo botón debe tener `shrink-0`
+- [ ] **Card padding:** No agregar padding inline (`p-8`) en elementos con clase `.card-premium` — el CSS ya maneja responsive
+- [ ] **Build:** Ejecutar `npx next build` antes de entregar. Si no compila, no se entrega
