@@ -209,6 +209,33 @@ Implementación limpia y funcional. Sin hallazgos negativos. Buen manejo de esta
 
 ---
 
+### CR-009: Hotfix — IDs crudos reemplazados por nombres de usuario (Tech Lead)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Tech Lead
+**Archivos modificados:** `src/views/Admin.tsx`, `src/views/Configuracion.tsx`
+
+#### Problema detectado en QA visual
+El PO reportó que en múltiples vistas se mostraba el UID de Firebase (`WqSzxRchE3...`) en lugar del nombre del usuario. Afectaba:
+1. Tarjetas de usuario en Panel Admin (solo mostraba ID)
+2. Modal "Auditar Diario" (encabezado con ID en vez de nombre)
+3. Logs de actividad (IDs tipo `u_8291` en vez de nombres)
+4. Lista de usuarios en Configuración > Sistema (ID truncado)
+
+#### Cambios realizados
+
+| Archivo | Cambio | Justificación |
+|:---|:---|:---|
+| `Admin.tsx:351` | Agregado `<p>{u.user?.name \|\| 'Sin nombre'}</p>` encima del ID en tarjetas | El nombre debe ser lo prominente, el ID es referencia técnica |
+| `Admin.tsx:24` | `u.user?.name \|\| u.id.slice(0,10)` → `u.user?.name \|\| 'Sin nombre'` | Modal mostraba hash como título |
+| `Admin.tsx:10-14` | `user: 'u_8291'` → `user: 'Abigail'` etc. en MOCK_LOGS | Logs mock con nombres bíblicos en vez de IDs falsos |
+| `Admin.tsx:220-223` | Filtro de búsqueda extendido para buscar por `u.user?.name` | Antes solo buscaba por ID y mood |
+| `Configuracion.tsx:178-179` | `u.id[0]` → `(u.user?.name \|\| 'U')[0]`, `u.id.slice(0,16)` → `u.user?.name \|\| 'Sin nombre'` | Lista de usuarios en Sistema mostraba solo IDs |
+
+#### Veredicto
+**HOTFIX APLICADO** — Detectado por PO en prueba visual. Todos los puntos donde se mostraba un UID al usuario final fueron corregidos. Build verificado.
+
+---
+
 ## Checklist de QA para Dev-1
 
 Antes de entregar código para revisión, verificar:

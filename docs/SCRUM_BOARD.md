@@ -66,6 +66,7 @@
 - **ABI-20**: Tech Lead. Modal "Auditar Diario" read-only con secciones completas. Build exitoso.
 - **ABI-21**: Dev-2 (CR-007). Toggle de roles con badge visual. Corregido bug de auto-degradación por Tech Lead. Aprobado 7/10.
 - **ABI-22**: Dev-3 (CR-008). Textarea + envío a Firestore `announcements` con feedback visual. Aprobado 9/10.
+- **HOTFIX**: Tech Lead (CR-009). UIDs de Firebase reemplazados por nombres de usuario en Admin, modal y Configuración. Reportado por PO.
 
 ## 📎 DOCUMENTACIÓN VINCULADA
 | Documento | Propósito |
