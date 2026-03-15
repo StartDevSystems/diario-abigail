@@ -38,4 +38,13 @@ export interface JournalState {
   habits: Habit[];
   notes: Note[];
   streak: number;
+  user?: {
+    name: string;
+    bio: string;
+  };
+  settings?: {
+    fontSize: 'small' | 'medium' | 'large';
+    fontFamily: string;
+    themeColor: string;
+  };
 }

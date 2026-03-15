@@ -15,6 +15,7 @@ import Habitos from "@/views/Habitos";
 import Devocional from "@/views/Devocional";
 import Notas from "@/views/Notas";
 import Admin from "@/views/Admin";
+import Configuracion from "@/views/Configuracion";
 
 function HomeContent() {
   const { state, user, loading, isAdmin } = useJournal();
@@ -22,12 +23,10 @@ function HomeContent() {
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
-    // Solo evaluar si debemos mostrar bienvenida cuando NO estemos cargando y haya un usuario
     if (!loading && user) {
       const todayStr = new Date().toLocaleDateString();
       const savedDate = new Date(state.today.date).toLocaleDateString();
       
-      // Si la fecha es diferente o no hay mood, mostrar bienvenida
       if (savedDate !== todayStr || !state.today.mood) {
         setShowWelcome(true);
       } else {
@@ -36,7 +35,6 @@ function HomeContent() {
     }
   }, [loading, user, state.today.mood, state.today.date]);
 
-  // Pantalla de carga pastel mientras bajamos los datos de Firebase
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#fffcf2]">
@@ -55,13 +53,14 @@ function HomeContent() {
 
   const renderPage = () => {
     switch (activeTab) {
-      case "hoy":        return <Hoy />;
-      case "semana":     return <Semana />;
-      case "habitos":    return <Habitos />;
-      case "devocional": return <Devocional />;
-      case "notas":      return <Notas />;
-      case "admin":      return <Admin />;
-      default:           return <Hoy />;
+      case "hoy":           return <Hoy />;
+      case "semana":        return <Semana />;
+      case "habitos":       return <Habitos />;
+      case "devocional":    return <Devocional />;
+      case "notas":         return <Notas />;
+      case "admin":         return <Admin />;
+      case "configuracion": return <Configuracion />;
+      default:              return <Hoy />;
     }
   };
 

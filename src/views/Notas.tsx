@@ -16,39 +16,39 @@ const Notas: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-10">
-      <header className="border-b border-rose-pastel pb-4">
-        <h2 className="text-3xl font-serif text-soft-text font-light italic">Mis Notas</h2>
-        <p className="text-soft-text/60 font-medium text-sm">Captura tus ideas</p>
+      <header className="border-b border-[#ffd6e7] pb-6">
+        <h2 className="text-4xl font-serif text-[#e11d74] font-light italic">Mis Notas</h2>
+        <p className="text-[#1d1d1f]/60 font-medium text-sm mt-1">Captura tus ideas y reflexiones</p>
       </header>
 
-      <div className="flex gap-3 bg-white p-5 rounded-3xl journal-shadow border border-rose-pastel/30">
+      <div className="card-premium p-6 flex gap-4">
         <textarea
           value={newContent}
           onChange={(e) => setNewContent(e.target.value)}
-          placeholder="Escribe un nuevo pensamiento..."
-          className="flex-1 bg-transparent border-none outline-none text-soft-text px-2 resize-none h-24 italic"
+          placeholder="Escribe un nuevo pensamiento... 🌸"
+          className="flex-1 bg-white/40 backdrop-blur-sm rounded-2xl p-4 border border-[#ffd6e7] outline-none text-[#1d1d1f] resize-none h-32 italic transition-all focus:border-[#e11d74]"
         />
-        <button onClick={handleAdd} className="bg-accent-pink text-white p-4 rounded-2xl hover:bg-deep-rose self-end transition-all">
-          <Plus size={24} />
+        <button onClick={handleAdd} className="bg-[#e11d74] text-white p-5 rounded-2xl hover:scale-105 active:scale-95 transition-all self-end shadow-lg shadow-[#e11d74]/20">
+          <Plus size={28} />
         </button>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4 mt-8">
+      <div className="grid sm:grid-cols-2 gap-6 mt-10">
         {state.notes.map((note) => (
-          <div key={note.id} className="bg-white p-6 rounded-3xl journal-shadow border border-rose-pastel/20 relative group hover:border-accent-pink transition-all">
+          <div key={note.id} className="card-premium p-8 relative group transition-all">
             <button 
               onClick={() => deleteNote(note.id)}
-              className="absolute top-4 right-4 text-red-300 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-6 right-6 text-red-300 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-500"
             >
-              <Trash2 size={18} />
+              <Trash2 size={20} />
             </button>
-            <div className="flex items-start gap-3 mb-3">
-              <Calendar size={14} className="text-accent-pink mt-0.5" />
-              <span className="text-[10px] font-bold text-soft-text/40 tracking-widest uppercase">
+            <div className="flex items-start gap-3 mb-4">
+              <Calendar size={14} className="text-[#e11d74] mt-0.5" />
+              <span className="text-[10px] font-black text-[#1d1d1f]/40 tracking-[0.2em] uppercase">
                 {new Date(note.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
               </span>
             </div>
-            <p className="text-soft-text leading-relaxed whitespace-pre-wrap italic">
+            <p className="text-[#1d1d1f] leading-relaxed whitespace-pre-wrap italic text-base">
               {note.content}
             </p>
           </div>

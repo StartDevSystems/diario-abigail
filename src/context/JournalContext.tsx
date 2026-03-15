@@ -29,6 +29,15 @@ const getInitialState = (): JournalState => ({
   ],
   notes: [],
   streak: 0,
+  user: {
+    name: "Abigail",
+    bio: "Tu espacio seguro y personal ✨",
+  },
+  settings: {
+    fontSize: 'medium',
+    fontFamily: 'Lora',
+    themeColor: '#e11d74',
+  }
 });
 
 interface JournalContextType {
@@ -37,6 +46,8 @@ interface JournalContextType {
   loading: boolean;
   isAdmin: boolean;
   updateToday: (data: Partial<DayData>) => void;
+  updateProfile: (data: { name: string, bio: string }) => void;
+  updateSettings: (data: Partial<JournalState['settings']>) => void;
   toggleHabitDay: (habitId: string, dayIndex: number) => void;
   addHabit: (name: string, emoji: string) => void;
   updateHabit: (id: string, name: string, emoji: string) => void;
@@ -143,6 +154,22 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
+  const updateProfile = (data: { name: string, bio: string }) => {
+    setState(prev => {
+      const newState = { ...prev, user: { ...prev.user, ...data } as any };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
+  const updateSettings = (data: Partial<JournalState['settings']>) => {
+    setState(prev => {
+      const newState = { ...prev, settings: { ...prev.settings, ...data } as any };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
   const toggleHabitDay = (habitId: string, dayIndex: number) => {
     setState(prev => {
       const habits = Array.isArray(prev.habits) ? prev.habits : [];
@@ -213,7 +240,7 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   return (
     <JournalContext.Provider value={{ 
-      state, user, isAdmin, loading, updateToday, toggleHabitDay, 
+      state, user, isAdmin, loading, updateToday, updateProfile, updateSettings, toggleHabitDay, 
       addHabit, updateHabit, deleteHabit, addNote, deleteNote, logout, getAllUsersData 
     }}>
       {children}
