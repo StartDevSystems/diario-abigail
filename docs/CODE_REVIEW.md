@@ -290,6 +290,37 @@ El PO reportó que el logo con el texto "Jesús" en la sección Devocional se co
 
 ---
 
+### CR-012: Hotfix — Nombre de registro no se guardaba + texto mood cortado en móvil (Tech Lead)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Tech Lead
+**Archivos modificados:** `src/components/AuthScreen.tsx`, `src/views/Hoy.tsx`
+
+#### Problemas detectados en QA visual (PO)
+
+| ID | Severidad | Descripción | Estado |
+|:---|:---|:---|:---|
+| CR-012-01 | `MAJOR` | Al registrarse con nombre+correo+contraseña, el nombre del formulario no se guardaba en Firestore. Causa: `onAuthStateChanged` se dispara antes de que `updateProfile` termine, creando el documento con `name: "Abigail"`. | `FIXED` |
+| CR-012-02 | `MINOR` | Texto "¿Cómo te sientes hoy?" se partía en móvil por `tracking-widest` excesivo. | `FIXED` |
+| CR-012-03 | `MINOR` | Layout del header "Hoy" desordenado en móvil — saludo y mood selector competían por espacio en la misma fila. | `FIXED` |
+
+#### Cambios realizados
+
+| Archivo | Cambio | Justificación |
+|:---|:---|:---|
+| `AuthScreen.tsx:5-8` | Agregado imports de Firestore (`doc, setDoc, getDoc`) | Necesario para guardar nombre directamente |
+| `AuthScreen.tsx:30-37` | Después de `createUser` + `updateProfile`, guarda `name` directamente en Firestore con `setDoc(merge: true)` | Elimina race condition con `onAuthStateChanged` |
+| `Hoy.tsx:33-70` | Header reestructurado: saludo y mood en bloques separados (`space-y-6`), selector limitado a `max-w-sm`, emojis con `justify-between` | Previene layout roto en móvil |
+| `Hoy.tsx:44` | `tracking-widest` → `tracking-wider sm:tracking-widest` + `whitespace-nowrap` | Texto no se parte en móvil |
+
+#### Pruebas realizadas
+- `npx next build` exitoso
+- PO validó visualmente en dispositivo móvil
+
+#### Veredicto
+**HOTFIX APLICADO** — Race condition en registro y layout móvil corregidos. Build verificado.
+
+---
+
 ## Checklist de QA para Dev-1
 
 Antes de entregar código para revisión, verificar:

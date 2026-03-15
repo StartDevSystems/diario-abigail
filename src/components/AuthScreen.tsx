@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { auth } from "@/lib/firebase";
-import { 
-  signInWithEmailAndPassword, 
+import { auth, db } from "@/lib/firebase";
+import {
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  updateProfile 
+  updateProfile
 } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { Heart, Mail, Lock, User, ArrowRight } from "lucide-react";
 
@@ -30,6 +31,12 @@ export default function AuthScreen() {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         if (name) {
           await updateProfile(userCredential.user, { displayName: name });
+          // Guardar nombre en Firestore directamente para evitar race condition
+          const userDocRef = doc(db, "users", userCredential.user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            await setDoc(userDocRef, { user: { name, bio: "Tu espacio seguro y personal ✨" } }, { merge: true });
+          }
         }
       }
     } catch (err: any) {

@@ -71,6 +71,7 @@
 - **HOTFIX**: Tech Lead (CR-009). UIDs de Firebase reemplazados por nombres de usuario en Admin, modal y Configuración. Reportado por PO.
 - **HOTFIX**: Tech Lead (CR-010). Header Devocional ("Jesús") roto en móvil. Stack vertical + font reducido para <540px. Reportado por PO.
 - **HOTFIX**: Tech Lead (CR-011). Nombre "Abigail" para todos los usuarios + mood selector roto en móvil. Reportado por PO.
+- **HOTFIX**: Tech Lead (CR-012). Nombre de registro no se guardaba en Firestore (race condition) + texto "¿Cómo te sientes hoy?" cortado en móvil. Reportado por PO.
 
 ## 📎 DOCUMENTACIÓN VINCULADA
 | Documento | Propósito |
