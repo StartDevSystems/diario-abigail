@@ -26,7 +26,7 @@ const Hoy: React.FC = () => {
   };
 
   const selectedMoodEmoji = MOODS.find(m => m.label === today.mood)?.emoji;
-  const firstName = state?.user?.name || user?.displayName?.split(' ')[0] || "Abigail";
+  const firstName = (state?.user?.name && state.user.name !== "Abigail" ? state.user.name : null) || user?.displayName?.split(' ')[0] || state?.user?.name || "Amiga";
 
   return (
     <div className="space-y-8 lg:space-y-12 pb-20">
@@ -56,11 +56,11 @@ const Hoy: React.FC = () => {
             <button onClick={() => updateToday({ mood: null })} className="ml-2 text-deep-rose/40 hover:text-deep-rose text-[10px] underline uppercase font-bold">Cambiar</button>
           </motion.div>
         ) : (
-          <div className="bg-white/40 backdrop-blur-sm p-5 rounded-[2rem] border border-rose-pastel/50 shadow-sm">
+          <div className="bg-white/40 backdrop-blur-sm p-4 sm:p-5 rounded-[2rem] border border-rose-pastel/50 shadow-sm">
             <p className="text-[10px] uppercase tracking-widest font-black text-soft-text/40 mb-4 text-center">¿Cómo te sientes hoy?</p>
-            <div className="flex justify-around gap-4">
+            <div className="flex justify-around gap-2 sm:gap-4 flex-wrap">
               {MOODS.map((m) => (
-                <button key={m.label} onClick={() => updateToday({ mood: m.label })} className="text-3xl hover:scale-110 transition-transform">
+                <button key={m.label} onClick={() => updateToday({ mood: m.label })} className="text-2xl sm:text-3xl hover:scale-110 transition-transform p-1">
                   {m.emoji}
                 </button>
               ))}

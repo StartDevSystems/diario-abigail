@@ -264,6 +264,32 @@ El PO reportó que el logo con el texto "Jesús" en la sección Devocional se co
 
 ---
 
+### CR-011: Hotfix — Nombre "Abigail" hardcodeado + Mood selector roto en móvil (Tech Lead)
+**Fecha:** 15 Mar 2026
+**Autor del código:** Tech Lead
+**Archivos modificados:** `src/views/Hoy.tsx`, `src/components/Layout.tsx`, `src/context/JournalContext.tsx`
+
+#### Problemas detectados en QA visual (PO)
+
+| ID | Severidad | Descripción | Estado |
+|:---|:---|:---|:---|
+| CR-011-01 | `MAJOR` | Saludo "Hola, Abigail" aparecía para todos los usuarios. El default de `getInitialState()` era `name: "Abigail"` y nunca se reemplazaba con el nombre de Google. | `FIXED` |
+| CR-011-02 | `MAJOR` | Selector de ánimo (5 emojis) se desbordaba en móvil. Sin `flex-wrap`, tamaño fijo `text-3xl`, y `gap-4` excesivo para pantallas <375px. | `FIXED` |
+
+#### Cambios realizados
+
+| Archivo | Cambio | Justificación |
+|:---|:---|:---|
+| `Hoy.tsx:29` | Prioridad de nombre: nombre custom → displayName de Google → fallback "Amiga" | Si el nombre es "Abigail" (default), usa el de Google |
+| `Hoy.tsx:59-68` | Mood selector: `text-2xl sm:text-3xl`, `gap-2 sm:gap-4`, `flex-wrap`, `p-4 sm:p-5` | Emojis más pequeños en móvil con wrap para prevenir overflow |
+| `Layout.tsx:50` | Misma lógica de nombre que en Hoy.tsx | Consistencia en header y sidebar |
+| `JournalContext.tsx:139-141` | Usuario nuevo usa `displayName` de Google como nombre inicial | Previene que todos los usuarios nuevos se llamen "Abigail" |
+
+#### Veredicto
+**HOTFIX APLICADO** — Dos bugs reportados por PO. Build verificado.
+
+---
+
 ## Checklist de QA para Dev-1
 
 Antes de entregar código para revisión, verificar:

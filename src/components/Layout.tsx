@@ -47,7 +47,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
 
   if (!mounted) return null;
 
-  const firstName = state?.user?.name || user?.displayName?.split(' ')[0] || "Abigail";
+  const firstName = (state?.user?.name && state.user.name !== "Abigail" ? state.user.name : null) || user?.displayName?.split(' ')[0] || state?.user?.name || "Amiga";
   const selectedMoodEmoji = MOODS.find(m => m.label === state?.today?.mood)?.emoji;
 
   const fontMap: Record<string, string> = {

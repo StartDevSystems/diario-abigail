@@ -137,6 +137,8 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
           }
         } else {
           const freshState = getInitialState();
+          const googleName = currentUser.displayName?.split(' ')[0] || "Abigail";
+          (freshState as any).user = { ...freshState.user, name: googleName };
           await setDoc(docRef, { ...freshState, role: 'user' });
           setState(freshState);
         }

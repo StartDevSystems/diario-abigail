@@ -45,7 +45,9 @@
 - [x] ABI-21: Gestión de roles (promover/degradar usuarios a admin).
 - [x] ABI-22: Enviar "Palabra del Día" push a todos los usuarios.
 
-### EPIC-06: Feedback & Comunidad
+### EPIC-06: Historial & Retroalimentación
+- [ ] ABI-24: Archivar día anterior en historial antes de resetear datos.
+- [ ] ABI-25: Vista "Semana" real que lea historial y muestre los últimos 7 días.
 - [ ] ABI-23: Buzón de sugerencias (usuario envía, admin visualiza).
 
 ---
@@ -68,6 +70,7 @@
 - **ABI-22**: Dev-3 (CR-008). Textarea + envío a Firestore `announcements` con feedback visual. Aprobado 9/10.
 - **HOTFIX**: Tech Lead (CR-009). UIDs de Firebase reemplazados por nombres de usuario en Admin, modal y Configuración. Reportado por PO.
 - **HOTFIX**: Tech Lead (CR-010). Header Devocional ("Jesús") roto en móvil. Stack vertical + font reducido para <540px. Reportado por PO.
+- **HOTFIX**: Tech Lead (CR-011). Nombre "Abigail" para todos los usuarios + mood selector roto en móvil. Reportado por PO.
 
 ## 📎 DOCUMENTACIÓN VINCULADA
 | Documento | Propósito |
