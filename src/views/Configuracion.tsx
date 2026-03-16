@@ -4,17 +4,46 @@ import { useJournal } from "../context/JournalContext";
 import { 
   Palette, User, Shield, Save, Loader2, 
   ChevronRight, Type, Smartphone, Lock, 
-  Users, Activity, Wifi, WifiOff, Trash2, Key
+  Users, Activity, Wifi, WifiOff, Trash2, Key,
+  MessageSquare, CheckCircle2
 } from "lucide-react";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../lib/firebase";
 
 type Tab = 'visual' | 'perfil' | 'admin';
 
 const Configuracion: React.FC = () => {
-  const { state, updateProfile, updateSettings, isAdmin, getAllUsersData } = useJournal();
+  const { state, updateProfile, updateSettings, isAdmin, getAllUsersData, user } = useJournal();
   const [activeTab, setActiveTab] = useState<Tab>('perfil');
   const [saving, setSaving] = useState(false);
   const [loadingAdmin, setLoadingAdmin] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
+
+  // Estado para el buzón de sugerencias
+  const [suggestion, setSuggestion] = useState("");
+  const [sendingSuggestion, setSendingSuggestion] = useState(false);
+  const [suggestionSent, setSuggestionSent] = useState(false);
+
+  const handleSendSuggestion = async () => {
+    if (!suggestion.trim() || !user || !state?.user?.name) return;
+    setSendingSuggestion(true);
+    try {
+      await addDoc(collection(db, "suggestions"), {
+        message: suggestion.trim(),
+        userId: user.uid,
+        userName: state.user.name,
+        createdAt: serverTimestamp(),
+        status: 'pending'
+      });
+      setSuggestion("");
+      setSuggestionSent(true);
+      setTimeout(() => setSuggestionSent(false), 2000);
+    } catch (e) {
+      console.error("Error al enviar sugerencia:", e);
+    } finally {
+      setSendingSuggestion(false);
+    }
+  };
 
   // Formulario local (inicializado con datos del estado)
   const [form, setForm] = useState({
@@ -130,6 +159,41 @@ const Configuracion: React.FC = () => {
                     <label className="text-[10px] font-black uppercase text-[#1d1d1f]/40 ml-3 tracking-widest">Tu frase inspiradora</label>
                     <textarea value={form.userBio} onChange={e => set('userBio', e.target.value)} rows={3} className="w-full bg-white/40 backdrop-blur-sm border-2 border-[#ffd6e7]/30 rounded-2xl p-5 font-bold text-[#1d1d1f] outline-none focus:border-[#e11d74] transition-all resize-none italic" />
                   </div>
+                </div>
+              </ConfigCard>
+
+              <ConfigCard title="Buzón de Sugerencias" icon={MessageSquare}>
+                <div className="space-y-4">
+                  <div className="relative">
+                    <textarea 
+                      value={suggestion}
+                      onChange={e => setSuggestion(e.target.value.slice(0, 500))}
+                      placeholder="Escribe tu sugerencia o idea..."
+                      rows={4}
+                      className="w-full bg-white/40 backdrop-blur-sm border-2 border-[#ffd6e7]/30 rounded-2xl p-5 font-medium text-[#1d1d1f] outline-none focus:border-[#e11d74] transition-all resize-none"
+                    />
+                    <div className="absolute bottom-4 right-5 text-[10px] font-black uppercase tracking-widest text-[#1d1d1f]/20">
+                      {suggestion.length}/500
+                    </div>
+                  </div>
+                  
+                  <button 
+                    onClick={handleSendSuggestion}
+                    disabled={!suggestion.trim() || sendingSuggestion}
+                    className={`w-full py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-3 ${
+                      suggestionSent 
+                        ? 'bg-green-500 text-white' 
+                        : 'bg-[#e11d74] text-white hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-[#e11d74]/10 disabled:opacity-30 disabled:hover:scale-100'
+                    }`}
+                  >
+                    {sendingSuggestion ? (
+                      <Loader2 size={18} className="animate-spin" />
+                    ) : suggestionSent ? (
+                      <><CheckCircle2 size={18} /> ¡Enviado!</>
+                    ) : (
+                      <><MessageSquare size={18} /> Enviar Sugerencia</>
+                    )}
+                  </button>
                 </div>
               </ConfigCard>
             </div>

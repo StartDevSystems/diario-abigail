@@ -149,20 +149,20 @@ export default function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
             <p className="text-sm font-medium text-soft-text/40">Antes de empezar, ¿cómo late tu corazón hoy?</p>
           </motion.div>
 
-          <div className="grid grid-cols-5 gap-3 w-full max-w-lg">
+          <div className="w-full max-w-md mx-auto" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.75rem' }}>
             {FEELINGS.map((f, i) => (
-              <motion.button 
-                key={f.label} 
+              <motion.button
+                key={f.label}
                 onClick={() => pickFeeling(f)}
-                initial={{ opacity:0, y:10 }} 
-                animate={{ opacity:1, y:0 }} 
+                initial={{ opacity:0, y:10 }}
+                animate={{ opacity:1, y:0 }}
                 transition={{ delay:0.3 + i*0.03 }}
-                whileHover={{ y:-5, scale:1.05 }} 
+                whileHover={{ y:-5, scale:1.05 }}
                 whileTap={{ scale:0.95 }}
-                className="flex flex-col items-center gap-3 p-4 bg-white rounded-3xl border border-rose-pastel/50 shadow-sm hover:shadow-md transition-all group"
+                className="flex flex-col items-center gap-2 py-4 px-2 bg-white rounded-2xl border border-black/5 shadow-sm hover:shadow-md transition-all group"
               >
-                <span className="text-3xl transition-all">{f.emoji}</span>
-                <span className="text-[9px] font-black uppercase tracking-wider text-soft-text/40 group-hover:text-deep-rose">{f.label}</span>
+                <span className="text-4xl">{f.emoji}</span>
+                <span className="text-[11px] font-bold text-soft-text/50 group-hover:text-deep-rose whitespace-nowrap capitalize">{f.label}</span>
               </motion.button>
             ))}
           </div>

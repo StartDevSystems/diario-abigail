@@ -60,12 +60,13 @@ const Hoy: React.FC = () => {
         </div>
 
         {!today.mood && (
-          <div className="bg-white/40 backdrop-blur-sm p-4 rounded-[1.5rem] border border-rose-pastel/50 shadow-sm max-w-sm mx-auto sm:mx-0">
+          <div className="bg-white/40 backdrop-blur-sm p-4 rounded-[1.5rem] border border-rose-pastel/50 shadow-sm max-w-md mx-auto sm:mx-0">
             <p className="text-[10px] uppercase tracking-wider sm:tracking-widest font-black text-soft-text/40 mb-3 text-center whitespace-nowrap">¿Cómo te sientes hoy?</p>
-            <div className="flex justify-between">
+            <div className="grid grid-cols-2 gap-2">
               {MOODS.map((m) => (
-                <button key={m.label} onClick={() => updateToday({ mood: m.label })} className="text-2xl sm:text-3xl hover:scale-110 transition-transform active:scale-95">
-                  {m.emoji}
+                <button key={m.label} onClick={() => updateToday({ mood: m.label })} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/60 border border-rose-pastel/30 hover:border-deep-rose/40 hover:bg-white/80 transition-all active:scale-95">
+                  <span className="text-2xl shrink-0">{m.emoji}</span>
+                  <span className="text-sm font-semibold text-soft-text capitalize whitespace-nowrap">{m.label}</span>
                 </button>
               ))}
             </div>

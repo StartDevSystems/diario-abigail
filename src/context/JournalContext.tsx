@@ -22,6 +22,7 @@ const getInitialDayData = (): DayData => ({
 
 const getInitialState = (): JournalState => ({
   today: getInitialDayData(),
+  history: [],
   habits: [
     { id: '1', name: 'Beber agua', emoji: '💧', completedDays: Array(7).fill(false) },
     { id: '2', name: 'Meditar', emoji: '🧘‍♀️', completedDays: Array(7).fill(false) },
@@ -55,6 +56,7 @@ interface JournalContextType {
   addNote: (content: string, tag?: string) => void;
   deleteNote: (id: string) => void;
   logout: () => void;
+  getHistory: () => DayData[];
   getAllUsersData: () => Promise<any[]>;
 }
 
@@ -110,7 +112,8 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
             ...rawData,
             habits: cleanHabits,
             today: { ...getInitialDayData(), ...(rawData.today || {}) },
-            notes: Array.isArray(rawData.notes) ? rawData.notes : []
+            notes: Array.isArray(rawData.notes) ? rawData.notes : [],
+            history: Array.isArray(rawData.history) ? rawData.history : []
           };
 
           const now = new Date();
@@ -126,12 +129,21 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
               newStreak = 0;
             }
 
-            const newState = {
+            // Archivar día anterior si tuvo actividad (mood)
+            const newHistory = [...mergedState.history];
+            if (mergedState.today.mood) {
+              newHistory.push(mergedState.today);
+            }
+            const limitedHistory = newHistory.slice(-30);
+
+            const newState: JournalState = {
               ...mergedState,
+              history: limitedHistory,
               streak: newStreak,
               today: { ...getInitialDayData(), date: now.toISOString() },
             };
             setState(newState);
+            if (currentUser) saveToFirebase(newState, currentUser);
           } else {
             setState(mergedState);
           }
@@ -242,6 +254,8 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const logout = () => auth.signOut();
 
+  const getHistory = () => state.history || [];
+
   const getAllUsersData = async () => {
     const { collection, getDocs } = await import('firebase/firestore');
     const querySnapshot = await getDocs(collection(db, "users"));
@@ -251,7 +265,7 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
   return (
     <JournalContext.Provider value={{ 
       state, user, isAdmin, loading, updateToday, updateProfile, updateSettings, toggleHabitDay, 
-      addHabit, updateHabit, deleteHabit, addNote, deleteNote, logout, getAllUsersData 
+      addHabit, updateHabit, deleteHabit, addNote, deleteNote, logout, getHistory, getAllUsersData 
     }}>
       {children}
     </JournalContext.Provider>

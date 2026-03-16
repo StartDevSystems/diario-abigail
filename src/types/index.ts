@@ -36,6 +36,7 @@ export interface Note {
 
 export interface JournalState {
   today: DayData;
+  history: DayData[];
   habits: Habit[];
   notes: Note[];
   streak: number;

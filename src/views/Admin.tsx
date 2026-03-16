@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useJournal } from '../context/JournalContext';
-import { Users, Eye, Search, ShieldCheck, Activity, Heart, CheckCircle2, LogIn, Sparkles, X, BookOpen, Star, FileText, Flame, Calendar, ShieldAlert } from 'lucide-react';
+import { Users, Eye, Search, ShieldCheck, Activity, Heart, CheckCircle2, LogIn, Sparkles, X, BookOpen, Star, FileText, Flame, Calendar, ShieldAlert, MessageSquare, Clock } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { doc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 const MOCK_LOGS = [
@@ -171,6 +171,33 @@ const Admin: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [sendSuccess, setSendSuccess] = useState(false);
 
+  // ABI-23: Estados para Sugerencias
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  const fetchSuggestions = async () => {
+    setLoadingSuggestions(true);
+    try {
+      const q = query(collection(db, "suggestions"), orderBy("createdAt", "desc"), limit(20));
+      const snap = await getDocs(q);
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setSuggestions(data);
+    } catch (e) {
+      console.error("Error fetching suggestions:", e);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
+
+  const markAsRead = async (id: string) => {
+    try {
+      await updateDoc(doc(db, "suggestions", id), { status: 'read' });
+      setSuggestions(prev => prev.map(s => s.id === id ? { ...s, status: 'read' } : s));
+    } catch (e) {
+      console.error("Error marking as read:", e);
+    }
+  };
+
   const handleSendDailyWord = async () => {
     if (!dailyWord.trim() || !user) return;
     setIsSending(true);
@@ -212,6 +239,7 @@ const Admin: React.FC = () => {
         setUsers(data);
         setLoading(false);
       });
+      fetchSuggestions();
     }
   }, [isAdmin]);
 
@@ -326,6 +354,67 @@ const Admin: React.FC = () => {
               </>
             )}
           </button>
+        </div>
+      </section>
+
+      {/* ABI-23: BUZÓN DE SUGERENCIAS */}
+      <section className="space-y-6">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-3">
+            <MessageSquare size={18} className="text-[#e11d74]" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1d1d1f]/40">Buzón de Sugerencias</h3>
+          </div>
+          <button 
+            onClick={fetchSuggestions}
+            className="text-[10px] font-black uppercase tracking-widest text-[#e11d74] hover:underline"
+          >
+            Sincronizar
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {loadingSuggestions ? (
+            <div className="col-span-full py-12 text-center text-[#1d1d1f]/30 italic animate-pulse">Cargando pensamientos...</div>
+          ) : suggestions.length === 0 ? (
+            <div className="col-span-full card-premium py-12 text-center text-[#1d1d1f]/30 italic">No hay sugerencias todavía</div>
+          ) : (
+            suggestions.map((s) => (
+              <div key={s.id} className={`card-premium transition-all relative overflow-hidden ${s.status === 'read' ? 'opacity-60 grayscale-[0.5]' : 'border-l-4 border-l-[#e11d74]'}`}>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#fff0f5] flex items-center justify-center text-[#e11d74] text-xs font-black shadow-sm border border-[#ffd6e7]">
+                      {(s.userName || 'U')[0]}
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-[#1d1d1f]">{s.userName}</p>
+                      <div className="flex items-center gap-1.5 opacity-40">
+                        <Clock size={10} />
+                        <span className="text-[10px] font-medium">
+                          {s.createdAt?.toDate ? s.createdAt.toDate().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Recién enviado'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <span className={`text-[10px] font-black uppercase px-2 py-1 rounded-full ${s.status === 'read' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}`}>
+                    {s.status === 'read' ? 'Leída' : 'Pendiente'}
+                  </span>
+                </div>
+
+                <p className="text-sm text-[#1d1d1f]/80 leading-relaxed break-words mb-6 italic">
+                  "{s.message}"
+                </p>
+
+                {s.status !== 'read' && (
+                  <button 
+                    onClick={() => markAsRead(s.id)}
+                    className="w-full py-3 bg-[#fff0f5] hover:bg-[#e11d74] hover:text-white text-[#e11d74] rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border border-[#ffd6e7]"
+                  >
+                    Marcar como leída
+                  </button>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </section>
 
