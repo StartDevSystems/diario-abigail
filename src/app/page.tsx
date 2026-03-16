@@ -37,7 +37,7 @@ function HomeContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#fffcf2]">
+      <div className="min-h-screen flex items-center justify-center bg-cream-pastel">
         <motion.div 
           animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }}
           transition={{ repeat: Infinity, duration: 2 }}
@@ -79,7 +79,7 @@ function HomeContent() {
             key="welcome"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.6 } }}
-            className="fixed inset-0 z-[9999] bg-[#fffcf2]"
+            className="fixed inset-0 z-[9999] bg-cream-pastel"
           >
             <WelcomeScreen onEnter={() => setShowWelcome(false)} />
           </motion.div>

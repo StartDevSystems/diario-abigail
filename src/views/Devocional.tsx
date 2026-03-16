@@ -49,10 +49,10 @@ const BIBLE_BOOKS = [
 // ════════════════════════════════════════════════════════
 
 const Spiral = () => (
-  <span style={{ width:22, height:22, borderRadius:"50%", background:"#ffd6e7", border:"2.5px solid #ffb3d1", display:"block", flexShrink:0 }}/>
+  <span style={{ width:22, height:22, borderRadius:"50%", background:"var(--color-theme-border)", border:"2.5px solid var(--color-theme-border)", display:"block", flexShrink:0 }}/>
 );
 const Ring = () => (
-  <span style={{ width:18, height:18, borderRadius:"50%", border:"2.5px solid #e11d74", background:"transparent", display:"block", flexShrink:0 }}/>
+  <span style={{ width:18, height:18, borderRadius:"50%", border:"2.5px solid var(--color-theme-primary)", background:"transparent", display:"block", flexShrink:0 }}/>
 );
 const GoldDot = () => (
   <span style={{ width:8, height:8, borderRadius:"50%", background:"#c49a3c", display:"inline-block", flexShrink:0 }}/>
@@ -64,13 +64,13 @@ const BsSpiral = () => (
   <span style={{ width:14, height:14, borderRadius:"50%", background:"rgba(255,255,255,.25)", border:"2px solid rgba(255,255,255,.4)", display:"block" }}/>
 );
 const SectionLabel = ({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) => (
-  <div style={{ display:"flex", alignItems:"center", gap:".4rem", fontSize:".7rem", fontWeight:900, letterSpacing:".1em", textTransform:"uppercase" as const, color:"#e11d74", marginBottom:".85rem", fontFamily:"'DM Sans',sans-serif" }}>
+  <div style={{ display:"flex", alignItems:"center", gap:".4rem", fontSize:".7rem", fontWeight:900, letterSpacing:".1em", textTransform:"uppercase" as const, color:"var(--color-theme-primary)", marginBottom:".85rem", fontFamily:"'DM Sans',sans-serif" }}>
     {icon}{children}
   </div>
 );
 const StyledTextarea = ({ value, onChange, placeholder, rows=5 }: { value:string; onChange:(v:string)=>void; placeholder:string; rows?:number }) => (
   <textarea value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} rows={rows}
-    style={{ width:"100%", background:"transparent", border:"none", outline:"none", resize:"none", fontFamily:"'DM Sans',sans-serif", fontSize:"inherit", color:"#2d0a1e", lineHeight:1.7, fontStyle:"italic", wordBreak: "break-word" }}
+    style={{ width:"100%", background:"transparent", border:"none", outline:"none", resize:"none", fontFamily:"'DM Sans',sans-serif", fontSize:"inherit", color:"var(--color-soft-text)", lineHeight:1.7, fontStyle:"italic", wordBreak: "break-word" }}
   />
 );
 
@@ -153,7 +153,7 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
         <div style={{ position:"absolute", inset:0, pointerEvents:"none", zIndex:0, borderRadius:"2.5rem",
           backgroundImage:"repeating-linear-gradient(transparent,transparent 27px,rgba(225,29,116,.035) 27px,rgba(225,29,116,.035) 28px)" }}/>
 
-        <div style={{ position:"relative", zIndex:1, background:"#e11d74", padding:"1.3rem 1.6rem 1.1rem", borderRadius:"2.5rem 2.5rem 0 0", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+        <div style={{ position:"relative", zIndex:1, background:"var(--color-theme-primary)", padding:"1.3rem 1.6rem 1.1rem", borderRadius:"2.5rem 2.5rem 0 0", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <div style={{ position:"absolute", left:14, top:0, bottom:0, display:"flex", flexDirection:"column", justifyContent:"center", gap:10 }}>
             <BsSpiral/><BsSpiral/><BsSpiral/>
           </div>
@@ -170,14 +170,14 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
           {([1,2,3] as const).map((n, i) => (
             <React.Fragment key={n}>
               <div style={{ display:"flex", alignItems:"center", gap:".4rem", fontSize:".7rem", fontWeight:700, letterSpacing:".06em", textTransform:"uppercase" as const, padding:".35rem .9rem", borderRadius:999, transition:"all .2s",
-                background: step===n ? "#e11d74" : step>n ? "#ffd6e7" : "transparent",
-                color:       step===n ? "white"   : step>n ? "#e11d74" : "#c47aaa",
-                border:      `1.5px solid ${step===n ? "#e11d74" : "#ffd6e7"}`,
-                boxShadow:   step===n ? "0 2px 10px rgba(225,29,116,.3)" : "none",
+                background: step===n ? "var(--color-theme-primary)" : step>n ? "var(--color-theme-border)" : "transparent",
+                color:       step===n ? "white"   : step>n ? "var(--color-theme-primary)" : "var(--color-theme-muted)",
+                border:      `1.5px solid ${step===n ? "var(--color-theme-primary)" : "var(--color-theme-border)"}`,
+                boxShadow:   step===n ? "0 2px 10px rgba(225, 29, 116, 0.3)" : "none",
               }}>
                 {n} {["Libro","Capítulo","Versículo"][i]}
               </div>
-              {i < 2 && <span style={{ color:"#ffd6e7", fontSize:".85rem" }}>›</span>}
+              {i < 2 && <span style={{ color:"var(--color-theme-border)", fontSize:".85rem" }}>›</span>}
             </React.Fragment>
           ))}
         </div>
@@ -186,18 +186,18 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
 
           {step === 1 && (
             <div style={{ animation:"spIn .25s ease" }}>
-              <div style={{ fontSize:".68rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase" as const, color:"#e11d74", display:"flex", alignItems:"center", gap:".4rem", marginBottom:".75rem" }}>
+              <div style={{ fontSize:".68rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase" as const, color:"var(--color-theme-primary)", display:"flex", alignItems:"center", gap:".4rem", marginBottom:".75rem" }}>
                 <GoldDot/> Elige un libro de la Biblia
               </div>
               <div style={{ position:"relative", marginBottom:".9rem" }}>
-                <Search size={14} color="#e11d74" style={{ position:"absolute", left:".75rem", top:"50%", transform:"translateY(-50%)" }}/>
+                <Search size={14} color="var(--color-theme-primary)" style={{ position:"absolute", left:".75rem", top:"50%", transform:"translateY(-50%)" }}/>
                 <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar libro..."
-                  style={{ width:"100%", background:"white", border:"1.5px solid #ffd6e7", borderRadius:".9rem", padding:".6rem 1rem .6rem 2.4rem", fontFamily:"'DM Sans',sans-serif", fontSize:".88rem", color:"#2d0a1e", outline:"none" }}/>
+                  style={{ width:"100%", background:"white", border:"1.5px solid var(--color-theme-border)", borderRadius:".9rem", padding:".6rem 1rem .6rem 2.4rem", fontFamily:"'DM Sans',sans-serif", fontSize:".88rem", color:"var(--color-soft-text)", outline:"none" }}/>
               </div>
               <div style={{ display:"flex", gap:".5rem", marginBottom:".9rem" }}>
                 {(["AT","NT"] as const).map(t => (
                   <button key={t} onClick={()=>{ setTestament(t); setSearch(""); }}
-                    style={{ flex:1, padding:".5rem", borderRadius:".8rem", border:`1.5px solid ${testament===t?"#e11d74":"#ffd6e7"}`, background:testament===t?"#ffd6e7":"white", color:testament===t?"#e11d74":"#c47aaa", fontFamily:"'DM Sans',sans-serif", fontSize:".78rem", fontWeight:700, cursor:"pointer", transition:"all .18s" }}>
+                    style={{ flex:1, padding:".5rem", borderRadius:".8rem", border:`1.5px solid ${testament===t?"var(--color-theme-primary)":"var(--color-theme-border)"}`, background:testament===t?"var(--color-theme-border)":"white", color:testament===t?"var(--color-theme-primary)":"var(--color-theme-muted)", fontFamily:"'DM Sans',sans-serif", fontSize:".78rem", fontWeight:700, cursor:"pointer", transition:"all .18s" }}>
                     {t==="AT" ? "Antiguo Testamento" : "Nuevo Testamento"}
                   </button>
                 ))}
@@ -205,8 +205,8 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
               <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:".5rem" }}>
                 {filtered.map(b => (
                   <button key={b.id} onClick={()=>pickBook(b)}
-                    style={{ padding:".5rem .4rem", borderRadius:".9rem", border:`1.5px solid ${b.id===selBook?.id?"#e11d74":"#ffd6e7"}`, background:b.id===selBook?.id?"#e11d74":"white", color:b.id===selBook?.id?"white":"#2d0a1e", fontFamily:"'DM Sans',sans-serif", fontSize:".75rem", fontWeight:600, cursor:"pointer", transition:"all .18s", textAlign:"center", lineHeight:1.2,
-                      boxShadow: b.id===selBook?.id?"0 3px 10px rgba(225,29,116,.3)":"none" }}>
+                    style={{ padding:".5rem .4rem", borderRadius:".9rem", border:`1.5px solid ${b.id===selBook?.id?"var(--color-theme-primary)":"var(--color-theme-border)"}`, background:b.id===selBook?.id?"var(--color-theme-primary)":"white", color:b.id===selBook?.id?"white":"var(--color-soft-text)", fontFamily:"'DM Sans',sans-serif", fontSize:".75rem", fontWeight:600, cursor:"pointer", transition:"all .18s", textAlign:"center", lineHeight:1.2,
+                      boxShadow: b.id===selBook?.id?"0 3px 10px rgba(225, 29, 116, 0.3)":"none" }}>
                     {b.name}
                   </button>
                 ))}
@@ -216,19 +216,19 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
 
           {step === 2 && (
             <div style={{ animation:"spIn .25s ease" }}>
-              <div style={{ fontSize:".72rem", color:"#c47aaa", fontWeight:600, display:"flex", alignItems:"center", gap:".35rem", marginBottom:".8rem", flexWrap:"wrap" as const }}>
-                <span style={{ color:"#e11d74", cursor:"pointer", textDecoration:"underline" }} onClick={()=>setStep(1)}>Libros</span>
-                <ChevronRight size={12} color="#ffd6e7"/>
-                <strong style={{ color:"#2d0a1e" }}>{selBook?.name}</strong>
+              <div style={{ fontSize:".72rem", color:"var(--color-theme-muted)", fontWeight:600, display:"flex", alignItems:"center", gap:".35rem", marginBottom:".8rem", flexWrap:"wrap" as const }}>
+                <span style={{ color:"var(--color-theme-primary)", cursor:"pointer", textDecoration:"underline" }} onClick={()=>setStep(1)}>Libros</span>
+                <ChevronRight size={12} color="var(--color-theme-border)"/>
+                <strong style={{ color:"var(--color-soft-text)" }}>{selBook?.name}</strong>
               </div>
-              <div style={{ fontSize:".68rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase" as const, color:"#e11d74", display:"flex", alignItems:"center", gap:".4rem", marginBottom:".75rem" }}>
+              <div style={{ fontSize:".68rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase" as const, color:"var(--color-theme-primary)", display:"flex", alignItems:"center", gap:".4rem", marginBottom:".75rem" }}>
                 <GoldDot/> Elige el capítulo
               </div>
               <div style={{ display:"flex", flexWrap:"wrap" as const, gap:".45rem" }}>
                 {Array.from({length: selBook?.chaps || 0},(_,i)=>i+1).map(c => (
                   <button key={c} onClick={()=>pickChap(c)}
-                    style={{ width:38, height:38, borderRadius:"50%", border:`1.5px solid ${c===selChap?"#e11d74":"#ffd6e7"}`, background:c===selChap?"#e11d74":"white", color:c===selChap?"white":"#2d0a1e", fontFamily:"'DM Sans',sans-serif", fontSize:".78rem", fontWeight:700, cursor:"pointer", transition:"all .18s", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0,
-                      boxShadow: c===selChap?"0 3px 10px rgba(225,29,116,.3)":"none" }}>
+                    style={{ width:38, height:38, borderRadius:"50%", border:`1.5px solid ${c===selChap?"var(--color-theme-primary)":"var(--color-theme-border)"}`, background:c===selChap?"var(--color-theme-primary)":"white", color:c===selChap?"white":"var(--color-soft-text)", fontFamily:"'DM Sans',sans-serif", fontSize:".78rem", fontWeight:700, cursor:"pointer", transition:"all .18s", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0,
+                      boxShadow: c===selChap?"0 3px 10px rgba(225, 29, 116, 0.3)":"none" }}>
                     {c}
                   </button>
                 ))}
@@ -238,22 +238,22 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
 
           {step === 3 && (
             <div style={{ animation:"spIn .25s ease" }}>
-              <div style={{ fontSize:".72rem", color:"#c47aaa", fontWeight:600, display:"flex", alignItems:"center", gap:".35rem", marginBottom:".8rem", flexWrap:"wrap" as const }}>
-                <span style={{ color:"#e11d74", cursor:"pointer", textDecoration:"underline" }} onClick={()=>setStep(1)}>Libros</span>
-                <ChevronRight size={12} color="#ffd6e7"/>
-                <span style={{ color:"#e11d74", cursor:"pointer", textDecoration:"underline" }} onClick={()=>setStep(2)}>{selBook?.name}</span>
-                <ChevronRight size={12} color="#ffd6e7"/>
-                <strong style={{ color:"#2d0a1e" }}>Cap. {selChap}</strong>
+              <div style={{ fontSize:".72rem", color:"var(--color-theme-muted)", fontWeight:600, display:"flex", alignItems:"center", gap:".35rem", marginBottom:".8rem", flexWrap:"wrap" as const }}>
+                <span style={{ color:"var(--color-theme-primary)", cursor:"pointer", textDecoration:"underline" }} onClick={()=>setStep(1)}>Libros</span>
+                <ChevronRight size={12} color="var(--color-theme-border)"/>
+                <span style={{ color:"var(--color-theme-primary)", cursor:"pointer", textDecoration:"underline" }} onClick={()=>setStep(2)}>{selBook?.name}</span>
+                <ChevronRight size={12} color="var(--color-theme-border)"/>
+                <strong style={{ color:"var(--color-soft-text)" }}>Cap. {selChap}</strong>
               </div>
-              <div style={{ fontSize:".68rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase" as const, color:"#e11d74", display:"flex", alignItems:"center", gap:".4rem", marginBottom:".75rem" }}>
+              <div style={{ fontSize:".68rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase" as const, color:"var(--color-theme-primary)", display:"flex", alignItems:"center", gap:".4rem", marginBottom:".75rem" }}>
                 <GoldDot/> Elige el rango de versículos
               </div>
 
               <div style={{ display:"flex", alignItems:"flex-end", gap:".8rem", marginBottom: "1rem" }}>
                 <div style={{ flex:1, display:"flex", flexDirection:"column", gap:".3rem" }}>
-                  <label style={{ fontSize:".65rem", fontWeight:700, letterSpacing:".09em", textTransform:"uppercase" as const, color:"#c47aaa" }}>DESDE</label>
+                  <label style={{ fontSize:".65rem", fontWeight:700, letterSpacing:".09em", textTransform:"uppercase" as const, color:"var(--color-theme-muted)" }}>DESDE</label>
                   <select value={vFrom} onChange={e=>setVFrom(+e.target.value)}
-                    style={{ width:"100%", background:"white", border:"1.5px solid #ffd6e7", borderRadius:".8rem", padding:".55rem .9rem", fontFamily:"'DM Sans',sans-serif", fontSize:".88rem", color:"#2d0a1e", outline:"none", cursor:"pointer" }}>
+                    style={{ width:"100%", background:"white", border:"1.5px solid var(--color-theme-border)", borderRadius:".8rem", padding:".55rem .9rem", fontFamily:"'DM Sans',sans-serif", fontSize:".88rem", color:"var(--color-soft-text)", outline:"none", cursor:"pointer" }}>
                     {verses.length > 0 ? (
                       verses.map(v => <option key={v.number} value={v.number}>{v.number}</option>)
                     ) : (
@@ -262,9 +262,9 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
                   </select>
                 </div>
                 <div style={{ flex:1, display:"flex", flexDirection:"column", gap:".3rem" }}>
-                  <label style={{ fontSize:".65rem", fontWeight:700, letterSpacing:".09em", textTransform:"uppercase" as const, color:"#c47aaa" }}>HASTA</label>
+                  <label style={{ fontSize:".65rem", fontWeight:700, letterSpacing:".09em", textTransform:"uppercase" as const, color:"var(--color-theme-muted)" }}>HASTA</label>
                   <select value={vTo} onChange={e=>setVTo(+e.target.value)}
-                    style={{ width:"100%", background:"white", border:"1.5px solid #ffd6e7", borderRadius:".8rem", padding:".55rem .9rem", fontFamily:"'DM Sans',sans-serif", fontSize:".88rem", color:"#2d0a1e", outline:"none", cursor:"pointer" }}>
+                    style={{ width:"100%", background:"white", border:"1.5px solid var(--color-theme-border)", borderRadius:".8rem", padding:".55rem .9rem", fontFamily:"'DM Sans',sans-serif", fontSize:".88rem", color:"var(--color-soft-text)", outline:"none", cursor:"pointer" }}>
                     {verses.length > 0 ? (
                       verses.filter(v => v.number >= vFrom).map(v => <option key={v.number} value={v.number}>{v.number}</option>)
                     ) : (
@@ -284,28 +284,28 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
                     <Loader2 size={16} className="animate-spin" /> Buscando en las Escrituras...
                   </div>
                 ) : (
-                  <p style={{ fontFamily:"'Playfair Display',serif", fontSize:"1.02rem", fontStyle:"italic", color:"#2d0a1e", lineHeight:1.75, marginBottom:".7rem" }}>
-                    <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"2.5rem", lineHeight:0, verticalAlign:"-.3rem", marginRight:".1rem", color:"#ffd6e7" }}>"</span>
+                  <p style={{ fontFamily:"'Playfair Display',serif", fontSize:"1.02rem", fontStyle:"italic", color:"var(--color-soft-text)", lineHeight:1.75, marginBottom:".7rem" }}>
+                    <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"2.5rem", lineHeight:0, verticalAlign:"-.3rem", marginRight:".1rem", color:"var(--color-theme-border)" }}>"</span>
                     {previewText}
                   </p>
                 )}
-                <div style={{ fontSize:".7rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase" as const, color:"#9b4f82", textAlign:"right" }}>— {reference}</div>
+                <div style={{ fontSize:".7rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase" as const, color:"var(--color-theme-muted)", textAlign:"right" }}>— {reference}</div>
               </div>
             </div>
           )}
 
         </div>
 
-        <div style={{ position:"relative", zIndex:1, background:"white", borderTop:"1.5px solid #ffd6e7", padding:"1rem 1.6rem", display:"flex", gap:".7rem", alignItems:"center" }}>
+        <div style={{ position:"relative", zIndex:1, background:"white", borderTop:"1.5px solid var(--color-theme-border)", padding:"1rem 1.6rem", display:"flex", gap:".7rem", alignItems:"center" }}>
           <div style={{ display:"flex", gap:".35rem", marginRight:"auto" }}>
             <GoldRing/><GoldRing/><GoldRing/>
           </div>
-          <button onClick={onClose} style={{ background:"none", border:"1.5px solid #ffd6e7", borderRadius:999, color:"#c47aaa", fontFamily:"'DM Sans',sans-serif", fontSize:".82rem", fontWeight:700, padding:".55rem 1.3rem", cursor:"pointer" }}>
+          <button onClick={onClose} style={{ background:"none", border:"1.5px solid var(--color-theme-border)", borderRadius:999, color:"var(--color-theme-muted)", fontFamily:"'DM Sans',sans-serif", fontSize:".82rem", fontWeight:700, padding:".55rem 1.3rem", cursor:"pointer" }}>
             Cancelar
           </button>
           {step === 3 && (
             <button onClick={() => onConfirm(previewText, reference)} disabled={loading || verses.length === 0}
-              style={{ background:"#e11d74", border:"none", borderRadius:999, color:"white", fontFamily:"'DM Sans',sans-serif", fontSize:".82rem", fontWeight:900, padding:".55rem 1.6rem", cursor:"pointer", boxShadow:"0 4px 16px rgba(225,29,116,.35)", opacity: (loading || verses.length === 0) ? .5 : 1 }}>
+              style={{ background:"var(--color-theme-primary)", border:"none", borderRadius:999, color:"white", fontFamily:"'DM Sans',sans-serif", fontSize:".82rem", fontWeight:900, padding:".55rem 1.6rem", cursor:"pointer", boxShadow:"0 4px 16px rgba(225, 29, 116, 0.35)", opacity: (loading || verses.length === 0) ? .5 : 1 }}>
               Confirmar Palabra 🌸
             </button>
           )}
@@ -355,7 +355,7 @@ const Devocional: React.FC = () => {
         @keyframes bsMdIn{from{opacity:0;transform:translateY(40px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
         @keyframes spIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
         .dev-tape::before,.dev-tape::after{content:'';position:absolute;top:4px;width:6px;height:6px;background:rgba(255,255,255,.5);border-radius:50%}
-        textarea::placeholder{color:#ffb3d1}
+        textarea::placeholder{color:var(--color-theme-border)}
         .animate-spin { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @media(max-width:540px){
@@ -377,47 +377,47 @@ const Devocional: React.FC = () => {
         />
       )}
 
-      <div className="dev-fade" style={{ maxWidth:680, margin:"0 auto", display:"flex", flexDirection:"column", gap:"1.5rem", paddingBottom:"3rem", fontFamily:"'DM Sans',sans-serif", color:"#2d0a1e" }}>
+      <div className="dev-fade" style={{ maxWidth:680, margin:"0 auto", display:"flex", flexDirection:"column", gap:"1.5rem", paddingBottom:"3rem", fontFamily:"'DM Sans',sans-serif", color:"var(--color-soft-text)" }}>
 
         <div className="dev-header-top" style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:"1rem", flexWrap:"wrap" }}>
           <div style={{ display:"flex", flexDirection:"column", gap:".35rem", flexShrink:0 }}>
-            <span style={{ background:"#e11d74", color:"white", fontWeight:900, fontSize:".85rem", letterSpacing:".04em", padding:".4rem 1.1rem", borderRadius:999, display:"inline-block" }}>Devocional</span>
-            <span style={{ background:"white", color:"#e11d74", border:"2px solid #ffd6e7", fontWeight:700, fontSize:".85rem", padding:".35rem 1.1rem", borderRadius:999, display:"inline-block", marginLeft:".6rem" }}>Diario</span>
+            <span style={{ background:"var(--color-theme-primary)", color:"white", fontWeight:900, fontSize:".85rem", letterSpacing:".04em", padding:".4rem 1.1rem", borderRadius:999, display:"inline-block" }}>Devocional</span>
+            <span style={{ background:"white", color:"var(--color-theme-primary)", border:"2px solid var(--color-theme-border)", fontWeight:700, fontSize:".85rem", padding:".35rem 1.1rem", borderRadius:999, display:"inline-block", marginLeft:".6rem" }}>Diario</span>
           </div>
           <div style={{ textAlign:"center", flex:1, minWidth:120 }}>
-            <span className="dev-jesus" style={{ fontFamily:"'Great Vibes',cursive", fontSize:"5.2rem", color:"#2d0a1e", lineHeight:1, opacity:.88, display:"block" }}>Jesús</span>
+            <span className="dev-jesus" style={{ fontFamily:"'Great Vibes',cursive", fontSize:"5.2rem", color:"var(--color-soft-text)", lineHeight:1, opacity:.88, display:"block" }}>Jesús</span>
           </div>
           <div className="dev-cross-section" style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:".4rem", flexShrink:0 }}>
             <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-              <line x1="26" y1="4" x2="26" y2="28" stroke="#2d0a1e" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="14" y1="13" x2="38" y2="13" stroke="#2d0a1e" strokeWidth="2.5" strokeLinecap="round"/>
-              <path d="M14 28 C14 21 26 19 26 26 C26 19 38 21 38 28 C38 37 26 44 26 44 C26 44 14 37 14 28Z" fill="#e11d74" opacity=".85"/>
-              <circle cx="38" cy="14" r="4" fill="#ffd6e7"/>
+              <line x1="26" y1="4" x2="26" y2="28" stroke="var(--color-soft-text)" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="14" y1="13" x2="38" y2="13" stroke="var(--color-soft-text)" strokeWidth="2.5" strokeLinecap="round"/>
+              <path d="M14 28 C14 21 26 19 26 26 C26 19 38 21 38 28 C38 37 26 44 26 44 C26 44 14 37 14 28Z" fill="var(--color-theme-primary)" opacity=".85"/>
+              <circle cx="38" cy="14" r="4" fill="var(--color-theme-border)"/>
             </svg>
-            <div style={{ fontSize:".65rem", fontWeight:700, color:"#c47aaa", textTransform:"uppercase", letterSpacing:".07em", textAlign:"center" }}>{fechaHoy}</div>
-            <div style={{ width:110, height:1, background:"#ffb3d1" }}/>
+            <div style={{ fontSize:".65rem", fontWeight:700, color:"var(--color-theme-muted)", textTransform:"uppercase", letterSpacing:".07em", textAlign:"center" }}>{fechaHoy}</div>
+            <div style={{ width:110, height:1, background:"var(--color-theme-border)" }}/>
           </div>
         </div>
 
         <div className="card-premium overflow-hidden relative">
-          <div style={{ height:4, background:"linear-gradient(90deg,#ffb3d1,#e11d74,#ff6b9d)" }}/>
-          <div style={{ position:"absolute", top:18, left:"50%", transform:"translateX(-50%)", width:44, height:44, background:"#e11d74", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 14px rgba(232,68,122,.35)", zIndex:2 }}>
+          <div style={{ height:4, background:"linear-gradient(90deg,var(--color-theme-border),var(--color-theme-primary),var(--color-theme-primary))" }}/>
+          <div style={{ position:"absolute", top:18, left:"50%", transform:"translateX(-50%)", width:44, height:44, background:"var(--color-theme-primary)", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 14px rgba(225, 29, 116, 0.35)", zIndex:2 }}>
             <BookOpen size={20} color="white"/>
           </div>
           <div style={{ padding:"3.8rem 2.5rem 1.8rem", display:"flex", flexDirection:"column", alignItems:"center", gap:".9rem", textAlign:"center" }}>
-            <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"5rem", lineHeight:.5, color:"#ffd6e7", userSelect:"none" as const }}>"</span>
+            <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"5rem", lineHeight:.5, color:"var(--color-theme-border)", userSelect:"none" as const }}>"</span>
             <p className="dev-verse-text" style={{ fontFamily:"'Playfair Display',serif", fontSize:"inherit", fontStyle:"italic", color:"var(--color-soft-text)", lineHeight:1.75, maxWidth:500, wordBreak: "break-word" }}>
               {today.devocionalVerse || "Aún no has elegido tu versículo de hoy..."}
             </p>
             {today.devocionalRef && (
-              <span style={{ fontSize:".72rem", fontWeight:900, letterSpacing:".14em", textTransform:"uppercase" as const, color:"#9b4f82" }}>
+              <span style={{ fontSize:".72rem", fontWeight:900, letterSpacing:".14em", textTransform:"uppercase" as const, color:"var(--color-theme-muted)" }}>
                 — {today.devocionalRef}
               </span>
             )}
 
             <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap", justifyContent: "center", marginTop: ".8rem" }}>
               <button className="dev-btn-change" onClick={() => setShowBible(true)}
-                style={{ display:"inline-flex", alignItems:"center", gap:".4rem", background:"#fff0f5", color:"#e11d74", border:"1.5px solid #ffd6e7", borderRadius:999, fontFamily:"'DM Sans',sans-serif", fontSize:".74rem", fontWeight:700, padding:".45rem 1.1rem", cursor:"pointer", transition:"background .18s,border-color .18s" }}>
+                style={{ display:"inline-flex", alignItems:"center", gap:".4rem", background:"var(--color-theme-pastel)", color:"var(--color-theme-primary)", border:"1.5px solid var(--color-theme-border)", borderRadius:999, fontFamily:"'DM Sans',sans-serif", fontSize:".74rem", fontWeight:700, padding:".45rem 1.1rem", cursor:"pointer", transition:"background .18s,border-color .18s" }}>
                 <PenLine size={12}/>
                 {today.devocionalVerse ? "Cambiar versículo" : "Elegir versículo 🌸"}
               </button>
@@ -425,7 +425,7 @@ const Devocional: React.FC = () => {
               {today.devocionalVerse && (
                 <>
                   <button onClick={handleCopy}
-                    style={{ display:"inline-flex", alignItems:"center", gap:".4rem", background:"#fff0f5", color:copied ? "#10b981" : "#e11d74", border:`1.5px solid ${copied ? "#10b981" : "#ffd6e7"}`, borderRadius:999, fontFamily:"'DM Sans',sans-serif", fontSize:".74rem", fontWeight:700, padding:".45rem 1.1rem", cursor:"pointer", transition:"all .18s" }}>
+                    style={{ display:"inline-flex", alignItems:"center", gap:".4rem", background:"var(--color-theme-pastel)", color:copied ? "#10b981" : "var(--color-theme-primary)", border:`1.5px solid ${copied ? "#10b981" : "var(--color-theme-border)"}`, borderRadius:999, fontFamily:"'DM Sans',sans-serif", fontSize:".74rem", fontWeight:700, padding:".45rem 1.1rem", cursor:"pointer", transition:"all .18s" }}>
                     {copied ? <Check size={12}/> : <Copy size={12}/>}
                     {copied ? "¡Copiado!" : "Copiar"}
                   </button>
@@ -443,10 +443,10 @@ const Devocional: React.FC = () => {
 
         <div className="dev-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1.2rem" }}>
           <div className="card-premium relative overflow-hidden">
-            <div className="dev-tape" style={{ position:"absolute", top:-13, left:"50%", transform:"translateX(-50%)", width:60, height:22, background:"#ff6b9d", borderRadius:4, opacity:.7 }}/>
+            <div className="dev-tape" style={{ position:"absolute", top:-13, left:"50%", transform:"translateX(-50%)", width:60, height:22, background:"var(--color-theme-primary)", borderRadius:4, opacity:.7 }}/>
             <div style={{ position:"absolute", top:".9rem", right:"1rem", fontSize:"1.1rem" }}>⭐⭐</div>
             <div style={{ marginTop:".4rem" }}>
-              <SectionLabel icon={<Clock size={14} color="#e11d74"/>}>Meditar y Memorizar</SectionLabel>
+              <SectionLabel icon={<Clock size={14} color="var(--color-theme-primary)"/>}>Meditar y Memorizar</SectionLabel>
               <StyledTextarea value={today.devocionalReflection ?? ""} onChange={v=>updateToday({devocionalReflection:v})} placeholder="Versículo para memorizar esta semana..." rows={6}/>
             </div>
           </div>
@@ -455,9 +455,9 @@ const Devocional: React.FC = () => {
               {[0,1,2,3,4,5].map(i=><Ring key={i}/>)}
             </div>
             <div style={{ padding:"1rem 1.3rem 2.8rem", position:"relative" }}>
-              <SectionLabel icon={<FileText size={14} color="#e11d74"/>}>Lectura del día</SectionLabel>
+              <SectionLabel icon={<FileText size={14} color="var(--color-theme-primary)"/>}>Lectura del día</SectionLabel>
               <StyledTextarea value={today.prayerAsk ?? ""} onChange={v=>updateToday({prayerAsk:v})} placeholder={"¿Qué leíste hoy?\nPasaje, libro, capítulo..."} rows={6}/>
-              <span style={{ position:"absolute", bottom:".8rem", right:"1rem", fontSize:"2rem", filter:"drop-shadow(0 2px 6px rgba(232,68,122,.3))" }}>🩷</span>
+              <span style={{ position:"absolute", bottom:".8rem", right:"1rem", fontSize:"2rem", filter:"drop-shadow(0 2px 6px rgba(225, 29, 116, 0.3))" }}>🩷</span>
             </div>
           </div>
         </div>
@@ -468,7 +468,7 @@ const Devocional: React.FC = () => {
               {[0,1,2,3].map(i=><Spiral key={i}/>)}
             </div>
             <div style={{ padding:"1.4rem 1.4rem 1.4rem 1.2rem" }}>
-              <SectionLabel icon={<Heart size={14} color="#e11d74"/>}>Reflexión</SectionLabel>
+              <SectionLabel icon={<Heart size={14} color="var(--color-theme-primary)"/>}>Reflexión</SectionLabel>
               <StyledTextarea value={today.prayerThanks ?? ""} onChange={v=>updateToday({prayerThanks:v})} placeholder="¿Qué aprendiste hoy?" rows={6}/>
             </div>
           </div>
@@ -476,16 +476,16 @@ const Devocional: React.FC = () => {
             <div style={{ display:"flex", gap:".5rem", alignItems:"center", marginBottom:".6rem" }}>
               {[0,1,2,3,4,5,6,7].map(i=><Ring key={i}/>)}
             </div>
-            <SectionLabel icon={<HelpCircle size={14} color="#e11d74"/>}>Preguntas</SectionLabel>
+            <SectionLabel icon={<HelpCircle size={14} color="var(--color-theme-primary)"/>}>Preguntas</SectionLabel>
             <div style={{ display:"flex", flexDirection:"column", gap:".7rem", marginBottom:".5rem" }}>
-              {[0,1,2,3].map(i=><div key={i} style={{ height:1, background:"#ffd6e7", borderRadius:1 }}/>)}
+              {[0,1,2,3].map(i=><div key={i} style={{ height:1, background:"var(--color-theme-border)", borderRadius:1 }}/>)}
             </div>
             <StyledTextarea value={today.prayerDecree ?? ""} onChange={v=>updateToday({prayerDecree:v})} placeholder="¿Qué preguntas surgieron?" rows={5}/>
           </div>
         </div>
 
         <div className="card-premium">
-          <SectionLabel icon={<span style={{ width:32, height:32, background:"#e11d74", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}><Heart size={15} color="white" fill="white"/></span>}>
+          <SectionLabel icon={<span style={{ width:32, height:32, background:"var(--color-theme-primary)", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}><Heart size={15} color="white" fill="white"/></span>}>
             Mi Oración de Hoy
           </SectionLabel>
           <StyledTextarea value={today.prayerAsk ?? ""} onChange={v=>updateToday({prayerAsk:v})} placeholder="Habla con Dios libremente... Él te escucha 🌸" rows={4}/>

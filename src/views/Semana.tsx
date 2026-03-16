@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useJournal } from '../context/JournalContext';
-import { Calendar, CheckCircle2, Circle, Star, Sparkles, TrendingUp, Heart, BookOpen, X, Flame } from 'lucide-react';
+import { Calendar, CheckCircle2, Circle, Star, Sparkles, TrendingUp, Heart, BookOpen, X, Flame, ArrowRight } from 'lucide-react';
 import { DayData, Mood } from '../types';
 
 const MOOD_EMOJIS: Record<string, string> = {
@@ -15,10 +15,30 @@ const MOOD_EMOJIS: Record<string, string> = {
 };
 
 const DayDetailModal = ({ day, onClose }: { day: { date: Date; data: DayData; dayName: string; dayNum: number; isToday: boolean }; onClose: () => void }) => {
+  const { state, updateToday } = useJournal();
+  const [passed, setPassed] = useState(false);
   const d = day.data;
   const dateStr = day.date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
   const completedTasks = d.tasks?.filter(t => t.completed) || [];
   const pendingTasks = d.tasks?.filter(t => !t.completed) || [];
+
+  const handlePassToToday = async () => {
+    if (pendingTasks.length === 0) return;
+    
+    const newTasks = pendingTasks.map((t, index) => ({
+      id: Date.now().toString() + index,
+      text: t.text,
+      completed: false
+    }));
+
+    const currentTasks = state.today.tasks || [];
+    await updateToday({ tasks: [...currentTasks, ...newTasks] });
+    
+    setPassed(true);
+    setTimeout(() => {
+      onClose();
+    }, 2000);
+  };
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ background: 'rgba(45,10,30,.45)', backdropFilter: 'blur(5px)' }} onClick={e => e.target === e.currentTarget && onClose()}>
@@ -28,7 +48,7 @@ const DayDetailModal = ({ day, onClose }: { day: { date: Date; data: DayData; da
         exit={{ opacity: 0, y: 30, scale: 0.95 }}
         className="bg-white rounded-[2.5rem] w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl"
       >
-        <div className="bg-deep-rose p-5 sm:p-6 flex items-center justify-between shrink-0">
+        <div className="bg-theme-primary p-5 sm:p-6 flex items-center justify-between shrink-0">
           <div className="min-w-0">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">{day.isToday ? 'Hoy' : 'Historial'}</p>
             <h3 className="text-lg sm:text-xl font-serif italic text-white font-bold capitalize truncate">{dateStr}</h3>
@@ -46,12 +66,12 @@ const DayDetailModal = ({ day, onClose }: { day: { date: Date; data: DayData; da
           {d.priorities?.filter(Boolean).length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-3">
-                <Sparkles size={14} className="text-deep-rose" />
+                <Sparkles size={14} className="text-theme-primary" />
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-soft-text/40">Prioridades</p>
               </div>
               <div className="space-y-2">
                 {d.priorities.filter(Boolean).map((p, i) => (
-                  <p key={i} className="text-sm font-medium text-soft-text bg-rose-50/50 p-3 rounded-xl break-words">{p}</p>
+                  <p key={i} className="text-sm font-medium text-soft-text bg-theme-pastel/50 p-3 rounded-xl break-words">{p}</p>
                 ))}
               </div>
             </section>
@@ -79,16 +99,32 @@ const DayDetailModal = ({ day, onClose }: { day: { date: Date; data: DayData; da
           {pendingTasks.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-3">
-                <Circle size={14} className="text-deep-rose" />
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-deep-rose/60">Pendientes ({pendingTasks.length})</p>
+                <Circle size={14} className="text-theme-primary" />
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary/60">Pendientes ({pendingTasks.length})</p>
               </div>
               <div className="space-y-1.5">
                 {pendingTasks.map(t => (
-                  <div key={t.id} className="flex items-center gap-3 p-3 rounded-xl bg-rose-50/50 border border-rose-pastel/50">
-                    <Circle size={14} className="text-deep-rose/30 shrink-0" />
+                  <div key={t.id} className="flex items-center gap-3 p-3 rounded-xl bg-theme-pastel/50 border border-theme-border/50">
+                    <Circle size={14} className="text-theme-primary/30 shrink-0" />
                     <span className="text-sm font-medium text-soft-text break-words">{t.text}</span>
                   </div>
                 ))}
+
+                {!day.isToday && (
+                  <button
+                    onClick={handlePassToToday}
+                    disabled={passed}
+                    className={`w-full mt-4 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98] ${
+                      passed ? 'bg-green-500 text-white' : 'bg-theme-primary text-white'
+                    }`}
+                  >
+                    {passed ? (
+                      <><CheckCircle2 size={14} /> ¡Pasadas a hoy!</>
+                    ) : (
+                      <><ArrowRight size={14} /> Pasar pendientes a hoy</>
+                    )}
+                  </button>
+                )}
               </div>
             </section>
           )}
@@ -102,12 +138,12 @@ const DayDetailModal = ({ day, onClose }: { day: { date: Date; data: DayData; da
           {d.gratitude?.filter(Boolean).length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-3">
-                <Heart size={14} className="text-deep-rose" />
+                <Heart size={14} className="text-theme-primary" />
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-soft-text/40">Gratitud</p>
               </div>
               <div className="space-y-2">
                 {d.gratitude.filter(Boolean).map((g, i) => (
-                  <p key={i} className="text-sm italic text-soft-text/70 bg-white/40 p-3 rounded-xl border border-rose-pastel/20 break-words">"{g}"</p>
+                  <p key={i} className="text-sm italic text-soft-text/70 bg-white/40 p-3 rounded-xl border border-theme-border/20 break-words">"{g}"</p>
                 ))}
               </div>
             </section>
@@ -117,12 +153,12 @@ const DayDetailModal = ({ day, onClose }: { day: { date: Date; data: DayData; da
           {d.devocionalRef && (
             <section>
               <div className="flex items-center gap-2 mb-3">
-                <BookOpen size={14} className="text-deep-rose" />
+                <BookOpen size={14} className="text-theme-primary" />
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-soft-text/40">Devocional</p>
               </div>
-              <blockquote className="text-sm italic text-soft-text leading-relaxed border-l-2 border-deep-rose pl-4 break-words">
+              <blockquote className="text-sm italic text-soft-text leading-relaxed border-l-2 border-theme-primary pl-4 break-words">
                 {d.devocionalVerse && `"${d.devocionalVerse}"`}
-                <span className="block text-[10px] font-black uppercase text-deep-rose/40 mt-2">— {d.devocionalRef}</span>
+                <span className="block text-[10px] font-black uppercase text-theme-primary/40 mt-2">— {d.devocionalRef}</span>
               </blockquote>
               {d.devocionalReflection && (
                 <p className="text-sm text-soft-text/50 mt-3 italic break-words">Reflexión: {d.devocionalReflection}</p>
@@ -204,8 +240,8 @@ const Semana: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col items-center justify-center py-20 text-center space-y-6"
       >
-        <div className="w-20 h-20 bg-white/60 rounded-full flex items-center justify-center shadow-sm border border-rose-pastel">
-          <Calendar size={32} className="text-deep-rose/30" />
+        <div className="w-20 h-20 bg-white/60 rounded-full flex items-center justify-center shadow-sm border border-theme-border">
+          <Calendar size={32} className="text-theme-primary/30" />
         </div>
         <div className="space-y-2">
           <h2 className="font-serif italic text-2xl text-soft-text">Tu semana está por florecer</h2>
@@ -226,7 +262,7 @@ const Semana: React.FC = () => {
         <p className="text-[10px] uppercase tracking-[0.3em] text-soft-text/40 font-black mb-2">
           {dateRangeStr}
         </p>
-        <h1 className="font-serif italic text-deep-rose text-4xl lg:text-5xl leading-tight">Esta semana</h1>
+        <h1 className="font-serif italic text-theme-primary text-4xl lg:text-5xl leading-tight">Esta semana</h1>
       </header>
 
       {/* Grid de días */}
@@ -244,18 +280,18 @@ const Semana: React.FC = () => {
                   rounded-[2rem] p-3 sm:p-4 text-center transition-all flex flex-col justify-between items-center
                   ${hasData ? 'cursor-pointer hover:scale-105 active:scale-95' : 'cursor-default'}
                   ${day.isToday
-                    ? "bg-white border-2 border-deep-rose shadow-md scale-105 z-10"
+                    ? "bg-white border-2 border-theme-primary shadow-md scale-105 z-10"
                     : day.data?.mood
-                      ? "bg-white/80 border border-rose-pastel shadow-sm hover:shadow-md"
+                      ? "bg-white/80 border border-theme-border shadow-sm hover:shadow-md"
                       : "bg-white/30 border border-white/40 opacity-60"
                   }
                 `}
               >
                 <div className="space-y-0.5">
-                  <p className={`text-[10px] font-black uppercase tracking-widest ${day.isToday ? 'text-deep-rose' : 'text-soft-text/30'}`}>
+                  <p className={`text-[10px] font-black uppercase tracking-widest ${day.isToday ? 'text-theme-primary' : 'text-soft-text/30'}`}>
                     {day.dayName}
                   </p>
-                  <p className={`font-serif text-lg sm:text-xl font-bold ${day.isToday ? 'text-deep-rose' : 'text-soft-text'}`}>
+                  <p className={`font-serif text-lg sm:text-xl font-bold ${day.isToday ? 'text-theme-primary' : 'text-soft-text'}`}>
                     {day.dayNum}
                   </p>
                 </div>
@@ -265,9 +301,9 @@ const Semana: React.FC = () => {
                 </div>
 
                 {hasTasks && (
-                  <div className="w-full h-1 bg-rose-pastel/30 rounded-full overflow-hidden mt-1">
+                  <div className="w-full h-1 bg-theme-pastel/30 rounded-full overflow-hidden mt-1">
                     <div
-                      className="h-full bg-deep-rose/40"
+                      className="h-full bg-theme-primary/40"
                       style={{ width: `${(day.data!.tasks.filter(t => t.completed).length / day.data!.tasks.length) * 100}%` }}
                     />
                   </div>
@@ -283,20 +319,20 @@ const Semana: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <section className="card-premium">
           <div className="flex items-center gap-3 mb-6">
-            <TrendingUp size={18} className="text-deep-rose" />
+            <TrendingUp size={18} className="text-theme-primary" />
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-soft-text/40">Resumen de Actividad</h3>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-rose-50/50 p-5 rounded-3xl border border-rose-100/50">
-              <p className="text-[10px] uppercase font-black text-deep-rose/40 tracking-wider mb-2">Días Activos</p>
+            <div className="bg-theme-pastel/50 p-5 rounded-3xl border border-theme-border/50">
+              <p className="text-[10px] uppercase font-black text-theme-primary/40 tracking-wider mb-2">Días Activos</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-serif text-deep-rose">{stats.activeDays}</span>
-                <span className="text-[10px] text-deep-rose/60 font-bold">/ 7</span>
+                <span className="text-3xl font-serif text-theme-primary">{stats.activeDays}</span>
+                <span className="text-[10px] text-theme-primary/60 font-bold">/ 7</span>
               </div>
             </div>
 
-            <div className="bg-white/60 p-5 rounded-3xl border border-rose-pastel/50">
+            <div className="bg-white/60 p-5 rounded-3xl border border-theme-border/50">
               <p className="text-[10px] uppercase font-black text-soft-text/30 tracking-wider mb-2">Tareas</p>
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-serif text-soft-text">{stats.completedTasks}</span>
@@ -308,12 +344,12 @@ const Semana: React.FC = () => {
 
         <section className="card-premium">
           <div className="flex items-center gap-3 mb-6">
-            <Sparkles size={18} className="text-deep-rose" />
+            <Sparkles size={18} className="text-theme-primary" />
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-soft-text/40">Tu Brillo</h3>
           </div>
 
           <div className="flex items-center gap-6">
-            <div className="w-16 h-16 bg-white rounded-[2rem] flex items-center justify-center text-4xl shadow-inner-sm border border-rose-pastel shrink-0">
+            <div className="w-16 h-16 bg-white rounded-[2rem] flex items-center justify-center text-4xl shadow-inner-sm border border-theme-border shrink-0">
               {stats.dominantMood ? MOOD_EMOJIS[stats.dominantMood] : '✨'}
             </div>
             <div>

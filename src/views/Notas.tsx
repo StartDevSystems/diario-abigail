@@ -4,10 +4,10 @@ import { useJournal } from '../context/JournalContext';
 import { Plus, Trash2, Calendar } from 'lucide-react';
 
 const TAGS = [
-  { id: 'general',      label: 'General',       emoji: '📝', color: '#9ca3af' },
-  { id: 'oracion',      label: 'Oración',       emoji: '🙏', color: '#e11d74' },
-  { id: 'aprendizaje',  label: 'Aprendizaje',   emoji: '📖', color: '#7c3aed' },
-  { id: 'suenos',       label: 'Sueños',        emoji: '💭', color: '#2563eb' },
+  { id: 'general',      label: 'General',       emoji: '📝', color: '#9ca3af', bgColor: '#9ca3af20' },
+  { id: 'oracion',      label: 'Oración',       emoji: '🙏', color: 'var(--color-theme-primary)', bgColor: 'var(--color-theme-accent)' },
+  { id: 'aprendizaje',  label: 'Aprendizaje',   emoji: '📖', color: '#7c3aed', bgColor: '#7c3aed20' },
+  { id: 'suenos',       label: 'Sueños',        emoji: '💭', color: '#2563eb', bgColor: '#2563eb20' },
 ];
 
 const Notas: React.FC = () => {
@@ -30,9 +30,9 @@ const Notas: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-10">
-      <header className="border-b border-[#ffd6e7] pb-6">
-        <h2 className="text-4xl font-serif text-[#e11d74] font-light italic">Mis Notas</h2>
-        <p className="text-[#1d1d1f]/60 font-medium text-sm mt-1">Captura tus ideas y reflexiones</p>
+      <header className="border-b border-theme-border pb-6">
+        <h2 className="text-4xl font-serif text-theme-primary font-light italic">Mis Notas</h2>
+        <p className="text-soft-text/60 font-medium text-sm mt-1">Captura tus ideas y reflexiones</p>
       </header>
 
       {/* Barra de Filtros */}
@@ -41,8 +41,8 @@ const Notas: React.FC = () => {
           onClick={() => setActiveFilter('all')}
           className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
             activeFilter === 'all' 
-              ? 'bg-[#e11d74] text-white shadow-md' 
-              : 'bg-white border border-[#ffd6e7] text-[#1d1d1f]/60 hover:bg-[#fff0f5]'
+              ? 'bg-theme-primary text-white shadow-md' 
+              : 'bg-white border border-theme-border text-soft-text/60 hover:bg-theme-pastel'
           }`}
         >
           Todas
@@ -54,7 +54,7 @@ const Notas: React.FC = () => {
             className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeFilter === tag.id 
                 ? 'text-white shadow-md' 
-                : 'bg-white border border-[#ffd6e7] text-[#1d1d1f]/60 hover:bg-[#fff0f5]'
+                : 'bg-white border border-theme-border text-soft-text/60 hover:bg-theme-pastel'
             }`}
             style={{ backgroundColor: activeFilter === tag.id ? tag.color : '' }}
           >
@@ -74,11 +74,11 @@ const Notas: React.FC = () => {
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 border ${
                 selectedTag === tag.id 
                   ? 'text-white shadow-sm' 
-                  : 'bg-[#fff0f5] border-[#ffd6e7] text-[#1d1d1f]/60'
+                  : 'bg-theme-pastel border-theme-border text-soft-text/60'
               }`}
               style={{ 
                 backgroundColor: selectedTag === tag.id ? tag.color : '',
-                borderColor: selectedTag === tag.id ? tag.color : '#ffd6e7'
+                borderColor: selectedTag === tag.id ? tag.color : ''
               }}
             >
               <span>{tag.emoji}</span>
@@ -92,9 +92,9 @@ const Notas: React.FC = () => {
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
             placeholder="Escribe un nuevo pensamiento... 🌸"
-            className="flex-1 bg-white/40 backdrop-blur-sm rounded-2xl p-4 border border-[#ffd6e7] outline-none text-[#1d1d1f] resize-none h-32 italic transition-all focus:border-[#e11d74]"
+            className="flex-1 bg-white/40 backdrop-blur-sm rounded-2xl p-4 border border-theme-border outline-none text-soft-text resize-none h-32 italic transition-all focus:border-theme-primary"
           />
-          <button onClick={handleAdd} className="bg-[#e11d74] text-white p-5 rounded-2xl hover:scale-105 active:scale-95 transition-all self-end shadow-lg shadow-[#e11d74]/20">
+          <button onClick={handleAdd} className="bg-theme-primary text-white p-5 rounded-2xl hover:scale-105 active:scale-95 transition-all self-end shadow-lg shadow-theme-primary/20">
             <Plus size={28} />
           </button>
         </div>
@@ -117,21 +117,21 @@ const Notas: React.FC = () => {
                 {/* Badge de Etiqueta */}
                 <div 
                   className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase flex items-center gap-1"
-                  style={{ backgroundColor: `${noteTag.color}20`, color: noteTag.color }}
+                  style={{ backgroundColor: noteTag.bgColor, color: noteTag.color }}
                 >
                   <span>{noteTag.emoji}</span>
                   {noteTag.label}
                 </div>
 
                 <div className="flex items-center gap-1.5">
-                  <Calendar size={12} className="text-[#e11d74]" />
-                  <span className="text-[10px] font-black text-[#1d1d1f]/40 tracking-[0.2em] uppercase">
+                  <Calendar size={12} className="text-theme-primary" />
+                  <span className="text-[10px] font-black text-soft-text/40 tracking-[0.2em] uppercase">
                     {new Date(note.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </span>
                 </div>
               </div>
 
-              <p className="text-[#1d1d1f] leading-relaxed whitespace-pre-wrap italic text-base break-words">
+              <p className="text-soft-text leading-relaxed whitespace-pre-wrap italic text-base break-words">
                 {note.content}
               </p>
             </div>

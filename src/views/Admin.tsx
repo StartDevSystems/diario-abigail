@@ -28,7 +28,7 @@ const UserDiaryModal = ({ user: u, onClose }: { user: any; onClose: () => void }
       <motion.div initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 30, scale: 0.95 }}
         className="bg-white rounded-[2.5rem] w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
 
-        <div className="bg-[#e11d74] p-6 flex items-center justify-between shrink-0">
+        <div className="bg-theme-primary p-6 flex items-center justify-between shrink-0">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Auditoría de Diario</p>
             <h3 className="text-xl font-serif italic text-white font-bold">{userName}</h3>
@@ -41,22 +41,22 @@ const UserDiaryModal = ({ user: u, onClose }: { user: any; onClose: () => void }
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Estado de hoy */}
           <section className="card-premium">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] mb-4">Estado del Día</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary mb-4">Estado del Día</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.15em] text-[#1d1d1f]/30 mb-1">Ánimo</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.15em] text-soft-text/30 mb-1">Ánimo</p>
                 <p className="text-2xl">{today.mood ? `${MOODS[today.mood] || '❓'} ${today.mood}` : '— Sin registro'}</p>
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.15em] text-[#1d1d1f]/30 mb-1">Racha</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.15em] text-soft-text/30 mb-1">Racha</p>
                 <div className="flex items-center gap-1.5">
                   <Flame size={16} className="text-orange-500" />
                   <span className="text-lg font-black text-orange-500">{u.streak || 0} días</span>
                 </div>
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.15em] text-[#1d1d1f]/30 mb-1">Versículo</p>
-                <p className="text-sm italic text-[#1d1d1f]/70 break-words">{today.devocionalRef || '— Ninguno'}</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.15em] text-soft-text/30 mb-1">Versículo</p>
+                <p className="text-sm italic text-soft-text/70 break-words">{today.devocionalRef || '— Ninguno'}</p>
               </div>
             </div>
           </section>
@@ -64,10 +64,10 @@ const UserDiaryModal = ({ user: u, onClose }: { user: any; onClose: () => void }
           {/* Prioridades */}
           {today.priorities?.filter(Boolean).length > 0 && (
             <section className="card-premium">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] mb-3 flex items-center gap-2"><Star size={14} /> Prioridades</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary mb-3 flex items-center gap-2"><Star size={14} /> Prioridades</p>
               <ul className="space-y-2">
                 {today.priorities.filter(Boolean).map((p: string, i: number) => (
-                  <li key={i} className="text-sm font-medium text-[#1d1d1f] bg-[#fff0f5] p-3 rounded-xl break-words">{p}</li>
+                  <li key={i} className="text-sm font-medium text-soft-text bg-theme-pastel p-3 rounded-xl break-words">{p}</li>
                 ))}
               </ul>
             </section>
@@ -76,10 +76,10 @@ const UserDiaryModal = ({ user: u, onClose }: { user: any; onClose: () => void }
           {/* Gratitud */}
           {today.gratitude?.filter(Boolean).length > 0 && (
             <section className="card-premium">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] mb-3 flex items-center gap-2"><Heart size={14} /> Gratitud</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary mb-3 flex items-center gap-2"><Heart size={14} /> Gratitud</p>
               <ul className="space-y-2">
                 {today.gratitude.filter(Boolean).map((g: string, i: number) => (
-                  <li key={i} className="text-sm italic text-[#1d1d1f]/70 bg-white/40 p-3 rounded-xl border border-[#ffd6e7]/20 break-words">"{g}"</li>
+                  <li key={i} className="text-sm italic text-soft-text/70 bg-white/40 p-3 rounded-xl border border-theme-border/20 break-words">"{g}"</li>
                 ))}
               </ul>
             </section>
@@ -88,11 +88,11 @@ const UserDiaryModal = ({ user: u, onClose }: { user: any; onClose: () => void }
           {/* Tareas */}
           {today.tasks?.length > 0 && (
             <section className="card-premium">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] mb-3 flex items-center gap-2"><CheckCircle2 size={14} /> Tareas ({today.tasks.filter((t: any) => t.completed).length}/{today.tasks.length})</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary mb-3 flex items-center gap-2"><CheckCircle2 size={14} /> Tareas ({today.tasks.filter((t: any) => t.completed).length}/{today.tasks.length})</p>
               <ul className="space-y-1.5">
                 {today.tasks.map((t: any) => (
-                  <li key={t.id} className={`text-sm p-2 rounded-lg flex items-center gap-2 ${t.completed ? 'line-through text-[#1d1d1f]/30' : 'text-[#1d1d1f] font-medium'}`}>
-                    <CheckCircle2 size={14} className={t.completed ? 'text-green-400' : 'text-[#ffd6e7]'} />
+                  <li key={t.id} className={`text-sm p-2 rounded-lg flex items-center gap-2 ${t.completed ? 'line-through text-soft-text/30' : 'text-soft-text font-medium'}`}>
+                    <CheckCircle2 size={14} className={t.completed ? 'text-green-400' : 'text-theme-border'} />
                     <span className="break-words">{t.text}</span>
                   </li>
                 ))}
@@ -103,22 +103,22 @@ const UserDiaryModal = ({ user: u, onClose }: { user: any; onClose: () => void }
           {/* Hábitos */}
           {habits.length > 0 && (
             <section className="card-premium">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] mb-3 flex items-center gap-2"><Calendar size={14} /> Hábitos</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary mb-3 flex items-center gap-2"><Calendar size={14} /> Hábitos</p>
               <div className="space-y-3">
                 {habits.map((h: any) => {
                   const completed = (h.completedDays || []).filter(Boolean).length;
                   return (
-                    <div key={h.id} className="flex items-center gap-3 bg-[#fff0f5]/50 p-3 rounded-xl">
+                    <div key={h.id} className="flex items-center gap-3 bg-theme-pastel/50 p-3 rounded-xl">
                       <span className="text-xl shrink-0">{h.emoji || '🌸'}</span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-[#1d1d1f] break-words">{h.name}</p>
+                        <p className="text-sm font-bold text-soft-text break-words">{h.name}</p>
                         <div className="flex gap-1 mt-1">
                           {DAYS.map((d, i) => (
-                            <div key={i} className={`w-5 h-5 rounded-full text-[8px] flex items-center justify-center font-bold ${h.completedDays?.[i] ? 'bg-[#e11d74] text-white' : 'bg-[#ffd6e7]/30 text-[#1d1d1f]/20'}`}>{d[0]}</div>
+                            <div key={i} className={`w-5 h-5 rounded-full text-[8px] flex items-center justify-center font-bold ${h.completedDays?.[i] ? 'bg-theme-primary text-white' : 'bg-theme-border/30 text-soft-text/20'}`}>{d[0]}</div>
                           ))}
                         </div>
                       </div>
-                      <span className="text-xs font-black text-[#e11d74] shrink-0">{completed}/7</span>
+                      <span className="text-xs font-black text-theme-primary shrink-0">{completed}/7</span>
                     </div>
                   );
                 })}
@@ -129,15 +129,15 @@ const UserDiaryModal = ({ user: u, onClose }: { user: any; onClose: () => void }
           {/* Notas */}
           {notes.length > 0 && (
             <section className="card-premium">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] mb-3 flex items-center gap-2"><FileText size={14} /> Notas ({notes.length})</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary mb-3 flex items-center gap-2"><FileText size={14} /> Notas ({notes.length})</p>
               <div className="space-y-2">
                 {notes.slice(0, 5).map((n: any) => (
-                  <div key={n.id} className="bg-white/40 p-3 rounded-xl border border-[#ffd6e7]/20">
-                    <p className="text-[10px] font-bold text-[#1d1d1f]/30 mb-1">{new Date(n.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}</p>
-                    <p className="text-sm italic text-[#1d1d1f]/70 break-words line-clamp-3">{n.content}</p>
+                  <div key={n.id} className="bg-white/40 p-3 rounded-xl border border-theme-border/20">
+                    <p className="text-[10px] font-bold text-soft-text/30 mb-1">{new Date(n.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}</p>
+                    <p className="text-sm italic text-soft-text/70 break-words line-clamp-3">{n.content}</p>
                   </div>
                 ))}
-                {notes.length > 5 && <p className="text-[10px] font-black text-[#e11d74] text-center">+{notes.length - 5} notas más</p>}
+                {notes.length > 5 && <p className="text-[10px] font-black text-theme-primary text-center">+{notes.length - 5} notas más</p>}
               </div>
             </section>
           )}
@@ -145,12 +145,12 @@ const UserDiaryModal = ({ user: u, onClose }: { user: any; onClose: () => void }
           {/* Devocional */}
           {today.devocionalVerse && (
             <section className="card-premium">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] mb-3 flex items-center gap-2"><BookOpen size={14} /> Devocional</p>
-              <blockquote className="text-sm italic text-[#1d1d1f] leading-relaxed border-l-2 border-[#e11d74] pl-4 break-words">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary mb-3 flex items-center gap-2"><BookOpen size={14} /> Devocional</p>
+              <blockquote className="text-sm italic text-soft-text leading-relaxed border-l-2 border-theme-primary pl-4 break-words">
                 "{today.devocionalVerse}"
-                <span className="block text-[10px] font-black uppercase text-[#9b4f82] mt-2">— {today.devocionalRef}</span>
+                <span className="block text-[10px] font-black uppercase text-theme-muted mt-2">— {today.devocionalRef}</span>
               </blockquote>
-              {today.devocionalReflection && <p className="text-sm text-[#1d1d1f]/60 mt-3 italic break-words">Reflexión: {today.devocionalReflection}</p>}
+              {today.devocionalReflection && <p className="text-sm text-soft-text/60 mt-3 italic break-words">Reflexión: {today.devocionalReflection}</p>}
             </section>
           )}
         </div>
@@ -264,22 +264,22 @@ const Admin: React.FC = () => {
 
   return (
     <div className="space-y-10 pb-20">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#ffd6e7] pb-8">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-theme-border pb-8">
         <div>
-          <div className="flex items-center gap-2 text-[#e11d74] mb-2">
+          <div className="flex items-center gap-2 text-theme-primary mb-2">
             <ShieldCheck size={20} />
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Soberana de Datos</span>
           </div>
-          <h2 className="text-5xl font-serif text-[#1d1d1f] italic font-light">Panel Supremo</h2>
+          <h2 className="text-5xl font-serif text-soft-text italic font-light">Panel Supremo</h2>
         </div>
         <div className="relative min-w-0">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1d1d1f]/30" size={20} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-soft-text/30" size={20} />
           <input 
             type="text" 
             placeholder="Buscar por ID o Ánimo..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-12 pr-6 py-4 card-premium border border-[#ffd6e7]/50 outline-none focus:border-[#e11d74] w-full md:w-80 transition-all bg-white/60 backdrop-blur-md min-w-0"
+            className="pl-12 pr-6 py-4 card-premium border border-theme-border/50 outline-none focus:border-theme-primary w-full md:w-80 transition-all bg-white/60 backdrop-blur-md min-w-0"
           />
         </div>
       </header>
@@ -287,12 +287,12 @@ const Admin: React.FC = () => {
       {/* MÉTRICAS DE ESTADO DEL SISTEMA */}
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {[
-          { label: 'Usuarios Totales', val: stats.total, icon: <Users size={20} />, color: '#e11d74' },
-          { label: 'Activos Hoy', val: stats.active, icon: <Activity size={20} />, color: '#db2777' },
-          { label: 'Hábitos Logrados', val: stats.habits, icon: <CheckCircle2 size={20} />, color: '#9b4f82' }
+          { label: 'Usuarios Totales', val: stats.total, icon: <Users size={20} />, color: 'var(--color-theme-primary)' },
+          { label: 'Activos Hoy', val: stats.active, icon: <Activity size={20} />, color: 'var(--color-theme-primary)' },
+          { label: 'Hábitos Logrados', val: stats.habits, icon: <CheckCircle2 size={20} />, color: 'var(--color-theme-muted)' }
         ].map((s, i) => (
           <div key={i} className="card-premium flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-inner-sm" style={{ background: '#fff0f5', color: s.color, border: '1px solid #ffd6e7' }}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-inner-sm" style={{ background: 'var(--color-theme-pastel)', color: s.color, border: '1px solid var(--color-theme-border)' }}>
               {s.icon}
             </div>
             <div className="min-w-0">
@@ -304,14 +304,14 @@ const Admin: React.FC = () => {
       </section>
 
       {/* ABI-22: ENVIAR PALABRA DEL DÍA */}
-      <section className="card-premium bg-gradient-to-br from-[#fff0f5] to-white border-[#ffd6e7]/40">
+      <section className="card-premium bg-gradient-to-br from-theme-pastel to-white border-theme-border/40">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-[#e11d74] flex items-center justify-center text-white shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-theme-primary flex items-center justify-center text-white shrink-0">
             <Sparkles size={20} />
           </div>
           <div>
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#e11d74]">Palabra del Día</h3>
-            <p className="text-sm italic text-[#1d1d1f]/50">Envía un mensaje de aliento a todas las usuarias</p>
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-theme-primary">Palabra del Día</h3>
+            <p className="text-sm italic text-soft-text/50">Envía un mensaje de aliento a todas las usuarias</p>
           </div>
         </div>
 
@@ -321,9 +321,9 @@ const Admin: React.FC = () => {
               value={dailyWord}
               onChange={(e) => setDailyWord(e.target.value.slice(0, 280))}
               placeholder="Escribe aquí el mensaje de hoy..."
-              className="w-full p-6 bg-white border border-[#ffd6e7] rounded-3xl outline-none focus:border-[#e11d74] transition-all font-serif italic text-lg text-[#1d1d1f] min-h-[140px] resize-none break-words"
+              className="w-full p-6 bg-white border border-theme-border rounded-3xl outline-none focus:border-theme-primary transition-all font-serif italic text-lg text-soft-text min-h-[140px] resize-none break-words"
             />
-            <div className="absolute bottom-4 right-6 text-[10px] font-black uppercase tracking-widest text-[#1d1d1f]/20">
+            <div className="absolute bottom-4 right-6 text-[10px] font-black uppercase tracking-widest text-soft-text/20">
               {dailyWord.length}/280
             </div>
           </div>
@@ -334,7 +334,7 @@ const Admin: React.FC = () => {
             className={`w-full py-4 rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 shrink-0 ${
               sendSuccess 
                 ? 'bg-green-500 text-white' 
-                : 'bg-[#e11d74] text-white hover:bg-[#db2777] shadow-lg shadow-[#e11d74]/20 disabled:opacity-30 disabled:shadow-none'
+                : 'bg-theme-primary text-white hover:bg-theme-hover shadow-lg shadow-theme-primary/20 disabled:opacity-30 disabled:shadow-none'
             }`}
           >
             {isSending ? (
@@ -361,12 +361,12 @@ const Admin: React.FC = () => {
       <section className="space-y-6">
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center gap-3">
-            <MessageSquare size={18} className="text-[#e11d74]" />
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1d1d1f]/40">Buzón de Sugerencias</h3>
+            <MessageSquare size={18} className="text-theme-primary" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-soft-text/40">Buzón de Sugerencias</h3>
           </div>
           <button 
             onClick={fetchSuggestions}
-            className="text-[10px] font-black uppercase tracking-widest text-[#e11d74] hover:underline"
+            className="text-[10px] font-black uppercase tracking-widest text-theme-primary hover:underline"
           >
             Sincronizar
           </button>
@@ -374,19 +374,19 @@ const Admin: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {loadingSuggestions ? (
-            <div className="col-span-full py-12 text-center text-[#1d1d1f]/30 italic animate-pulse">Cargando pensamientos...</div>
+            <div className="col-span-full py-12 text-center text-soft-text/30 italic animate-pulse">Cargando pensamientos...</div>
           ) : suggestions.length === 0 ? (
-            <div className="col-span-full card-premium py-12 text-center text-[#1d1d1f]/30 italic">No hay sugerencias todavía</div>
+            <div className="col-span-full card-premium py-12 text-center text-soft-text/30 italic">No hay sugerencias todavía</div>
           ) : (
             suggestions.map((s) => (
-              <div key={s.id} className={`card-premium transition-all relative overflow-hidden ${s.status === 'read' ? 'opacity-60 grayscale-[0.5]' : 'border-l-4 border-l-[#e11d74]'}`}>
+              <div key={s.id} className={`card-premium transition-all relative overflow-hidden ${s.status === 'read' ? 'opacity-60 grayscale-[0.5]' : 'border-l-4 border-l-theme-primary'}`}>
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#fff0f5] flex items-center justify-center text-[#e11d74] text-xs font-black shadow-sm border border-[#ffd6e7]">
+                    <div className="w-8 h-8 rounded-lg bg-theme-pastel flex items-center justify-center text-theme-primary text-xs font-black shadow-sm border border-theme-border">
                       {(s.userName || 'U')[0]}
                     </div>
                     <div>
-                      <p className="text-[11px] font-bold text-[#1d1d1f]">{s.userName}</p>
+                      <p className="text-[11px] font-bold text-soft-text">{s.userName}</p>
                       <div className="flex items-center gap-1.5 opacity-40">
                         <Clock size={10} />
                         <span className="text-[10px] font-medium">
@@ -400,14 +400,14 @@ const Admin: React.FC = () => {
                   </span>
                 </div>
 
-                <p className="text-sm text-[#1d1d1f]/80 leading-relaxed break-words mb-6 italic">
+                <p className="text-sm text-soft-text/80 leading-relaxed break-words mb-6 italic">
                   "{s.message}"
                 </p>
 
                 {s.status !== 'read' && (
                   <button 
                     onClick={() => markAsRead(s.id)}
-                    className="w-full py-3 bg-[#fff0f5] hover:bg-[#e11d74] hover:text-white text-[#e11d74] rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border border-[#ffd6e7]"
+                    className="w-full py-3 bg-theme-pastel hover:bg-theme-primary hover:text-white text-theme-primary rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-theme-border"
                   >
                     Marcar como leída
                   </button>
@@ -422,47 +422,47 @@ const Admin: React.FC = () => {
         {/* LISTADO DE USUARIOS */}
         <div className="lg:col-span-8 space-y-6">
           <div className="flex items-center gap-3 mb-2 px-2">
-            <Users size={18} className="text-[#e11d74]" />
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1d1d1f]/40">Comunidad de Abigail</h3>
+            <Users size={18} className="text-theme-primary" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-soft-text/40">Comunidad de Abigail</h3>
           </div>
           
           {loading ? (
-            <div className="py-20 text-center text-[#1d1d1f]/40 animate-pulse font-medium">Conectando con la base de datos...</div>
+            <div className="py-20 text-center text-soft-text/40 animate-pulse font-medium">Conectando con la base de datos...</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredUsers.map((u) => (
                 <div key={u.id} className="card-premium group transition-all relative overflow-hidden">
                   <div className="flex justify-between items-start mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-[#fff0f5] flex items-center justify-center text-[#e11d74] text-xl shadow-sm border border-[#ffd6e7] shrink-0">
+                    <div className="w-12 h-12 rounded-2xl bg-theme-pastel flex items-center justify-center text-theme-primary text-xl shadow-sm border border-theme-border shrink-0">
                       {u.today?.mood === 'feliz' ? '😊' : u.today?.mood === 'triste' ? '😢' : u.today?.mood === 'bien' ? '🙂' : '👤'}
                     </div>
                     <div className="flex flex-col items-end gap-2 ml-4 min-w-0">
-                      <p className="text-sm font-bold text-[#1d1d1f] truncate w-full text-right">{u.user?.name || 'Sin nombre'}</p>
-                      <span className="text-[10px] font-mono text-[#1d1d1f]/30 bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-[#ffd6e7]/30 truncate w-full text-right">ID: {u.id.slice(0,8)}</span>
+                      <p className="text-sm font-bold text-soft-text truncate w-full text-right">{u.user?.name || 'Sin nombre'}</p>
+                      <span className="text-[10px] font-mono text-soft-text/30 bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-theme-border/30 truncate w-full text-right">ID: {u.id.slice(0,8)}</span>
                       {u.role === 'admin' && (
-                        <span className="text-[10px] font-black uppercase tracking-widest bg-[#e11d74] text-white px-2 py-0.5 rounded-full shadow-sm">Admin</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest bg-theme-primary text-white px-2 py-0.5 rounded-full shadow-sm">Admin</span>
                       )}
                     </div>
                   </div>
                   
                   <div className="space-y-5">
                     <div>
-                      <p className="text-[10px] font-black text-[#1d1d1f]/30 uppercase tracking-[0.2em] mb-1">Estado de Hoy</p>
-                      <p className="text-lg font-bold text-[#1d1d1f] capitalize truncate">{u.today?.mood || 'Silencio'}</p>
+                      <p className="text-[10px] font-black text-soft-text/30 uppercase tracking-[0.2em] mb-1">Estado de Hoy</p>
+                      <p className="text-lg font-bold text-soft-text capitalize truncate">{u.today?.mood || 'Silencio'}</p>
                     </div>
                     
                     <div>
-                      <p className="text-[10px] font-black text-[#1d1d1f]/30 uppercase tracking-[0.2em] mb-2">Destellos de Gratitud</p>
+                      <p className="text-[10px] font-black text-soft-text/30 uppercase tracking-[0.2em] mb-2">Destellos de Gratitud</p>
                       <div className="space-y-2">
                         {u.today?.gratitude?.filter(Boolean).slice(0,1).map((g: string, i: number) => (
-                          <p key={i} className="text-sm text-[#1d1d1f]/70 italic leading-relaxed break-words bg-white/40 p-3 rounded-xl border border-[#ffd6e7]/20">"{g}"</p>
-                        )) || <p className="text-sm text-[#1d1d1f]/20 italic">Corazón en espera...</p>}
+                          <p key={i} className="text-sm text-soft-text/70 italic leading-relaxed break-words bg-white/40 p-3 rounded-xl border border-theme-border/20">"{g}"</p>
+                        )) || <p className="text-sm text-soft-text/20 italic">Corazón en espera...</p>}
                       </div>
                     </div>
                   </div>
 
                   <div className="mt-8 flex gap-3">
-                    <button onClick={() => setSelectedUser(u)} className="flex-1 flex items-center justify-center gap-2 py-4 bg-[#fff0f5] text-[#e11d74] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#e11d74] hover:text-white transition-all duration-300 border border-[#ffd6e7] shrink-0 min-w-0">
+                    <button onClick={() => setSelectedUser(u)} className="flex-1 flex items-center justify-center gap-2 py-4 bg-theme-pastel text-theme-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-theme-primary hover:text-white transition-all duration-300 border border-theme-border shrink-0 min-w-0">
                       <Eye size={14} /> <span className="truncate">Auditar</span>
                     </button>
                     {u.id !== user?.uid && (
@@ -491,35 +491,35 @@ const Admin: React.FC = () => {
         {/* ACTIVIDAD RECIENTE (LOGS) */}
         <div className="lg:col-span-4 space-y-6">
           <div className="flex items-center gap-3 mb-2 px-2">
-            <Activity size={18} className="text-[#e11d74]" />
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1d1d1f]/40">Actividad Reciente</h3>
+            <Activity size={18} className="text-theme-primary" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-soft-text/40">Actividad Reciente</h3>
           </div>
 
           <div className="card-premium space-y-1">
             {MOCK_LOGS.map((log, idx) => (
-              <div key={log.id} className={`flex items-start gap-4 p-4 transition-colors hover:bg-[#fff0f5]/50 rounded-2xl ${idx !== MOCK_LOGS.length - 1 ? 'border-b border-[#ffd6e7]/20' : ''}`}>
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#fff0f5', color: '#e11d74' }}>
+              <div key={log.id} className={`flex items-start gap-4 p-4 transition-colors hover:bg-theme-pastel/50 rounded-2xl ${idx !== MOCK_LOGS.length - 1 ? 'border-b border-theme-border/20' : ''}`}>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--color-theme-pastel)', color: 'var(--color-theme-primary)' }}>
                   {log.icon}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-[#1d1d1f] break-words leading-tight">{log.text}</p>
+                  <p className="text-sm font-bold text-soft-text break-words leading-tight">{log.text}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] font-mono text-[#e11d74] bg-[#fff0f5] px-1.5 py-0.5 rounded uppercase">{log.user}</span>
-                    <span className="text-[10px] text-[#1d1d1f]/30 font-medium tracking-tight">• {log.time}</span>
+                    <span className="text-[10px] font-mono text-theme-primary bg-theme-pastel px-1.5 py-0.5 rounded uppercase">{log.user}</span>
+                    <span className="text-[10px] text-soft-text/30 font-medium tracking-tight">• {log.time}</span>
                   </div>
                 </div>
               </div>
             ))}
-            <button className="w-full pt-4 pb-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] hover:underline transition-all">Ver todos los eventos</button>
+            <button className="w-full pt-4 pb-2 text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary hover:underline transition-all">Ver todos los eventos</button>
           </div>
 
           {/* ESTADO DE SERVIDORES */}
-          <div className="card-premium bg-gradient-to-br from-[#e11d74]/5 to-transparent border-[#ffd6e7]/30">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e11d74] mb-4">Salud de Red</p>
+          <div className="card-premium bg-gradient-to-br from-theme-primary/5 to-transparent border-theme-border/30">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary mb-4">Salud de Red</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs font-bold text-[#1d1d1f]">Firestore Cloud</span>
+                <span className="text-xs font-bold text-soft-text">Firestore Cloud</span>
               </div>
               <span className="text-[10px] font-mono text-green-600 font-bold">ACTIVO</span>
             </div>

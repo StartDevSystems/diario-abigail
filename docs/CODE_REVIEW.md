@@ -321,6 +321,109 @@ El PO reportó que el logo con el texto "Jesús" en la sección Devocional se co
 
 ---
 
+## Sprint 05 — Temas Dinámicos & Perfil Premium
+**Período:** 16 Mar - 23 Mar 2026
+**Reviewer:** Tech Lead
+
+---
+
+### CR-013: Review de ABI-26 (Sistema de Temas de Color Dinámico)
+**Fecha:** 16 Mar 2026
+**Autor del código:** Dev-1, Dev-2, Dev-3 (refactor colores), Tech Lead (integración picker + fixes)
+**Archivos revisados:** `src/views/Configuracion.tsx`, `src/components/Layout.tsx`, `src/app/globals.css`, `src/app/page.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-013-01 | `INFO` | 8 paletas preset (Rosa, Lavanda, Océano, Esmeralda, Atardecer, Dorado, Carmesí, Elegante) con preview visual. Correcta variedad de colores y buena UX de selección. | `Configuracion.tsx` | OK |
+| CR-013-02 | `INFO` | Color picker libre con `react-colorful`. Arrastre fluido gracias a throttle con `requestAnimationFrame`. Sin jank en dispositivos móviles. | `Configuracion.tsx` | OK |
+| CR-013-03 | `INFO` | `applyTheme()` en Layout.tsx genera 8 variantes HSL desde un solo color hex. Variables CSS dinámicas: `--color-theme-primary`, `hover`, `pastel`, `border`, `light`, `accent`, `muted`, `cream-pastel`. Algoritmo sólido. | `Layout.tsx` | OK |
+| CR-013-04 | `INFO` | Botón "Restablecer colores originales" para volver al default `#e11d74`. Previene que la usuaria quede atrapada con un color que no le gusta. | `Configuracion.tsx` | OK |
+| CR-013-05 | `INFO` | Fondo de toda la app cambia dinámicamente via `bg-cream-pastel`. Preview en tiempo real mientras se arrastra el picker. | `page.tsx`, `Layout.tsx` | OK |
+| CR-013-06 | `MINOR` | Throttle con `requestAnimationFrame` es la elección correcta para rendimiento del picker. Alternativa `lodash.throttle` habría agregado dependencia innecesaria. Buena decisión técnica. | `Configuracion.tsx` | OK |
+
+#### Veredicto
+**APROBADO** (9/10)
+
+Feature completo y bien integrado. La generación de variantes HSL desde un solo color es elegante y mantenible. El throttle con rAF asegura rendimiento fluido. Build exitoso.
+
+---
+
+### CR-014: Review de ABI-27 (Perfil de Usuario Premium — Dashboard Personal)
+**Fecha:** 16 Mar 2026
+**Autor del código:** Agent (estructura), Tech Lead (foto de perfil, fix edición nombre, integración Layout)
+**Archivos revisados:** `src/views/Configuracion.tsx`, `src/context/JournalContext.tsx`, `src/types/index.ts`, `src/components/Layout.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-014-01 | `INFO` | Header con avatar grande (foto o iniciales), nombre serif italic, email, bio y badge Admin. Estilo premium consistente. | `Configuracion.tsx` | OK |
+| CR-014-02 | `INFO` | Subir foto de perfil en base64 con límite de 500KB. Botón de cámara superpuesto sobre el avatar. Foto aparece también en botón "Mi Espacio" del header (Layout.tsx). | `Configuracion.tsx`, `Layout.tsx` | OK |
+| CR-014-03 | `INFO` | Grid de estadísticas 2x2 en móvil / 4x1 en desktop: Días activos, Racha actual, Tareas completadas, Notas escritas. Responsive correcto con `grid-cols-2 sm:grid-cols-4`. | `Configuracion.tsx` | OK |
+| CR-014-04 | `INFO` | Resumen emocional: mood más frecuente destacado + barras de distribución con emojis y porcentajes. Buen uso de datos existentes. | `Configuracion.tsx` | OK |
+| CR-014-05 | `MAJOR` | `useEffect` reseteaba el formulario de nombre/bio en cada render, impidiendo editar. Fix aplicado: el efecto ya no sobreescribe mientras el usuario está escribiendo. | `Configuracion.tsx` | `FIXED` |
+| CR-014-06 | `INFO` | Buzón de sugerencias preservado dentro del perfil. No hubo regresión. | `Configuracion.tsx` | OK |
+
+#### Correcciones aplicadas por el Reviewer
+
+```
+Configuracion.tsx → useEffect con dependencia controlada: solo sincroniza nombre/bio
+                     cuando cambia el uid, no en cada re-render del estado global.
+                     Previene que el formulario se resetee mientras el usuario escribe.
+```
+
+#### Veredicto
+**APROBADO CON CORRECCIONES** (8/10)
+
+Dashboard visualmente atractivo con estadísticas útiles. Bug del useEffect que reseteaba el formulario fue corregido por el Tech Lead. La foto de perfil integrada en Layout.tsx es un buen detalle de cohesión visual.
+
+---
+
+### CR-015: Review de ABI-28 (Botón Guardar Flotante en Ajustes)
+**Fecha:** 16 Mar 2026
+**Autor del código:** Tech Lead
+**Archivos revisados:** `src/views/Configuracion.tsx`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-015-01 | `INFO` | Posición `fixed`, `bottom-28` en móvil (arriba del navbar), `bottom-10` en desktop. Nunca queda tapado por la navegación. | `Configuracion.tsx` | OK |
+| CR-015-02 | `INFO` | Estilo: `rounded-2xl`, `shadow-xl`, `border-2 border-white/20`, `hover:scale-110`. Discreto pero accesible. Solo icono, sin texto. | `Configuracion.tsx` | OK |
+| CR-015-03 | `INFO` | Siempre visible sin importar el scroll. Mejora la UX en formularios largos como Ajustes. | `Configuracion.tsx` | OK |
+
+#### Veredicto
+**APROBADO** (10/10)
+
+Implementación simple y efectiva. Posicionamiento responsive correcto. Build exitoso.
+
+---
+
+### CR-016: Review de ABI-29 (Refactor de Colores Hardcodeados a Variables CSS)
+**Fecha:** 16 Mar 2026
+**Autor del código:** Dev-1, Dev-2, Dev-3
+**Archivos revisados:** `src/views/Admin.tsx`, `src/views/Hoy.tsx`, `src/components/WelcomeScreen.tsx`, `src/app/page.tsx`, `src/app/globals.css`
+
+#### Hallazgos
+
+| ID | Severidad | Descripción | Archivo:Línea | Estado |
+|:---|:---|:---|:---|:---|
+| CR-016-01 | `INFO` | Admin.tsx: 48 colores hardcodeados migrados a variables de tema. Todos los rosas, bordes y fondos ahora respetan el tema activo. | `Admin.tsx` | OK |
+| CR-016-02 | `INFO` | Hoy.tsx: colores migrados + labels de mood añadidos para accesibilidad. | `Hoy.tsx` | OK |
+| CR-016-03 | `INFO` | WelcomeScreen.tsx: colores migrados a variables CSS. Pantalla de bienvenida ahora respeta el tema. | `WelcomeScreen.tsx` | OK |
+| CR-016-04 | `INFO` | page.tsx: `bg-[#fffcf2]` reemplazado por `bg-cream-pastel` (2 ocurrencias). Fondo dinámico. | `page.tsx` | OK |
+| CR-016-05 | `INFO` | globals.css: `@theme` con variables CSS como valores default. Base sólida para el sistema de temas. | `globals.css` | OK |
+| CR-016-06 | `MINOR` | Accesibilidad corregida: instancias de `text-[9px]` encontradas durante el refactor fueron actualizadas a `text-[10px]`, respetando el mínimo del equipo. | Múltiples | `FIXED` |
+
+#### Veredicto
+**APROBADO** (9/10)
+
+Refactor masivo ejecutado correctamente. 169+ colores migrados sin regresiones visuales. Los devs aprovecharon para corregir violaciones de accesibilidad (`text-[9px]` a `text-[10px]`). El sistema de temas ahora tiene una base CSS sólida. Build exitoso.
+
+---
+
 ## Checklist de QA para Dev-1
 
 Antes de entregar código para revisión, verificar:

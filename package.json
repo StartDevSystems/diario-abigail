@@ -16,6 +16,7 @@
     "lucide-react": "^0.344.0",
     "next": "latest",
     "react": "rc",
+    "react-colorful": "^5.6.1",
     "react-dom": "rc",
     "tailwind-merge": "^2.2.1",
     "three": "^0.161.0"

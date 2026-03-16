@@ -4,19 +4,31 @@
   --font-inter: 'var(--font-inter)', 'Inter', sans-serif;
   --font-playfair: 'var(--font-playfair)', 'Playfair Display', serif;
 
-  --color-rose-pastel: #fdf2f2;
+  /* Theme Colors */
+  --color-theme-primary: #e11d74;
+  --color-theme-hover: #c4165f;
+  --color-theme-pastel: #fff0f5;
+  --color-theme-border: #ffd6e7;
+  --color-theme-light: #fff8fb;
+  --color-theme-accent: #fbcfe8;
+  --color-theme-muted: #9b4f82;
+  --color-soft-text: #1d1d1f;
+
+  /* Aliases for backward compatibility */
+  --color-deep-rose: var(--color-theme-primary);
+  --color-rose-pastel: var(--color-theme-pastel);
+  --color-accent-pink: var(--color-theme-accent);
+
+  /* Keep other existing colors */
   --color-lavender-pastel: #f5f3ff;
-  --color-cream-pastel: #efeff4; /* Fondo grisáceo más marcado para que el blanco resalte */
-  --color-accent-pink: #fbcfe8;
+  --color-cream-pastel: #efeff4;
   --color-accent-lavender: #ddd6fe;
-  --color-soft-text: #1d1d1f; /* Negro Apple */
-  --color-deep-rose: #db2777;
 }
 
 @layer base {
   body {
-    color: #1d1d1f;
-    background-color: #efeff4;
+    color: var(--color-soft-text);
+    background-color: var(--color-cream-pastel);
     font-family: var(--font-inter);
     -webkit-font-smoothing: antialiased;
   }
@@ -81,7 +93,7 @@
 }
 
 .floral-pattern {
-  background-image: radial-gradient(#fbcfe8 0.5px, transparent 0.5px);
+  background-image: radial-gradient(var(--color-theme-accent) 0.5px, transparent 0.5px);
   background-size: 20px 20px;
 }
 
@@ -90,6 +102,6 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #fbcfe8;
+  background: var(--color-theme-accent);
   border-radius: 10px;
 }

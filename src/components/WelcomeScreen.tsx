@@ -138,11 +138,11 @@ export default function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
         <motion.div key="feelings"
           initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0, scale:0.97 }}
           transition={{ duration:0.4 }}
-          className="fixed inset-0 flex flex-col items-center justify-center p-6 bg-[#fffcf2] z-[9999]"
+          className="fixed inset-0 flex flex-col items-center justify-center p-6 bg-theme-light z-[9999]"
         >
           <motion.div className="text-center mb-12"
             initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.15 }}>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-deep-rose/30 mb-4">{fecha}</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-theme-primary/30 mb-4">{fecha}</p>
             <h1 className="font-serif italic text-5xl text-soft-text leading-tight mb-4">
               Hola, {firstName} 🌸
             </h1>
@@ -162,7 +162,7 @@ export default function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
                 className="flex flex-col items-center gap-2 py-4 px-2 bg-white rounded-2xl border border-black/5 shadow-sm hover:shadow-md transition-all group"
               >
                 <span className="text-4xl">{f.emoji}</span>
-                <span className="text-[11px] font-bold text-soft-text/50 group-hover:text-deep-rose whitespace-nowrap capitalize">{f.label}</span>
+                <span className="text-[11px] font-bold text-soft-text/50 group-hover:text-theme-primary whitespace-nowrap capitalize">{f.label}</span>
               </motion.button>
             ))}
           </div>
@@ -172,39 +172,39 @@ export default function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
       {screen === "verse" && (
         <motion.div key="verse"
           initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
-          className="fixed inset-0 flex flex-col items-center justify-center p-6 bg-[#fffcf2] z-[9999]"
+          className="fixed inset-0 flex flex-col items-center justify-center p-6 bg-theme-light z-[9999]"
         >
           <motion.div
             initial={{ opacity:0, y:30, scale:0.95 }} 
             animate={{ opacity:1, y:0, scale:1 }}
             transition={{ duration:0.6, ease:"easeOut" }}
-            className="w-full max-w-lg bg-white rounded-[3rem] p-10 md:p-16 text-center border-2 border-rose-pastel shadow-2xl relative overflow-hidden"
+            className="w-full max-w-lg bg-white rounded-[3rem] p-10 md:p-16 text-center border-2 border-theme-border shadow-2xl relative overflow-hidden"
           >
-            <div className="absolute -top-20 -left-20 w-64 h-64 bg-rose-pastel/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -top-20 -left-20 w-64 h-64 bg-theme-pastel/20 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-orange-50 rounded-full blur-3xl pointer-events-none" />
 
-            <button onClick={onEnter} className="absolute right-8 top-8 p-2 bg-rose-pastel/20 rounded-full hover:rotate-90 transition-all text-deep-rose/40 hover:text-deep-rose">
+            <button onClick={onEnter} className="absolute right-8 top-8 p-2 bg-theme-pastel/20 rounded-full hover:rotate-90 transition-all text-theme-primary/40 hover:text-theme-primary">
               <X size={18} />
             </button>
 
             <div className="mb-8 flex flex-col items-center gap-2">
-              <Sparkles className="text-deep-rose mb-2" size={24} />
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-deep-rose/40">Consuelo para tu corazón {selectedLabel.toLowerCase()}</p>
+              <Sparkles className="text-theme-primary mb-2" size={24} />
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-theme-primary/40">Consuelo para tu corazón {selectedLabel.toLowerCase()}</p>
             </div>
 
             <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }}>
               <p className="font-serif italic text-2xl md:text-3xl text-soft-text leading-relaxed mb-8 px-4">
                 "{verseText}"
               </p>
-              <div className="w-12 h-1 bg-rose-pastel mx-auto mb-6 rounded-full" />
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-deep-rose flex items-center justify-center gap-2">
+              <div className="w-12 h-1 bg-theme-pastel mx-auto mb-6 rounded-full" />
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-theme-primary flex items-center justify-center gap-2">
                 {loading && <Loader2 className="animate-spin" size={12} />}
                 {verseRef}
               </p>
               
               <button 
                 onClick={onEnter}
-                className="mt-12 w-full py-5 bg-deep-rose text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-lg shadow-pink-200 hover:scale-[1.02] active:scale-95 transition-all"
+                className="mt-12 w-full py-5 bg-theme-primary text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-lg shadow-theme-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
               >
                 Amén, abrir mi diario
               </button>

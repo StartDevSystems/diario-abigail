@@ -1,6 +1,22 @@
 # 📋 Tablero Scrum: Diario de Abigail
 
-## 🚀 SPRINT ACTUAL: Sprint 03 - PWA & Optimización de Lectura
+## 🚀 SPRINT ACTUAL: Sprint 05 - Temas Dinámicos & Perfil Premium
+**Duración:** 16 Mar - 23 Mar 2026 | **Velocidad Estimada:** 19 Story Points
+
+| ID | Historia de Usuario | Prioridad | Estado | Asignado | Story Points |
+|:---|:---|:---|:---|:---|:---|
+| ABI-26 | Como usuaria, quiero cambiar los colores de toda la app desde Ajustes para personalizar mi experiencia visual. | 🔥 CRÍTICA | ✅ DONE | Dev-1, Dev-2, Dev-3, Tech Lead | 8 |
+| ABI-27 | Como usuaria, quiero ver mi perfil como un dashboard personal con estadísticas, foto y resumen emocional. | ⚡ ALTA | ✅ DONE | Agent, Tech Lead | 5 |
+| ABI-28 | Como usuaria, quiero un botón Guardar flotante en Ajustes para guardar sin hacer scroll. | 🟡 MEDIA | ✅ DONE | Tech Lead | 1 |
+| ABI-29 | Como desarrollador, quiero migrar los 169+ colores hardcodeados a variables CSS para soportar temas dinámicos. | ⚡ ALTA | ✅ DONE | Dev-1, Dev-2, Dev-3 | 5 |
+
+**Sprint Velocity:** 19/19 SP completados (100%) | **Burndown:** Sprint completado
+
+---
+
+## 📜 SPRINTS ANTERIORES
+
+### Sprint 03 - PWA & Optimización de Lectura
 **Duración:** 15 Mar - 22 Mar 2026 | **Velocidad Estimada:** 15 Story Points
 
 | ID | Historia de Usuario | Prioridad | Estado | Asignado | Story Points |
@@ -23,6 +39,10 @@
 - [x] ABI-02: Selector de tipografía dinámica (Lora, Playfair, etc.).
 - [ ] ABI-03: Modo oscuro "OLED" para lectura nocturna.
 - [ ] ABI-04: Animaciones de transición tipo "página de libro".
+- [x] ABI-26: Sistema de temas de color dinámico (8 paletas + color picker libre).
+- [x] ABI-27: Perfil de usuario premium (dashboard personal con stats y foto).
+- [x] ABI-28: Botón Guardar flotante (FAB) en Ajustes.
+- [x] ABI-29: Refactor de 169+ colores hardcodeados a variables CSS de tema.
 
 ### EPIC-02: Conexión Espiritual (Devocional)
 - [x] ABI-05: Integración robusta con Bible API (RVR1960).
@@ -53,14 +73,23 @@
 ---
 
 ## 📈 MÉTRICAS DEL PROYECTO
-*   **Historias Completadas:** 15 (ABI-01, 02, 05, 06, 09, 10, 11, 12, 13, 14, 16, 17, 20, 21, 22)
+*   **Versión:** v1.3.0
+*   **Historias Completadas:** 19 (ABI-01, 02, 05, 06, 09, 10, 11, 12, 13, 14, 16, 17, 20, 21, 22, 26, 27, 28, 29)
 *   **En Progreso:** 0
-*   **Pendientes:** 6
-*   **Sprint Health:** 🏆 SPRINT COMPLETADO — 18/15 SP (120%) en día 1 de 7
+*   **Pendientes:** 8 (ABI-03, 04, 07, 08, 15, 18, 19, 23, 24, 25)
+*   **Sprint Health:** 🏆 SPRINT 05 COMPLETADO — 19/19 SP (100%)
 
 ---
 
 ## 📝 NOTAS DEL SPRINT
+
+### Sprint 05
+- **ABI-26**: Dev-1, Dev-2, Dev-3 (refactor colores) + Tech Lead (integración picker + fixes). 8 paletas preset + color picker libre con react-colorful. `applyTheme()` genera 8 variantes HSL. Aprobado (CR-013).
+- **ABI-27**: Agent (estructura) + Tech Lead (foto de perfil, fix edición nombre, integración Layout). Dashboard personal tipo ESPN con stats, foto de perfil y resumen emocional. Aprobado (CR-014).
+- **ABI-28**: Tech Lead (CR-015). Botón Guardar flotante FAB en esquina inferior derecha. Aprobado.
+- **ABI-29**: Dev-1, Dev-2, Dev-3 (CR-016). Migración de 169+ colores hardcodeados a variables CSS en Admin, Hoy, WelcomeScreen, page.tsx y globals.css. Aprobado.
+
+### Sprint 03
 - **ABI-11**: Dev-1 (CR-001 + CR-003) + Tech Lead (CR-002). Aprobado.
 - **ABI-13**: Dev-2 (CR-005). Panel admin con métricas, logs mock y estado de red. Aprobado 8/10.
 - **ABI-14**: Dev-3 (CR-004). Botones copiar + WhatsApp en Devocional. Aprobado 9/10.

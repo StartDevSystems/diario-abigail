@@ -43,6 +43,7 @@ export interface JournalState {
   user?: {
     name: string;
     bio: string;
+    avatar?: string;
   };
   settings?: {
     fontSize: 'small' | 'medium' | 'large';

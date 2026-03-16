@@ -48,17 +48,17 @@ export default function AuthScreen() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[#fffcf2] floral-pattern">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-theme-light floral-pattern">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white p-10 rounded-[3rem] shadow-2xl border border-rose-pastel/50"
+        className="w-full max-w-md bg-white p-10 rounded-[3rem] shadow-2xl border border-theme-border/50"
       >
         <div className="flex flex-col items-center text-center mb-10">
-          <div className="w-16 h-12 rounded-full bg-rose-pastel flex items-center justify-center mb-6 shadow-sm">
-            <Heart className="text-deep-rose fill-deep-rose/20" size={32} />
+          <div className="w-16 h-12 rounded-full bg-theme-pastel flex items-center justify-center mb-6 shadow-sm">
+            <Heart className="text-theme-primary fill-theme-primary/20" size={32} />
           </div>
-          <h1 className="text-3xl font-serif text-deep-rose italic font-bold">
+          <h1 className="text-3xl font-serif text-theme-primary italic font-bold">
             {isLogin ? "¡Bienvenida de vuelta!" : "Crea tu espacio sagrado"}
           </h1>
           <p className="text-soft-text/60 text-sm mt-2 font-medium">
@@ -69,30 +69,30 @@ export default function AuthScreen() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
             <div className="relative group">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-accent-pink group-focus-within:text-deep-rose transition-colors" size={18} />
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-accent group-focus-within:text-theme-primary transition-colors" size={18} />
               <input 
                 type="text" required placeholder="Tu nombre"
                 value={name} onChange={(e) => setName(e.target.value)}
-                className="w-full bg-rose-pastel/20 border-2 border-transparent focus:border-rose-pastel rounded-2xl py-4 pl-12 pr-4 outline-none transition-all font-medium text-soft-text"
+                className="w-full bg-theme-pastel/20 border-2 border-transparent focus:border-theme-border rounded-2xl py-4 pl-12 pr-4 outline-none transition-all font-medium text-soft-text"
               />
             </div>
           )}
 
           <div className="relative group">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-accent-pink group-focus-within:text-deep-rose transition-colors" size={18} />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-accent group-focus-within:text-theme-primary transition-colors" size={18} />
             <input 
               type="email" required placeholder="Correo electrónico"
               value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-rose-pastel/20 border-2 border-transparent focus:border-rose-pastel rounded-2xl py-4 pl-12 pr-4 outline-none transition-all font-medium text-soft-text"
+              className="w-full bg-theme-pastel/20 border-2 border-transparent focus:border-theme-border rounded-2xl py-4 pl-12 pr-4 outline-none transition-all font-medium text-soft-text"
             />
           </div>
 
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-accent-pink group-focus-within:text-deep-rose transition-colors" size={18} />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-accent group-focus-within:text-theme-primary transition-colors" size={18} />
             <input 
               type="password" required placeholder="Tu contraseña"
               value={password} onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-rose-pastel/20 border-2 border-transparent focus:border-rose-pastel rounded-2xl py-4 pl-12 pr-4 outline-none transition-all font-medium text-soft-text"
+              className="w-full bg-theme-pastel/20 border-2 border-transparent focus:border-theme-border rounded-2xl py-4 pl-12 pr-4 outline-none transition-all font-medium text-soft-text"
             />
           </div>
 
@@ -100,7 +100,7 @@ export default function AuthScreen() {
 
           <button 
             type="submit" disabled={loading}
-            className="w-full bg-deep-rose hover:bg-pink-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-deep-rose/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full bg-theme-primary hover:bg-theme-hover text-white font-bold py-4 rounded-2xl shadow-lg shadow-theme-primary/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
           >
             {loading ? "Procesando..." : (isLogin ? "Entrar" : "Empezar ahora")}
             <ArrowRight size={20} />
@@ -110,7 +110,7 @@ export default function AuthScreen() {
         <div className="mt-8 text-center">
           <button 
             onClick={() => setIsLogin(!isLogin)}
-            className="text-soft-text/40 hover:text-deep-rose text-sm font-bold underline transition-colors"
+            className="text-soft-text/40 hover:text-theme-primary text-sm font-bold underline transition-colors"
           >
             {isLogin ? "¿No tienes cuenta? Regístrate aquí" : "¿Ya tienes cuenta? Inicia sesión"}
           </button>

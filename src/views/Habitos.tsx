@@ -12,7 +12,7 @@ const EMOJI_CATEGORIES = [
   { label: "😀 Caras",    emojis: ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","😉","😊","😇","🥰","😍","🤩","😘","😗","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🤫","🤔","🤐","🤨","😐","😑","😶","😏","😒","🙄","😬","🤥","😌","😔","😪","🤤","😴","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","🤯","🤠","🥸","😎","🤓","🧐","😕","😟","🙁","😮","😯","😲","😳","🥺","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👽","👾","🤖"] },
   { label: "👋 Gestos",   emojis: ["👋","🤚","🖐","✋","🖖","👌","🤌","🤏","✌️","🤞","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏","✍️","💅","🤳","💪","🦾","🦵","🦶","👂","🦻","👃","🧠","👀","👁","👅","👄","💋"] },
   { label: "👩 Personas", emojis: ["👶","🧒","👦","👧","🧑","👱","👨","🧔","👩","🧓","👴","👵","🙍","🙎","🙅","🙆","💁","🙋","🧏","🙇","🤦","🤷","👮","🕵️","💂","🥷","👷","🤴","👸","👳","👲","🧕","🤵","👰","🤰","🤱","👼","🎅","🤶","🧙","🧝","🧛","🧟","🧞","🧜","🧚","👫","👬","👭","💏","💑","👪"] },
-  { label: "🐶 Animales", emojis: ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🙈","🙉","🙊","🐔","🐧","🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🦋","🐌","🐞","🐜","🐢","🐍","🦎","🐙","🦑","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🦭","🐊","🐘","🦒","🦘","🐕","🐈","🐓","🦜","🐇","🦔","🦝","🦦","🐁","🐀","🐿"] },
+  { label: "🐶 Animales", emojis: ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🙈","🙉","🙊","🐔","🐧","🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🦋","🐌","🐞","🐜","🐢","🐍","🦎","🐙","🦑","🐡","🐠","🐟","🐬","🐳","🐋","鲨","🦭","🐊","🐘","🦒","🦘","🐕","🐈","🐓","🦜","🐇","🦔","🦝","🦦","🐁","🐀","🐿"] },
   { label: "🌸 Naturaleza",emojis: ["🌸","🌺","🌻","🌹","🌷","💐","🌼","🪷","🪻","🌱","🌿","🍀","🍁","🍂","🍃","🪴","🌵","🎋","🍄","🌾","🌍","🌎","🌏","🌋","⛰","🏔","🏕","🏖","🏜","🏝","🌅","🌄","🌠","🌇","🌆","🌃","🌌","🌉","⭐","🌟","💫","✨","☀️","🌤","⛅","☁️","🌧","⛈","🌩","🌨","❄️","☃️","⛄","💨","💧","💦","☔","🌊","🌈"] },
   { label: "🍕 Comida",   emojis: ["🍇","🍈","🍉","🍊","🍋","🍌","🍍","🥭","🍎","🍏","🍐","🍑","🍒","🍓","🫐","🥝","🍅","🥥","🥑","🍆","🥕","🌽","🌶","🥦","🧄","🍞","🥐","🥖","🥨","🧀","🥚","🍳","🥞","🧇","🥓","🥩","🍗","🍖","🌭","🍔","🍟","🍕","🥙","🥗","🍱","🍜","🍝","🍣","🍤","🍦","🍧","🍨","🍩","🍪","🎂","🍰","🧁","🍫","🍬","🍭","☕","🫖","🍵","🧃","🥤","🧋","🍺","🥂","🍷","🍸","🍹","🧉","🍾"] },
   { label: "⚽ Deportes", emojis: ["⚽","🏀","🏈","⚾","🥎","🎾","🏐","🏉","🥏","🎱","🏓","🏸","🏒","⛳","🏹","🎣","🤿","🥊","🥋","🎽","🛹","🛷","⛸","🎿","⛷","🏂","🪂","🏋","🤸","⛹","🤺","🏇","🧘","🏄","🏊","🤽","🚣","🧗","🚵","🚴","🏆","🥇","🥈","🥉","🏅","🎖","🏵","🎗","🎪","🤹","🎭","🎨","🎬","🎤","🎧","🎵","🎶","🎷","🎸","🎹","🎺","🎻","🥁"] },
@@ -57,10 +57,10 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ selected, onSelect }) => {
         className="transition-all"
         style={{
           width: "56px", height: "56px", borderRadius: "16px",
-          border: open ? "2px solid #e8447a" : "1px solid #ffd6e7",
-          background: "#fff0f5", fontSize: "1.75rem", cursor: "pointer",
+          border: open ? "2px solid var(--color-theme-primary)" : "1px solid var(--color-theme-border)",
+          background: "var(--color-theme-pastel)", fontSize: "1.75rem", cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
-          boxShadow: open ? "0 0 0 3px rgba(232,68,122,0.12)" : "none",
+          boxShadow: open ? "0 0 0 3px rgba(225, 29, 116, 0.12)" : "none",
         }}
       >
         {selected}
@@ -72,28 +72,28 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ selected, onSelect }) => {
           style={{
             top: "64px", left: 0,
             background: "#fff", borderRadius: "20px",
-            border: "1px solid #ffd6e7",
-            boxShadow: "0 12px 40px rgba(232,68,122,0.18)",
+            border: "1px solid var(--color-theme-border)",
+            boxShadow: "0 12px 40px rgba(225, 29, 116, 0.18)",
             width: "320px", overflow: "hidden",
           }}
         >
           {/* búsqueda */}
-          <div style={{ padding: "12px 12px 8px", borderBottom: "1px solid #ffeef5" }}>
+          <div style={{ padding: "12px 12px 8px", borderBottom: "1px solid var(--color-theme-light)" }}>
             <div style={{ position: "relative" }}>
-              <Search size={13} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#c47aaa" }} />
+              <Search size={13} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "var(--color-theme-muted)" }} />
               <input
                 ref={inp} value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Buscar emoji..."
                 className="w-full outline-none text-sm"
                 style={{
                   padding: "8px 30px 8px 30px", borderRadius: "12px",
-                  border: "1px solid #ffd6e7", background: "#fff8fb",
-                  color: "#2d0a1e", fontFamily: "inherit",
+                  border: "1px solid var(--color-theme-border)", background: "var(--color-theme-light)",
+                  color: "var(--color-soft-text)", fontFamily: "inherit",
                 }}
               />
               {search && (
                 <button type="button" onClick={() => setSearch("")}
-                  style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#c47aaa", display: "flex" }}>
+                  style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--color-theme-muted)", display: "flex" }}>
                   <X size={12} />
                 </button>
               )}
@@ -102,15 +102,15 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ selected, onSelect }) => {
 
           {/* tabs categorías */}
           {!search && (
-            <div style={{ display: "flex", overflowX: "auto", padding: "8px 10px 6px", gap: "5px", scrollbarWidth: "none", borderBottom: "1px solid #ffeef5" }}>
+            <div style={{ display: "flex", overflowX: "auto", padding: "8px 10px 6px", gap: "5px", scrollbarWidth: "none", borderBottom: "1px solid var(--color-theme-light)" }}>
               {EMOJI_CATEGORIES.map((c, i) => (
                 <button key={i} type="button" onClick={() => setCat(i)}
                   style={{
                     flexShrink: 0, padding: "4px 10px", borderRadius: "99px",
                     border: "none", fontSize: "11px", fontWeight: 700,
                     cursor: "pointer", fontFamily: "inherit", transition: "all 0.12s",
-                    background: cat === i ? "#e8447a" : "#fff0f5",
-                    color: cat === i ? "white" : "#c47aaa",
+                    background: cat === i ? "var(--color-theme-primary)" : "var(--color-theme-pastel)",
+                    color: cat === i ? "white" : "var(--color-theme-muted)",
                   }}>
                   {c.label.split(" ")[0]}
                 </button>
@@ -119,7 +119,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ selected, onSelect }) => {
           )}
 
           {search && displayed.length === 0 && (
-            <div style={{ padding: "24px", textAlign: "center", color: "#c47aaa", fontSize: "13px" }}>
+            <div style={{ padding: "24px", textAlign: "center", color: "var(--color-theme-muted)", fontSize: "13px" }}>
               No encontrado 🌸
             </div>
           )}
@@ -132,11 +132,11 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ selected, onSelect }) => {
                   width: "34px", height: "34px", borderRadius: "8px", border: "none",
                   fontSize: "1.2rem", cursor: "pointer",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  background: selected === e ? "#ffd6e7" : "transparent",
+                  background: selected === e ? "var(--color-theme-border)" : "transparent",
                   transition: "background 0.1s",
                 }}
-                onMouseEnter={e2 => { if (selected !== e) e2.currentTarget.style.background = "#fff0f5"; }}
-                onMouseLeave={e2 => { e2.currentTarget.style.background = selected === e ? "#ffd6e7" : "transparent"; }}
+                onMouseEnter={e2 => { if (selected !== e) e2.currentTarget.style.background = "var(--color-theme-pastel)"; }}
+                onMouseLeave={e2 => { e2.currentTarget.style.background = selected === e ? "var(--color-theme-border)" : "transparent"; }}
               >
                 {e}
               </button>
@@ -152,7 +152,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ selected, onSelect }) => {
    CONFETI
 ════════════════════════════════════════════════ */
 interface Particle { id: number; x: number; y: number; color: string; size: number; speed: number; rotation: number; rotationSpeed: number; }
-const COLORS = ["#ff6b9d","#e8447a","#ffb3d1","#ffd6e7","#9b4f82","#e9d5ff"];
+const COLORS = ["#ff6b9d","#e11d74","#ffb3d1","#ffd6e7","#9b4f82","#e9d5ff"];
 const makeParticles = (n = 65): Particle[] =>
   Array.from({ length: n }, (_, i) => ({
     id: i, x: Math.random() * 100, y: -10, color: COLORS[i % COLORS.length],
@@ -195,12 +195,12 @@ const CelebrationOverlay = ({ onDone }: { onDone: () => void }) => {
         style={{ animation:"popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both" }}>
         <div style={{ fontSize:"3.5rem" }}>🏆</div>
         <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] mb-1" style={{ color:"#c47aaa" }}>✦ ¡Logro desbloqueado! ✦</p>
-          <h3 className="text-2xl font-serif italic font-bold" style={{ color:"#e8447a" }}>¡Día perfecto, Abigail!</h3>
-          <p className="text-sm mt-1.5 font-medium" style={{ color:"#c47aaa" }}>Completaste todos tus hábitos 🌸</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.4em] mb-1" style={{ color:"var(--color-theme-muted)" }}>✦ ¡Logro desbloqueado! ✦</p>
+          <h3 className="text-2xl font-serif italic font-bold" style={{ color:"var(--color-theme-primary)" }}>¡Día perfecto, Abigail!</h3>
+          <p className="text-sm mt-1.5 font-medium" style={{ color:"var(--color-theme-muted)" }}>Completaste todos tus hábitos 🌸</p>
         </div>
         <button onClick={onDone} className="px-7 py-2.5 rounded-full text-white text-xs font-black uppercase tracking-widest"
-          style={{ background:"#e8447a", boxShadow:"0 4px 14px rgba(232,68,122,0.35)" }}>
+          style={{ background:"var(--color-theme-primary)", boxShadow:"0 4px 14px rgba(225, 29, 116, 0.35)" }}>
           ¡Gracias! 🌸
         </button>
       </div>
@@ -227,14 +227,14 @@ const WeeklySummary = ({ habits, currentDayIdx }: { habits: any[]; currentDayIdx
   const bestScore  = dayScores[bestDayIdx];
 
   const stats = [
-    { icon: <TrendingUp size={16}/>, label:"Promedio semanal", value:`${avg}%`,      sub:"hábitos cumplidos",  color:"#e8447a", bg:"#fff0f5", border:"#ffd6e7" },
-    { icon: <Flame size={16}/>,      label:"Racha más larga",  value:`${longestStreak}d`, sub:longestStreak===1?"día consecutivo":"días consecutivos", color:"#ff6b9d", bg:"#fff0f5", border:"#ffd6e7" },
-    { icon: <Calendar size={16}/>,   label:"Mejor día",        value:bestScore>0?DAYS[bestDayIdx]:"—", sub:bestScore>0?`${bestScore} hábitos ese día`:"Sin datos aún", color:"#9b4f82", bg:"#fdf4ff", border:"#e9d5ff" },
+    { icon: <TrendingUp size={16}/>, label:"Promedio semanal", value:`${avg}%`,      sub:"hábitos cumplidos",  color:"var(--color-theme-primary)", bg:"var(--color-theme-pastel)", border:"var(--color-theme-border)" },
+    { icon: <Flame size={16}/>,      label:"Racha más larga",  value:`${longestStreak}d`, sub:longestStreak===1?"día consecutivo":"días consecutivos", color:"var(--color-theme-primary)", bg:"var(--color-theme-pastel)", border:"var(--color-theme-border)" },
+    { icon: <Calendar size={16}/>,   label:"Mejor día",        value:bestScore>0?DAYS[bestDayIdx]:"—", sub:bestScore>0?`${bestScore} hábitos ese día`:"Sin datos aún", color:"var(--color-theme-muted)", bg:"var(--color-theme-light)", border:"var(--color-theme-border)" },
   ];
 
   return (
     <div className="card-premium">
-      <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-4" style={{ color:"#c47aaa" }}>🌸 Resumen de la semana</p>
+      <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-4" style={{ color:"var(--color-theme-muted)" }}>🌸 Resumen de la semana</p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         {stats.map((s, i) => (
           <div key={i} className="flex items-center gap-3 p-4 rounded-2xl transition-transform hover:scale-[1.02] bg-white/60 backdrop-blur-md journal-shadow"
@@ -244,18 +244,18 @@ const WeeklySummary = ({ habits, currentDayIdx }: { habits: any[]; currentDayIdx
             <div>
               <p className="text-[9px] font-black uppercase tracking-[0.18em]" style={{ color:s.color }}>{s.label}</p>
               <p className="text-2xl font-black leading-tight" style={{ color:s.color }}>{s.value}</p>
-              <p className="text-[10px] font-medium" style={{ color:"#a06080" }}>{s.sub}</p>
+              <p className="text-[10px] font-medium" style={{ color:"var(--color-theme-muted)" }}>{s.sub}</p>
             </div>
           </div>
         ))}
       </div>
       <div>
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[9px] font-black uppercase tracking-[0.2em]" style={{ color:"#c47aaa" }}>Progreso global</span>
-          <span className="text-xs font-black" style={{ color:"#e8447a" }}>{completed}/{total}</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.2em]" style={{ color:"var(--color-theme-muted)" }}>Progreso global</span>
+          <span className="text-xs font-black" style={{ color:"var(--color-theme-primary)" }}>{completed}/{total}</span>
         </div>
-        <div className="h-2 rounded-full overflow-hidden" style={{ background:"#ffd6e7" }}>
-          <div className="h-full rounded-full transition-all duration-700" style={{ width:`${avg}%`, background:"#e8447a" }} />
+        <div className="h-2 rounded-full overflow-hidden" style={{ background:"var(--color-theme-border)" }}>
+          <div className="h-full rounded-full transition-all duration-700" style={{ width:`${avg}%`, background:"var(--color-theme-primary)" }} />
         </div>
       </div>
     </div>
@@ -274,14 +274,14 @@ const DayBubble = ({ completed, isToday, dayLabel, size="md", onClick, disabled 
   const lbl  = size==="lg"?"text-[11px]":"text-[9px]";
   return (
     <div className={`flex flex-col items-center gap-2 transition-all duration-200 ${!isToday&&!completed?"opacity-35":""}`}>
-      <span className={`${lbl} font-black uppercase tracking-widest`} style={{ color:isToday?"#e8447a":"#c47aaa" }}>
+      <span className={`${lbl} font-black uppercase tracking-widest`} style={{ color:isToday?"var(--color-theme-primary)":"var(--color-theme-muted)" }}>
         {size==="lg"?dayLabel:dayLabel[0]}
       </span>
       <button onClick={onClick} disabled={disabled}
         style={completed
-          ? { background:"#e8447a", boxShadow:"0 4px 14px rgba(232,68,122,0.35)" }
+          ? { background:"var(--color-theme-primary)", boxShadow:"0 4px 14px rgba(225, 29, 116, 0.35)" }
           : isToday
-          ? { background:"#fff", outline:"2px solid #ffb3d1" }
+          ? { background:"#fff", outline:"2px solid var(--color-theme-border)" }
           : { background:"#fafafa" }}
         className={`${dim} rounded-full flex items-center justify-center transition-all duration-200
           ${completed?"text-white scale-110":"text-transparent"}
@@ -309,20 +309,20 @@ const MobileCard = ({ habit, currentDayIdx, onToggle, onDelete, onEdit }: {
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-3">
           <span className="text-2xl w-11 h-11 flex items-center justify-center rounded-2xl flex-shrink-0"
-            style={{ background:"#fff0f5", border:"1px solid #ffd6e7" }}>{habit.emoji||"🌸"}</span>
+            style={{ background:"var(--color-theme-pastel)", border:"1px solid var(--color-theme-border)" }}>{habit.emoji||"🌸"}</span>
           <div className="min-w-0">
             <p className="font-bold text-base tracking-tight break-words" style={{ color:"var(--color-soft-text)" }}>{habit.name}</p>
             {streak>0&&(
               <div className="flex items-center gap-1 mt-0.5">
-                <Flame size={10} style={{ color:"#ff6b9d" }}/>
-                <span className="text-[10px] font-black" style={{ color:"#ff6b9d" }}>{streak} días seguidos</span>
+                <Flame size={10} style={{ color:"var(--color-theme-primary)" }}/>
+                <span className="text-[10px] font-black" style={{ color:"var(--color-theme-primary)" }}>{streak} días seguidos</span>
               </div>
             )}
           </div>
         </div>
         <div className="flex gap-1 flex-shrink-0">
-          <button onClick={()=>onEdit(habit)} className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-[#fff0f5]" style={{ color:"#c47aaa" }}><Edit2 size={13}/></button>
-          <button onClick={()=>onDelete(habit.id)} className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-[#fff0f5]" style={{ color:"#c47aaa" }}><Trash2 size={13}/></button>
+          <button onClick={()=>onEdit(habit)} className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-theme-pastel" style={{ color:"var(--color-theme-muted)" }}><Edit2 size={13}/></button>
+          <button onClick={()=>onDelete(habit.id)} className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-theme-pastel" style={{ color:"var(--color-theme-muted)" }}><Trash2 size={13}/></button>
         </div>
       </div>
       <div className="grid grid-cols-7 gap-1 mb-4">
@@ -333,11 +333,11 @@ const MobileCard = ({ habit, currentDayIdx, onToggle, onDelete, onEdit }: {
       </div>
       <div>
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[9px] font-black uppercase tracking-[0.2em]" style={{ color:"#c47aaa" }}>Progreso semanal</span>
-          <span className="text-[10px] font-black" style={{ color:"#e8447a" }}>{completedCount}/7</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.2em]" style={{ color:"var(--color-theme-muted)" }}>Progreso semanal</span>
+          <span className="text-[10px] font-black" style={{ color:"var(--color-theme-primary)" }}>{completedCount}/7</span>
         </div>
-        <div className="h-2 rounded-full overflow-hidden" style={{ background:"#ffd6e7" }}>
-          <div className="h-full rounded-full transition-all duration-500" style={{ width:`${(completedCount/7)*100}%`, background:"#e8447a" }}/>
+        <div className="h-2 rounded-full overflow-hidden" style={{ background:"var(--color-theme-border)" }}>
+          <div className="h-full rounded-full transition-all duration-500" style={{ width:`${(completedCount/7)*100}%`, background:"var(--color-theme-primary)" }}/>
         </div>
       </div>
     </div>
@@ -363,37 +363,37 @@ const DesktopCard = ({ habit, currentDayIdx, onToggle, onDelete, isEditing, edit
       <div className="absolute top-5 right-5 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         {isEditing?(
           <>
-            <button onClick={onEditSave} className="w-9 h-9 rounded-xl flex items-center justify-center text-white hover:scale-110 transition-transform" style={{ background:"#e8447a" }}><Save size={14}/></button>
-            <button onClick={onEditCancel} className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors hover:bg-[#fff0f5]" style={{ background:"#fafafa", color:"#c47aaa" }}><X size={14}/></button>
+            <button onClick={onEditSave} className="w-9 h-9 rounded-xl flex items-center justify-center text-white hover:scale-110 transition-transform" style={{ background:"var(--color-theme-primary)" }}><Save size={14}/></button>
+            <button onClick={onEditCancel} className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors hover:bg-theme-pastel" style={{ background:"#fafafa", color:"var(--color-theme-muted)" }}><X size={14}/></button>
           </>
         ):(
           <>
-            <button onClick={()=>onEditStart(habit)} className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors hover:bg-[#fff0f5]" style={{ background:"#fafafa", color:"#c47aaa" }}><Edit2 size={14}/></button>
-            <button onClick={()=>onDelete(habit.id)} className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors hover:bg-[#fff0f5]" style={{ background:"#fafafa", color:"#c47aaa" }}><Trash2 size={14}/></button>
+            <button onClick={()=>onEditStart(habit)} className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors hover:bg-theme-pastel" style={{ background:"#fafafa", color:"var(--color-theme-muted)" }}><Edit2 size={14}/></button>
+            <button onClick={()=>onDelete(habit.id)} className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors hover:bg-theme-pastel" style={{ background:"#fafafa", color:"var(--color-theme-muted)" }}><Trash2 size={14}/></button>
           </>
         )}
       </div>
       <div className="flex items-center gap-5 mb-8">
         <span className="text-4xl w-16 h-16 flex items-center justify-center rounded-3xl flex-shrink-0"
-          style={{ background:"#fff0f5", border:"1px solid #ffd6e7" }}>
+          style={{ background:"var(--color-theme-pastel)", border:"1px solid var(--color-theme-border)" }}>
           {isEditing
             ? <input value={editEmoji} onChange={e=>onEditEmojiChange(e.target.value)} className="w-full text-center bg-transparent outline-none text-3xl" maxLength={2}/>
             : habit.emoji||"🌸"}
         </span>
         <div className="flex-1 min-w-0">
           {isEditing
-            ? <input value={editName} onChange={e=>onEditNameChange(e.target.value)} onKeyDown={e=>e.key==="Enter"&&onEditSave()} autoFocus className="text-2xl font-bold bg-transparent outline-none w-full pb-1" style={{ color:"var(--color-soft-text)", borderBottom:"2px solid #e8447a" }}/>
+            ? <input value={editName} onChange={e=>onEditNameChange(e.target.value)} onKeyDown={e=>e.key==="Enter"&&onEditSave()} autoFocus className="text-2xl font-bold bg-transparent outline-none w-full pb-1" style={{ color:"var(--color-soft-text)", borderBottom:"2px solid var(--color-theme-primary)" }}/>
             : <h3 className="text-2xl font-bold tracking-tight break-words" style={{ color:"var(--color-soft-text)" }}>{habit.name}</h3>}
           <div className="flex items-center gap-4 mt-2 flex-wrap">
             {streak>0&&(
               <div className="flex items-center gap-1.5">
-                <Flame size={12} style={{ color:"#ff6b9d" }}/>
-                <span className="text-xs font-black" style={{ color:"#ff6b9d" }}>{streak} días seguidos</span>
+                <Flame size={12} style={{ color:"var(--color-theme-primary)" }}/>
+                <span className="text-xs font-black" style={{ color:"var(--color-theme-primary)" }}>{streak} días seguidos</span>
               </div>
             )}
             <div className="flex items-center gap-1.5">
-              <TrendingUp size={12} style={{ color:"#c47aaa" }}/>
-              <span className="text-xs font-bold" style={{ color:"#c47aaa" }}>{progress}% esta semana</span>
+              <TrendingUp size={12} style={{ color:"var(--color-theme-muted)" }}/>
+              <span className="text-xs font-bold" style={{ color:"var(--color-theme-muted)" }}>{progress}% esta semana</span>
             </div>
           </div>
         </div>
@@ -406,11 +406,11 @@ const DesktopCard = ({ habit, currentDayIdx, onToggle, onDelete, isEditing, edit
       </div>
       <div>
         <div className="flex justify-between items-center mb-2">
-          <span className="text-[10px] font-black uppercase tracking-[0.25em]" style={{ color:"#c47aaa" }}>Progreso semanal</span>
-          <span className="text-sm font-black" style={{ color:"#e8447a" }}>{completedCount} / 7 días</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.25em]" style={{ color:"var(--color-theme-muted)" }}>Progreso semanal</span>
+          <span className="text-sm font-black" style={{ color:"var(--color-theme-primary)" }}>{completedCount} / 7 días</span>
         </div>
-        <div className="h-2.5 rounded-full overflow-hidden" style={{ background:"#ffd6e7" }}>
-          <div className="h-full rounded-full transition-all duration-700" style={{ width:`${progress}%`, background:"#e8447a" }}/>
+        <div className="h-2.5 rounded-full overflow-hidden" style={{ background:"var(--color-theme-border)" }}>
+          <div className="h-full rounded-full transition-all duration-700" style={{ width:`${progress}%`, background:"var(--color-theme-primary)" }}/>
         </div>
       </div>
     </div>
@@ -457,18 +457,18 @@ const Habitos: React.FC = () => {
       <div className="max-w-5xl mx-auto pb-24 px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
 
         {/* HEADER */}
-        <header className="pb-6 pt-3" style={{ borderBottom:"2px solid #ffd6e7" }}>
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] mb-2" style={{ color:"#c47aaa" }}>✦ Seguimiento de Disciplina ✦</p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light italic mb-4" style={{ color:"#e8447a" }}>Mis Hábitos</h2>
+        <header className="pb-6 pt-3" style={{ borderBottom:"2px solid var(--color-theme-border)" }}>
+          <p className="text-[9px] font-black uppercase tracking-[0.4em] mb-2" style={{ color:"var(--color-theme-muted)" }}>✦ Seguimiento de Disciplina ✦</p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light italic mb-4" style={{ color:"var(--color-theme-primary)" }}>Mis Hábitos</h2>
           <div className="flex flex-wrap gap-3">
             <div className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold"
-              style={{ background:"#fff0f5", border:"1px solid #ffd6e7", color:"#e8447a" }}>
+              style={{ background:"var(--color-theme-pastel)", border:"1px solid var(--color-theme-border)", color:"var(--color-theme-primary)" }}>
               {allDoneToday
                 ?<><Sparkles size={12}/> ¡Día perfecto! 🌸</>
-                :<><Star size={12} fill="#e8447a"/> {completedToday} de {habits.length} completados hoy</>}
+                :<><Star size={12} fill="var(--color-theme-primary)"/> {completedToday} de {habits.length} completados hoy</>}
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold"
-              style={{ background:"#fff0f5", border:"1px solid #ffd6e7", color:"#ff6b9d" }}>
+              style={{ background:"var(--color-theme-pastel)", border:"1px solid var(--color-theme-border)", color:"var(--color-theme-primary)" }}>
               🌸 {DAYS[currentDayIdx]} · semana activa
             </div>
           </div>
@@ -482,19 +482,19 @@ const Habitos: React.FC = () => {
           {habits.map(habit=>(
             <div key={habit.id}>
               {editingId===habit.id?(
-                <div className="card-premium space-y-4" style={{ border:"2px solid #e8447a" }}>
-                  <p className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color:"#e8447a" }}>✦ Editando</p>
+                <div className="card-premium space-y-4" style={{ border:"2px solid var(--color-theme-primary)" }}>
+                  <p className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color:"var(--color-theme-primary)" }}>✦ Editando</p>
                   <div className="flex gap-2 items-center">
                     <EmojiPicker selected={editEmoji} onSelect={setEditEmoji}/>
                     <input value={editName} onChange={e=>setEditName(e.target.value)}
-                      className="flex-1 rounded-2xl px-4 py-3 outline-none font-bold bg-white/60 backdrop-blur-md" style={{ color:"var(--color-soft-text)", border:"1px solid #ffd6e7", fontSize: "inherit" }}/>
+                      className="flex-1 rounded-2xl px-4 py-3 outline-none font-bold bg-white/60 backdrop-blur-md" style={{ color:"var(--color-soft-text)", border:"1px solid var(--color-theme-border)", fontSize: "inherit" }}/>
                   </div>
                   <div className="flex gap-2">
                     <button onClick={saveEdit} className="flex-1 py-3 rounded-2xl font-bold text-white flex items-center justify-center gap-2"
-                      style={{ background:"#e8447a", boxShadow:"0 4px 14px rgba(232,68,122,0.3)" }}>
+                      style={{ background:"var(--color-theme-primary)", boxShadow:"0 4px 14px rgba(225, 29, 116, 0.3)" }}>
                       <Save size={15}/> Guardar
                     </button>
-                    <button onClick={()=>setEditingId(null)} className="px-5 py-3 rounded-2xl font-bold bg-white/60 backdrop-blur-md" style={{ color:"#c47aaa" }}><X size={16}/></button>
+                    <button onClick={()=>setEditingId(null)} className="px-5 py-3 rounded-2xl font-bold bg-white/60 backdrop-blur-md" style={{ color:"var(--color-theme-muted)" }}><X size={16}/></button>
                   </div>
                 </div>
               ):(
@@ -521,7 +521,7 @@ const Habitos: React.FC = () => {
         {/* FORMULARIO AÑADIR */}
         {showAdd?(
           <div className="card-premium space-y-5">
-            <p className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color:"#e8447a" }}>✦ Nuevo Hábito</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color:"var(--color-theme-primary)" }}>✦ Nuevo Hábito</p>
             <div className="flex gap-3 items-center flex-wrap">
               {/* EMOJI PICKER */}
               <EmojiPicker selected={newHabitEmoji} onSelect={setNewHabitEmoji}/>
@@ -529,15 +529,15 @@ const Habitos: React.FC = () => {
                 onKeyDown={e=>e.key==="Enter"&&handleAdd()}
                 placeholder="Nombre del hábito... 🌸"
                 className="flex-1 min-w-[160px] h-14 px-5 rounded-2xl font-semibold outline-none transition-all bg-white/60 backdrop-blur-md"
-                style={{ border:"1px solid #ffd6e7", color:"var(--color-soft-text)", fontSize: "inherit" }}/>
+                style={{ border:"1px solid var(--color-theme-border)", color:"var(--color-soft-text)", fontSize: "inherit" }}/>
             </div>
             <div className="flex gap-3">
               <button onClick={handleAdd}
                 className="flex-1 sm:flex-none px-8 py-3.5 rounded-2xl text-white font-bold flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-95"
-                style={{ background:"#e8447a", boxShadow:"0 6px 18px -4px rgba(232,68,122,0.4)" }}>
+                style={{ background:"var(--color-theme-primary)", boxShadow:"0 6px 18px -4px rgba(225, 29, 116, 0.4)" }}>
                 <Save size={16}/> Guardar hábito
               </button>
-              <button onClick={()=>setShowAdd(false)} className="px-6 py-3.5 rounded-2xl font-bold transition-colors bg-white/60 backdrop-blur-md" style={{ color:"#c47aaa" }}>
+              <button onClick={()=>setShowAdd(false)} className="px-6 py-3.5 rounded-2xl font-bold transition-colors bg-white/60 backdrop-blur-md" style={{ color:"var(--color-theme-muted)" }}>
                 <X size={17}/>
               </button>
             </div>
@@ -545,9 +545,9 @@ const Habitos: React.FC = () => {
         ):(
           <button onClick={()=>setShowAdd(true)}
             className="group w-full flex items-center justify-center gap-4 py-6 rounded-[1.75rem] font-bold transition-all hover:scale-[1.01] active:scale-[0.99] card-premium"
-            style={{ border:"2px dashed #ffb3d1", color:"#e8447a", background:"rgba(255, 248, 251, 0.5)" }}>
+            style={{ border:"2px dashed var(--color-theme-border)", color:"var(--color-theme-primary)", background:"rgba(255, 248, 251, 0.5)" }}>
             <div className="w-10 h-10 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform"
-              style={{ background:"#e8447a", boxShadow:"0 4px 14px rgba(232,68,122,0.35)" }}>
+              style={{ background:"var(--color-theme-primary)", boxShadow:"0 4px 14px rgba(225, 29, 116, 0.35)" }}>
               <Plus size={20} strokeWidth={3}/>
             </div>
             <span className="text-base sm:text-lg">Añadir nuevo hábito</span>

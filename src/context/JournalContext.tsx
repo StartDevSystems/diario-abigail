@@ -47,7 +47,7 @@ interface JournalContextType {
   loading: boolean;
   isAdmin: boolean;
   updateToday: (data: Partial<DayData>) => void;
-  updateProfile: (data: { name: string, bio: string }) => void;
+  updateProfile: (data: { name?: string, bio?: string, avatar?: string }) => void;
   updateSettings: (data: Partial<JournalState['settings']>) => void;
   toggleHabitDay: (habitId: string, dayIndex: number) => void;
   addHabit: (name: string, emoji: string) => void;
@@ -176,7 +176,7 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
-  const updateProfile = (data: { name: string, bio: string }) => {
+  const updateProfile = (data: { name?: string, bio?: string, avatar?: string }) => {
     setState(prev => {
       const newState = { ...prev, user: { ...prev.user, ...data } as any };
       if (user) saveToFirebase(newState, user);
