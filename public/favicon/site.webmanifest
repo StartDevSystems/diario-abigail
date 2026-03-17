@@ -3,6 +3,7 @@
   "short_name": "Abigail",
   "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",

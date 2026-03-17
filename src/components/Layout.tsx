@@ -139,7 +139,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
       <aside ref={sidebarRef} className="hidden md:flex flex-col w-72 bg-white/40 backdrop-blur-2xl border-r border-theme-border/50 journal-shadow z-20">
         <div className="p-10 flex flex-col items-center text-center">
           <div className="mb-6 relative w-24 h-24 rounded-full overflow-hidden border-2 border-theme-border shadow-sm bg-white p-1">
-            <Image src="/logo-full.png" alt="Logo" fill className="object-contain" />
+            <Image src="/logo-full.png" alt="Logo" fill className="object-contain" priority />
           </div>
           <h1 className="text-2xl font-serif text-theme-primary italic font-bold leading-tight">Diario de <br/> Abigail</h1>
           <div className="w-10 h-1 bg-theme-accent mt-4 rounded-full opacity-40" />
@@ -173,7 +173,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
         <header className="p-6 md:px-12 md:py-8 bg-transparent flex justify-between items-center sticky top-0 z-30">
           <div className="md:hidden flex items-center gap-3">
             <div className="w-10 h-10 rounded-full overflow-hidden border border-theme-border shadow-sm bg-white p-0.5 relative">
-              <Image src="/logo-full.png" alt="Logo" fill className="object-contain" />
+              <Image src="/logo-full.png" alt="Logo" fill className="object-contain" priority />
             </div>
             <h1 className="text-xl font-serif text-theme-primary italic font-bold leading-none">Abigail</h1>
           </div>
@@ -187,7 +187,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
             >
               <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-theme-primary/20 bg-theme-pastel/20 flex items-center justify-center shadow-inner">
                 {(state?.user?.avatar || user?.photoURL) ? (
-                  <Image src={state?.user?.avatar || user?.photoURL || ''} alt="Perfil" fill className="object-cover" unoptimized />
+                  <Image src={state?.user?.avatar || user?.photoURL || ''} alt="Perfil" fill className="object-cover" />
                 ) : (
                   <span className="text-lg font-black text-theme-primary">{firstName[0]}</span>
                 )}

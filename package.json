@@ -15,6 +15,7 @@
     "gsap": "^3.12.5",
     "lucide-react": "^0.344.0",
     "next": "latest",
+    "next-pwa": "^5.6.0",
     "react": "rc",
     "react-colorful": "^5.6.1",
     "react-dom": "rc",

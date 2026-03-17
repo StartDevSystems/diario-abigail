@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { JournalProvider, useJournal } from "@/context/JournalContext";
@@ -9,13 +10,38 @@ import FloralDecoration from "@/components/FloralDecoration";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import AuthScreen from "@/components/AuthScreen";
 
-import Hoy from "@/views/Hoy";
-import Semana from "@/views/Semana";
-import Habitos from "@/views/Habitos";
-import Devocional from "@/views/Devocional";
-import Notas from "@/views/Notas";
-import Admin from "@/views/Admin";
-import Configuracion from "@/views/Configuracion";
+const Hoy = dynamic(() => import("@/views/Hoy"), {
+  loading: () => <ViewSkeleton />
+});
+const Semana = dynamic(() => import("@/views/Semana"), {
+  loading: () => <ViewSkeleton />
+});
+const Habitos = dynamic(() => import("@/views/Habitos"), {
+  loading: () => <ViewSkeleton />
+});
+const Devocional = dynamic(() => import("@/views/Devocional"), {
+  loading: () => <ViewSkeleton />
+});
+const Notas = dynamic(() => import("@/views/Notas"), {
+  loading: () => <ViewSkeleton />
+});
+const Admin = dynamic(() => import("@/views/Admin"), {
+  loading: () => <ViewSkeleton />
+});
+const Configuracion = dynamic(() => import("@/views/Configuracion"), {
+  loading: () => <ViewSkeleton />
+});
+
+function ViewSkeleton() {
+  return (
+    <div className="animate-pulse space-y-6 p-4">
+      <div className="h-8 bg-theme-border/20 rounded-2xl w-48" />
+      <div className="h-40 bg-theme-border/10 rounded-[2rem]" />
+      <div className="h-32 bg-theme-border/10 rounded-[2rem]" />
+      <div className="h-24 bg-theme-border/10 rounded-[2rem]" />
+    </div>
+  );
+}
 
 function HomeContent() {
   const { state, user, loading, isAdmin } = useJournal();
