@@ -8,7 +8,7 @@
 ## Stack Tecnológico
 - **Frontend:** Next.js 16 (App Router), TypeScript, Tailwind CSS v4
 - **Base de Datos & Auth:** Firebase Firestore & Authentication
-- **Animaciones:** Framer Motion, GSAP, Three.js (Scene3D, CycleDial 3D)
+- **Animaciones:** Framer Motion, GSAP, Three.js (Scene3D). CycleDial usa SVG 2D (donut).
 - **Iconografía:** Lucide React
 
 ## Arquitectura
@@ -44,6 +44,7 @@
 5. **Deprecations:** No usar `onKeyPress` (deprecated). Usar `onKeyDown`.
 6. **Build:** `npx next build` debe pasar antes de cualquier commit.
 7. **Documentación:** Todo cambio se documenta en CODE_REVIEW.md y SCRUM_BOARD.md. No revelar que el código fue hecho por IA — usar Dev-1, Dev-2, Tech Lead.
+8. **Changelog de cambios visuales:** Cuando se modifique o reemplace un componente visual (gráfico, layout, diseño), documentar en CODE_REVIEW.md una sección **"Antes"** y **"Después"** describiendo exactamente cómo era y cómo quedó. Incluir: tecnologías usadas, estructura visual, colores, animaciones, dependencias añadidas/eliminadas, y líneas de código (+/-). Esto permite que cualquier dev futuro entienda la evolución del componente sin tener que buscar en git.
 
 ## Firestore Collections
 | Collection | Propósito | Campos clave |

@@ -15,6 +15,44 @@ Registro de auditorías de código por sprint. Cada Pull Request o cambio signif
 
 ---
 
+### CR-020: Refactor CycleDial — de 3D (Three.js) a Donut SVG 2D
+**Fecha:** 17 Mar 2026
+**Autor del código:** Dev-1
+**Archivos modificados:** `src/views/Ciclo.tsx`
+**Scope:** Reemplazo completo del gráfico de ciclo menstrual
+
+#### Antes (Three.js 3D):
+- Anillo toroidal 3D con `THREE.TorusGeometry` + `MeshPhysicalMaterial` (clearcoat, metalness)
+- Marker esférico pulsante con `GSAP` animación infinita
+- 80 partículas flotantes con `AdditiveBlending`
+- Glow ring con pulse GSAP
+- Trail dots (8 esferas detrás del marker)
+- Mouse interactivity (rotation parallax)
+- Labels como `THREE.Sprite` con `CanvasTexture`
+- Centro: overlay HTML circular con blur, mostraba número de día + fase + corazón pulsante
+- Imports pesados: `three`, `gsap`, `useRef`, `useCallback`
+
+#### Después (SVG 2D Donut):
+- Donut SVG con 28 segmentos individuales (uno por día del ciclo)
+- Colores por fase: rojo/rosa (#e11d74) menstruación, naranja/durazno (#f4a261) folicular, azul/lila (#8b5cf6) ovulación, rosa claro (#f9a8d4) lútea
+- Número de día en blanco sobre cada segmento
+- Ícono de gota de sangre flotando sobre el día actual
+- Centro: card blanca redondeada con ícono de calendario, fecha de hoy, "Días del periodo" en negrita, rango de fechas del período
+- ~60% de hueco central
+- Sin dependencias externas (puro SVG + React)
+- Eliminados imports: `three`, `gsap`, `useRef`, `useCallback`
+
+#### Resultado:
+- **-365 líneas, +173 líneas** (192 líneas menos en total)
+- Bundle más ligero al no depender de Three.js/GSAP para este componente
+- Renderizado instantáneo (sin setup de escena WebGL)
+- Build exitoso sin warnings
+
+**Veredicto:** APPROVED 10/10
+**Notas:** Cambio solicitado por PO. El diseño 2D es más limpio, legible y performante. La información del ciclo se presenta de forma más clara con números visibles en cada segmento.
+
+---
+
 ### CR-019: Review de CycleDial 3D (Three.js + GSAP)
 **Fecha:** 17 Mar 2026
 **Autor del código:** Tech Lead
