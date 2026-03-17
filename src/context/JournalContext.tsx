@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { JournalState, Habit, Note, DayData } from '../types/index';
+import { JournalState, Habit, Note, DayData, CycleData } from '../types/index';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -55,6 +55,7 @@ interface JournalContextType {
   deleteHabit: (id: string) => void;
   addNote: (content: string, tag?: string) => void;
   deleteNote: (id: string) => void;
+  updateCycle: (data: Partial<CycleData>) => void;
   logout: () => void;
   getHistory: () => DayData[];
   getAllUsersData: () => Promise<any[]>;
@@ -252,6 +253,15 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
+  const updateCycle = (data: Partial<CycleData>) => {
+    setState(prev => {
+      const currentCycle = prev.cycle || { periods: [], cycleLength: 28, periodLength: 5, symptoms: {} };
+      const newState = { ...prev, cycle: { ...currentCycle, ...data, lastUpdated: new Date().toISOString() } };
+      if (user) saveToFirebase(newState, user);
+      return newState;
+    });
+  };
+
   const logout = () => auth.signOut();
 
   const getHistory = () => state.history || [];
@@ -264,8 +274,8 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   return (
     <JournalContext.Provider value={{ 
-      state, user, isAdmin, loading, updateToday, updateProfile, updateSettings, toggleHabitDay, 
-      addHabit, updateHabit, deleteHabit, addNote, deleteNote, logout, getHistory, getAllUsersData 
+      state, user, isAdmin, loading, updateToday, updateProfile, updateSettings, toggleHabitDay,
+      addHabit, updateHabit, deleteHabit, addNote, deleteNote, updateCycle, logout, getHistory, getAllUsersData
     }}>
       {children}
     </JournalContext.Provider>

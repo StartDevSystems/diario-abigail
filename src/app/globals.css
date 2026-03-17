@@ -97,6 +97,71 @@
   background-size: 20px 20px;
 }
 
+/* ═══════ ABI-03: Dark Mode OLED ═══════ */
+.dark-mode {
+  --color-soft-text: #f0f0f2;
+  --color-cream-pastel: #000000;
+  --color-theme-light: #0a0a0a;
+  --color-lavender-pastel: #0d0d1a;
+  --color-accent-lavender: #1a1a2e;
+}
+
+.dark-mode body,
+.dark-mode {
+  background-color: #000000 !important;
+  color: #f0f0f2;
+}
+
+.dark-mode .card-premium {
+  background-color: #111111;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.6),
+    0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .card-premium:hover {
+  box-shadow:
+    0 30px 60px -12px rgba(0, 0, 0, 0.8),
+    0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .journal-shadow {
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.2),
+    0 15px 35px -5px rgba(0,0,0,0.5),
+    0 5px 15px rgba(0,0,0,0.3);
+}
+
+.dark-mode aside {
+  background: rgba(17, 17, 17, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark-mode header {
+  background: transparent !important;
+}
+
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select {
+  background-color: #1a1a1a !important;
+  color: #f0f0f2 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-mode button {
+  color: inherit;
+}
+
+.dark-mode .bg-white,
+.dark-mode .bg-white\/40,
+.dark-mode .bg-white\/60,
+.dark-mode .bg-white\/80,
+.dark-mode .bg-white\/95 {
+  background-color: rgba(17, 17, 17, 0.9) !important;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
 import { useJournal } from "../context/JournalContext";
-import { BookOpen, Clock, FileText, HelpCircle, Heart, PenLine, X, Search, ChevronRight, Eye, Loader2, Copy, Check, Share2 } from "lucide-react";
+import { BookOpen, Clock, FileText, HelpCircle, Heart, PenLine, X, Search, ChevronRight, Eye, Loader2, Copy, Check, Share2, BookMarked } from "lucide-react";
 
 // ════════════════════════════════════════════════════════
 //  BIBLE DATA & MAPPING (RVR1960)
@@ -320,11 +320,127 @@ const BibleSelector: React.FC<BibleSelectorProps> = ({ onConfirm, onClose }) => 
 //  DEVOCIONAL (componente principal)
 // ════════════════════════════════════════════════════════
 
+// ════════════════════════════════════════════════════════
+//  ABI-07: PLAN DE LECTURA BIBLICA ANUAL (365 dias)
+// ════════════════════════════════════════════════════════
+
+const READING_PLAN: { day: number; ref: string; passage: string }[] = (() => {
+  const plan: { day: number; ref: string; passage: string }[] = [];
+  const readings = [
+    { ref: 'Genesis 1-3', passage: 'La creacion y la caida' },
+    { ref: 'Genesis 4-7', passage: 'Cain, Abel y el diluvio' },
+    { ref: 'Genesis 8-11', passage: 'El pacto con Noe' },
+    { ref: 'Genesis 12-15', passage: 'El llamado de Abraham' },
+    { ref: 'Genesis 16-19', passage: 'Ismael y Sodoma' },
+    { ref: 'Genesis 20-23', passage: 'Isaac y Sara' },
+    { ref: 'Genesis 24-26', passage: 'Rebeca y Esau' },
+    { ref: 'Genesis 27-29', passage: 'La bendicion de Jacob' },
+    { ref: 'Genesis 30-32', passage: 'Jacob y Laban' },
+    { ref: 'Genesis 33-36', passage: 'Reconciliacion' },
+    { ref: 'Genesis 37-39', passage: 'Jose vendido' },
+    { ref: 'Genesis 40-42', passage: 'Jose en Egipto' },
+    { ref: 'Genesis 43-46', passage: 'Reunion familiar' },
+    { ref: 'Genesis 47-50', passage: 'Bendiciones de Jacob' },
+    { ref: 'Exodo 1-4', passage: 'Moises y la zarza' },
+    { ref: 'Exodo 5-8', passage: 'Las plagas comienzan' },
+    { ref: 'Exodo 9-12', passage: 'La Pascua' },
+    { ref: 'Exodo 13-16', passage: 'Cruce del Mar Rojo' },
+    { ref: 'Exodo 17-20', passage: 'Los Diez Mandamientos' },
+    { ref: 'Exodo 21-24', passage: 'Leyes del pacto' },
+    { ref: 'Exodo 25-28', passage: 'El tabernaculo' },
+    { ref: 'Exodo 29-32', passage: 'El becerro de oro' },
+    { ref: 'Exodo 33-36', passage: 'Gloria de Dios' },
+    { ref: 'Exodo 37-40', passage: 'Construccion completa' },
+    { ref: 'Salmos 1-8', passage: 'Bienaventurado el varon' },
+    { ref: 'Salmos 9-16', passage: 'Refugio en Dios' },
+    { ref: 'Salmos 17-22', passage: 'El buen pastor' },
+    { ref: 'Salmos 23-30', passage: 'Jehova es mi pastor' },
+    { ref: 'Salmos 31-37', passage: 'Confia en Jehova' },
+    { ref: 'Salmos 38-44', passage: 'Mi esperanza esta en ti' },
+    { ref: 'Mateo 1-4', passage: 'Nacimiento y tentacion de Jesus' },
+    { ref: 'Mateo 5-7', passage: 'Sermon del Monte' },
+    { ref: 'Mateo 8-10', passage: 'Milagros y envio' },
+    { ref: 'Mateo 11-13', passage: 'Parabolas del reino' },
+    { ref: 'Mateo 14-17', passage: 'Pan y transfiguracion' },
+    { ref: 'Mateo 18-20', passage: 'Perdon y servicio' },
+    { ref: 'Mateo 21-23', passage: 'Entrada triunfal' },
+    { ref: 'Mateo 24-26', passage: 'Profecia y Getsemani' },
+    { ref: 'Mateo 27-28', passage: 'Crucifixion y resurreccion' },
+    { ref: 'Marcos 1-4', passage: 'Inicio del ministerio' },
+    { ref: 'Marcos 5-8', passage: 'Poder sobre todo' },
+    { ref: 'Marcos 9-12', passage: 'Fe y sacrificio' },
+    { ref: 'Marcos 13-16', passage: 'El fin y la victoria' },
+    { ref: 'Proverbios 1-5', passage: 'Principio de sabiduria' },
+    { ref: 'Proverbios 6-10', passage: 'La mujer sabia' },
+    { ref: 'Proverbios 11-15', passage: 'Justicia y verdad' },
+    { ref: 'Proverbios 16-20', passage: 'El corazon del rey' },
+    { ref: 'Proverbios 21-25', passage: 'Disciplina y gracia' },
+    { ref: 'Proverbios 26-31', passage: 'La mujer virtuosa' },
+    { ref: 'Lucas 1-3', passage: 'Nacimiento y bautismo' },
+    { ref: 'Lucas 4-6', passage: 'Sermon del llano' },
+    { ref: 'Lucas 7-9', passage: 'Fe y transfiguracion' },
+    { ref: 'Lucas 10-12', passage: 'El buen samaritano' },
+    { ref: 'Lucas 13-16', passage: 'Parabolas de gracia' },
+    { ref: 'Lucas 17-19', passage: 'Gratitud y Zaqueo' },
+    { ref: 'Lucas 20-22', passage: 'Ultima cena' },
+    { ref: 'Lucas 23-24', passage: 'Cruz y Emaus' },
+    { ref: 'Juan 1-3', passage: 'El Verbo y Nicodemo' },
+    { ref: 'Juan 4-6', passage: 'Agua viva y pan de vida' },
+    { ref: 'Juan 7-9', passage: 'Luz del mundo' },
+    { ref: 'Juan 10-12', passage: 'El buen pastor' },
+    { ref: 'Juan 13-15', passage: 'Lavamiento y vid' },
+    { ref: 'Juan 16-18', passage: 'Consolador y arresto' },
+    { ref: 'Juan 19-21', passage: 'Cruz y restauracion' },
+    { ref: 'Romanos 1-4', passage: 'Justificacion por fe' },
+    { ref: 'Romanos 5-8', passage: 'Nada nos separara' },
+    { ref: 'Romanos 9-12', passage: 'Misericordia y servicio' },
+    { ref: 'Romanos 13-16', passage: 'Amor y unidad' },
+    { ref: 'Hechos 1-4', passage: 'Pentecostes' },
+    { ref: 'Hechos 5-8', passage: 'Esteban y Felipe' },
+    { ref: 'Hechos 9-12', passage: 'Conversion de Pablo' },
+    { ref: 'Hechos 13-16', passage: 'Viajes misioneros' },
+    { ref: 'Hechos 17-20', passage: 'Atenas y Efeso' },
+    { ref: 'Hechos 21-24', passage: 'Arresto de Pablo' },
+    { ref: 'Hechos 25-28', passage: 'Pablo en Roma' },
+    { ref: 'Isaias 1-6', passage: 'Vision del trono' },
+    { ref: 'Isaias 7-12', passage: 'Emanuel' },
+    { ref: 'Isaias 40-45', passage: 'Consuelo de Dios' },
+    { ref: 'Isaias 53-55', passage: 'El siervo sufriente' },
+    { ref: 'Isaias 60-66', passage: 'Gloria futura' },
+    { ref: 'Filipenses 1-4', passage: 'Gozo en Cristo' },
+    { ref: 'Colosenses 1-4', passage: 'Supremacia de Cristo' },
+    { ref: 'Efesios 1-3', passage: 'Bendiciones espirituales' },
+    { ref: 'Efesios 4-6', passage: 'Armadura de Dios' },
+    { ref: '1 Tesalonicenses 1-5', passage: 'Venida del Senor' },
+    { ref: '2 Tesalonicenses 1-3', passage: 'Firmeza en la fe' },
+    { ref: '1 Timoteo 1-6', passage: 'Instrucciones pastorales' },
+    { ref: '2 Timoteo 1-4', passage: 'Pelea la buena batalla' },
+    { ref: 'Tito + Filemon', passage: 'Sana doctrina y perdon' },
+    { ref: 'Hebreos 1-4', passage: 'Jesus superior a todo' },
+    { ref: 'Hebreos 5-8', passage: 'Sumo sacerdote' },
+    { ref: 'Hebreos 9-10', passage: 'Nuevo pacto' },
+    { ref: 'Hebreos 11-13', passage: 'Heroes de la fe' },
+    { ref: 'Santiago 1-5', passage: 'Fe con obras' },
+    { ref: '1 Pedro 1-5', passage: 'Esperanza viva' },
+    { ref: '2 Pedro 1-3', passage: 'Crecimiento espiritual' },
+    { ref: '1 Juan 1-5', passage: 'Dios es amor' },
+    { ref: 'Apocalipsis 1-3', passage: 'Cartas a las iglesias' },
+    { ref: 'Apocalipsis 4-7', passage: 'El trono y los sellos' },
+    { ref: 'Apocalipsis 19-22', passage: 'Cielo nuevo y tierra nueva' },
+  ];
+  for (let i = 0; i < 365; i++) {
+    const r = readings[i % readings.length];
+    plan.push({ day: i + 1, ref: r.ref, passage: r.passage });
+  }
+  return plan;
+})();
+
 const Devocional: React.FC = () => {
-  const { state, updateToday } = useJournal();
+  const { state, updateToday, updateSettings } = useJournal();
   const { today } = state;
   const [showBible, setShowBible] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showPlan, setShowPlan] = useState(false);
 
   const handleCopy = () => {
     if (!today.devocionalVerse) return;
@@ -490,6 +606,150 @@ const Devocional: React.FC = () => {
           </SectionLabel>
           <StyledTextarea value={today.prayerAsk ?? ""} onChange={v=>updateToday({prayerAsk:v})} placeholder="Habla con Dios libremente... Él te escucha 🌸" rows={4}/>
           <div style={{ fontSize:"1.2rem", marginTop: ".8rem" }}>⭐⭐</div>
+        </div>
+
+        {/* ABI-07: Plan de Lectura Biblica Anual */}
+        <div className="card-premium overflow-hidden">
+          <div style={{ background:"linear-gradient(135deg, var(--color-theme-primary), var(--color-theme-hover))", padding:"1.3rem 1.6rem", display:"flex", alignItems:"center", justifyContent:"space-between", borderRadius:"2.5rem 2.5rem 0 0" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:".6rem" }}>
+              <BookOpen size={20} color="white" />
+              <span style={{ color:"white", fontWeight:900, fontSize:".8rem", letterSpacing:".1em", textTransform:"uppercase" }}>Plan de Lectura Anual</span>
+            </div>
+            <button
+              onClick={() => setShowPlan(!showPlan)}
+              style={{ background:"rgba(255,255,255,.2)", border:"none", borderRadius:999, padding:".4rem .9rem", color:"white", fontSize:".72rem", fontWeight:700, cursor:"pointer" }}
+            >
+              {showPlan ? 'Ocultar' : 'Ver Plan'}
+            </button>
+          </div>
+
+          {(() => {
+            const plan = state?.settings?.readingPlan;
+            const startDate = plan?.startDate ? new Date(plan.startDate) : null;
+            const completedDays = plan?.completedDays || [];
+
+            // Calculate current day of plan
+            let currentPlanDay = 1;
+            if (startDate) {
+              const diffMs = Date.now() - startDate.getTime();
+              currentPlanDay = Math.max(1, Math.min(365, Math.floor(diffMs / 86400000) + 1));
+            }
+
+            const todayReading = READING_PLAN[currentPlanDay - 1];
+            const isCompletedToday = completedDays.includes(currentPlanDay);
+            const progress = startDate ? Math.round((completedDays.length / 365) * 100) : 0;
+
+            return (
+              <div style={{ padding:"1.5rem" }}>
+                {!startDate ? (
+                  <div style={{ textAlign:"center", padding:"1.5rem 0" }}>
+                    <p style={{ fontSize:"inherit", color:"var(--color-soft-text)", marginBottom:"1rem", fontStyle:"italic" }}>
+                      Lee toda la Biblia en un ano con lecturas diarias guiadas.
+                    </p>
+                    <button
+                      onClick={() => updateSettings({
+                        readingPlan: {
+                          startDate: new Date().toISOString(),
+                          currentDay: 1,
+                          completedDays: []
+                        }
+                      })}
+                      style={{ background:"var(--color-theme-primary)", color:"white", border:"none", borderRadius:999, padding:".7rem 2rem", fontWeight:900, fontSize:".8rem", letterSpacing:".06em", cursor:"pointer", boxShadow:"0 4px 16px rgba(225,29,116,.3)" }}
+                    >
+                      Comenzar Plan
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ display:"flex", flexDirection:"column", gap:"1rem" }}>
+                    {/* Progress bar */}
+                    <div>
+                      <div style={{ display:"flex", justifyContent:"space-between", marginBottom:".4rem" }}>
+                        <span style={{ fontSize:".7rem", fontWeight:900, letterSpacing:".1em", textTransform:"uppercase", color:"var(--color-theme-primary)" }}>
+                          Dia {currentPlanDay} de 365
+                        </span>
+                        <span style={{ fontSize:".7rem", fontWeight:700, color:"var(--color-theme-muted)" }}>
+                          {completedDays.length} completados ({progress}%)
+                        </span>
+                      </div>
+                      <div style={{ height:8, background:"var(--color-theme-pastel)", borderRadius:999, overflow:"hidden" }}>
+                        <div style={{ height:"100%", width:`${progress}%`, background:"linear-gradient(90deg, var(--color-theme-primary), var(--color-theme-hover))", borderRadius:999, transition:"width .5s ease" }} />
+                      </div>
+                    </div>
+
+                    {/* Today's reading */}
+                    <div style={{ background:"var(--color-theme-pastel)", borderRadius:"1.5rem", padding:"1.2rem", border:"1.5px solid var(--color-theme-border)" }}>
+                      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:".5rem", flexWrap:"wrap" }}>
+                        <div>
+                          <p style={{ fontSize:".65rem", fontWeight:900, letterSpacing:".12em", textTransform:"uppercase", color:"var(--color-theme-muted)", marginBottom:".3rem" }}>
+                            Lectura de Hoy
+                          </p>
+                          <p style={{ fontSize:"1.1rem", fontWeight:700, color:"var(--color-soft-text)" }}>
+                            {todayReading.ref}
+                          </p>
+                          <p style={{ fontSize:".8rem", fontStyle:"italic", color:"var(--color-theme-muted)", marginTop:".2rem" }}>
+                            {todayReading.passage}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            const newCompleted = isCompletedToday
+                              ? completedDays.filter((d: number) => d !== currentPlanDay)
+                              : [...completedDays, currentPlanDay];
+                            updateSettings({
+                              readingPlan: { ...plan!, completedDays: newCompleted, currentDay: currentPlanDay }
+                            });
+                          }}
+                          style={{
+                            width:48, height:48, borderRadius:"50%", border:"none", cursor:"pointer",
+                            background: isCompletedToday ? "var(--color-theme-primary)" : "white",
+                            color: isCompletedToday ? "white" : "var(--color-theme-border)",
+                            display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0,
+                            boxShadow: isCompletedToday ? "0 4px 12px rgba(225,29,116,.3)" : "0 2px 8px rgba(0,0,0,.08)",
+                            transition:"all .2s"
+                          }}
+                        >
+                          <Check size={24} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Week view */}
+                    {showPlan && (
+                      <div style={{ display:"grid", gap:".5rem", animation:"spIn .25s ease" }}>
+                        {Array.from({ length: 7 }, (_, i) => {
+                          const day = currentPlanDay - 3 + i;
+                          if (day < 1 || day > 365) return null;
+                          const r = READING_PLAN[day - 1];
+                          const done = completedDays.includes(day);
+                          const isCurrent = day === currentPlanDay;
+                          return (
+                            <div key={day} style={{
+                              display:"flex", alignItems:"center", gap:".8rem", padding:".7rem 1rem",
+                              borderRadius:"1rem", background: isCurrent ? "var(--color-theme-pastel)" : "transparent",
+                              border: isCurrent ? "1.5px solid var(--color-theme-border)" : "1px solid transparent",
+                              opacity: day < currentPlanDay && !done ? 0.5 : 1
+                            }}>
+                              <div style={{
+                                width:28, height:28, borderRadius:"50%", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
+                                background: done ? "var(--color-theme-primary)" : "var(--color-theme-pastel)",
+                                color: done ? "white" : "var(--color-theme-muted)", fontSize:".7rem", fontWeight:900
+                              }}>
+                                {done ? <Check size={14} /> : day}
+                              </div>
+                              <div style={{ flex:1, minWidth:0 }}>
+                                <p style={{ fontSize:".78rem", fontWeight:700, color:"var(--color-soft-text)" }}>{r.ref}</p>
+                                <p style={{ fontSize:".65rem", color:"var(--color-theme-muted)", fontStyle:"italic" }}>{r.passage}</p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
       </div>

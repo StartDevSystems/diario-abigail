@@ -28,6 +28,9 @@ const Notas = dynamic(() => import("@/views/Notas"), {
 const Admin = dynamic(() => import("@/views/Admin"), {
   loading: () => <ViewSkeleton />
 });
+const Ciclo = dynamic(() => import("@/views/Ciclo"), {
+  loading: () => <ViewSkeleton />
+});
 const Configuracion = dynamic(() => import("@/views/Configuracion"), {
   loading: () => <ViewSkeleton />
 });
@@ -84,6 +87,7 @@ function HomeContent() {
       case "habitos":       return <Habitos />;
       case "devocional":    return <Devocional />;
       case "notas":         return <Notas />;
+      case "ciclo":         return <Ciclo />;
       case "admin":         return <Admin />;
       case "configuracion": return <Configuracion />;
       default:              return <Hoy />;

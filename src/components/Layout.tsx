@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Calendar, Home, BookOpen, Star, FileText, LogOut, ShieldCheck, Settings, ChevronDown, User as UserIcon } from 'lucide-react';
+import { Calendar, Home, BookOpen, Star, FileText, LogOut, ShieldCheck, Settings, ChevronDown, User as UserIcon, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import FloralDecoration from './FloralDecoration';
 import Scene3D from './Scene3D';
@@ -15,6 +15,7 @@ const TABS = [
   { id: 'habitos', name: 'Hábitos', icon: Star },
   { id: 'devocional', name: 'Devocional', icon: BookOpen },
   { id: 'notas', name: 'Notas', icon: FileText },
+  { id: 'ciclo', name: 'Ciclo', icon: Heart },
 ];
 
 const MOODS = [
@@ -107,6 +108,41 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
       applyTheme(state.settings.themeColor);
     }
   }, [state?.settings?.themeColor]);
+
+  // ABI-03: Dark mode
+  useEffect(() => {
+    if (state?.settings?.darkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+  }, [state?.settings?.darkMode]);
+
+  // ABI-08: Daily notification
+  useEffect(() => {
+    if (!state?.settings?.notificationsEnabled || !('Notification' in window)) return;
+    const DAILY_VERSES = [
+      'Jehova es mi pastor; nada me faltara. — Salmos 23:1',
+      'Todo lo puedo en Cristo que me fortalece. — Filipenses 4:13',
+      'Porque yo se los pensamientos que tengo acerca de vosotros. — Jeremias 29:11',
+      'El Senor es mi luz y mi salvacion; ¿de quien temere? — Salmos 27:1',
+      'Esforzaos y cobrad animo; no temais. — Deuteronomio 31:6',
+      'Echando toda vuestra ansiedad sobre el, porque el tiene cuidado de vosotros. — 1 Pedro 5:7',
+      'Mas buscad primeramente el reino de Dios. — Mateo 6:33',
+    ];
+    const now = new Date();
+    const target = new Date(now);
+    target.setHours(8, 0, 0, 0);
+    if (now > target) target.setDate(target.getDate() + 1);
+    const delay = target.getTime() - now.getTime();
+    const timer = setTimeout(() => {
+      if (Notification.permission === 'granted') {
+        const verse = DAILY_VERSES[new Date().getDay()];
+        new Notification('Palabra del Dia', { body: verse, icon: '/logo-full.png' });
+      }
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [state?.settings?.notificationsEnabled]);
 
   if (!mounted) return null;
 
@@ -252,8 +288,17 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
         </header>
 
         <div className="flex-1 w-full max-w-6xl mx-auto p-6 md:px-12 md:pb-32 lg:px-16">
+          {/* ABI-04: Page-turn animation */}
           <AnimatePresence mode="wait">
-            <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4 }} className="w-full">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, rotateY: -8, x: 40, scale: 0.97 }}
+              animate={{ opacity: 1, rotateY: 0, x: 0, scale: 1 }}
+              exit={{ opacity: 0, rotateY: 8, x: -40, scale: 0.97 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              style={{ perspective: 1200, transformOrigin: 'left center' }}
+              className="w-full"
+            >
               {children}
             </motion.div>
           </AnimatePresence>

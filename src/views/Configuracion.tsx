@@ -6,7 +6,7 @@ import {
   ChevronRight, Type, Smartphone, Lock,
   Users, Activity, Wifi, WifiOff, Trash2, Key,
   MessageSquare, CheckCircle2, Flame, Calendar,
-  FileText, BarChart3, Camera
+  FileText, BarChart3, Camera, Moon, Sun, Download, Bell, BellOff
 } from "lucide-react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../lib/firebase";
@@ -25,6 +25,18 @@ const THEME_PALETTES = [
   { id: 'crimson',  name: 'Carmesí',       color: '#dc2626' },
   { id: 'slate',    name: 'Elegante',      color: '#475569' },
 ];
+
+const ConfigCard = ({ title, icon: Icon, children }: { title: string; icon: any; children: React.ReactNode }) => (
+  <div className="card-premium overflow-hidden mb-8">
+    <div className="bg-theme-pastel/50 px-8 py-5 border-b border-theme-border/30 backdrop-blur-md flex items-center gap-4">
+      <div className="w-10 h-10 rounded-xl bg-white/80 flex items-center justify-center shadow-sm border border-theme-border/50">
+        <Icon size={20} className="text-theme-primary" />
+      </div>
+      <h3 className="text-sm font-black uppercase tracking-[0.2em] text-soft-text">{title}</h3>
+    </div>
+    <div className="p-8">{children}</div>
+  </div>
+);
 
 const Configuracion: React.FC = () => {
   const { state, updateProfile, updateSettings, isAdmin, getAllUsersData, user } = useJournal();
@@ -140,18 +152,48 @@ const Configuracion: React.FC = () => {
 
   const set = (key: string, val: any) => setForm(f => ({ ...f, [key]: val }));
 
-  // Helper para componentes de UI tipo Abigail
-  const ConfigCard = ({ title, icon: Icon, children }: any) => (
-    <div className="card-premium overflow-hidden mb-8">
-      <div className="bg-theme-pastel/50 px-8 py-5 border-b border-theme-border/30 backdrop-blur-md flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-white/80 flex items-center justify-center shadow-sm border border-theme-border/50">
-          <Icon size={20} className="text-theme-primary" />
-        </div>
-        <h3 className="text-sm font-black uppercase tracking-[0.2em] text-soft-text">{title}</h3>
-      </div>
-      <div className="p-8">{children}</div>
-    </div>
-  );
+  // -- Estadisticas calculadas para perfil --
+  const activeDays = (state.history?.length || 0) + (state.today?.mood ? 1 : 0);
+  const currentStreak = (state as any).streak?.current || (typeof state.streak === 'number' ? state.streak : 0);
+  const todayCompleted = state.today?.tasks?.filter((t: any) => t.done || t.completed)?.length || 0;
+  const historyCompleted = state.history?.reduce((acc: number, day: any) =>
+    acc + (day.tasks?.filter((t: any) => t.done || t.completed)?.length || 0), 0) || 0;
+  const totalTasksCompleted = todayCompleted + historyCompleted;
+  const totalNotes = state.notes?.length || 0;
+
+  const moodCounts: Record<string, number> = {};
+  state.history?.forEach((day: any) => {
+    if (day.mood) moodCounts[day.mood] = (moodCounts[day.mood] || 0) + 1;
+  });
+  if (state.today?.mood) moodCounts[state.today.mood] = (moodCounts[state.today.mood] || 0) + 1;
+  const totalMoods = Object.values(moodCounts).reduce((a, b) => a + b, 0);
+
+  const MOOD_META: Record<string, { emoji: string; label: string }> = {
+    triste:  { emoji: '\u{1F622}', label: 'Triste' },
+    neutral: { emoji: '\u{1F610}', label: 'Neutral' },
+    bien:    { emoji: '\u{1F642}', label: 'Bien' },
+    feliz:   { emoji: '\u{1F60A}', label: 'Feliz' },
+    genial:  { emoji: '\u{1F929}', label: 'Genial' },
+  };
+
+  const sortedMoods = Object.entries(moodCounts).sort((a, b) => b[1] - a[1]);
+  const topMood = sortedMoods[0];
+
+  const profileInitials = (form.userName || 'A')
+    .split(' ')
+    .map((w: string) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+
+  const statsData = [
+    { label: 'Dias Activos', value: activeDays, Icon: Calendar, accent: 'text-blue-500' },
+    { label: 'Racha Actual', value: currentStreak, Icon: Flame, accent: 'text-orange-500' },
+    { label: 'Tareas Hechas', value: totalTasksCompleted, Icon: CheckCircle2, accent: 'text-green-500' },
+    { label: 'Notas Escritas', value: totalNotes, Icon: FileText, accent: 'text-purple-500' },
+  ];
+
+  // ConfigCard movido fuera del componente para evitar re-mount
 
   return (
     <div className="max-w-5xl mx-auto pb-32 px-4 relative">
@@ -186,51 +228,8 @@ const Configuracion: React.FC = () => {
 
         {/* CONTENIDO */}
         <main className="flex-1">
-          {activeTab === 'perfil' && (() => {
-            // -- Estadisticas calculadas --
-            const activeDays = (state.history?.length || 0) + (state.today?.mood ? 1 : 0);
-            const currentStreak = (state as any).streak?.current || (typeof state.streak === 'number' ? state.streak : 0);
-            const todayCompleted = state.today?.tasks?.filter((t: any) => t.done || t.completed)?.length || 0;
-            const historyCompleted = state.history?.reduce((acc: number, day: any) =>
-              acc + (day.tasks?.filter((t: any) => t.done || t.completed)?.length || 0), 0) || 0;
-            const totalTasksCompleted = todayCompleted + historyCompleted;
-            const totalNotes = state.notes?.length || 0;
-
-            // -- Mood distribution --
-            const moodCounts: Record<string, number> = {};
-            state.history?.forEach((day: any) => {
-              if (day.mood) moodCounts[day.mood] = (moodCounts[day.mood] || 0) + 1;
-            });
-            if (state.today?.mood) moodCounts[state.today.mood] = (moodCounts[state.today.mood] || 0) + 1;
-            const totalMoods = Object.values(moodCounts).reduce((a, b) => a + b, 0);
-
-            const MOOD_META: Record<string, { emoji: string; label: string }> = {
-              triste:  { emoji: '\u{1F622}', label: 'Triste' },
-              neutral: { emoji: '\u{1F610}', label: 'Neutral' },
-              bien:    { emoji: '\u{1F642}', label: 'Bien' },
-              feliz:   { emoji: '\u{1F60A}', label: 'Feliz' },
-              genial:  { emoji: '\u{1F929}', label: 'Genial' },
-            };
-
-            const sortedMoods = Object.entries(moodCounts).sort((a, b) => b[1] - a[1]);
-            const topMood = sortedMoods[0];
-
-            const profileInitials = (form.userName || 'A')
-              .split(' ')
-              .map((w: string) => w[0])
-              .join('')
-              .toUpperCase()
-              .slice(0, 2);
-
-            const statsData = [
-              { label: 'Dias Activos', value: activeDays, Icon: Calendar, accent: 'text-blue-500' },
-              { label: 'Racha Actual', value: currentStreak, Icon: Flame, accent: 'text-orange-500' },
-              { label: 'Tareas Hechas', value: totalTasksCompleted, Icon: CheckCircle2, accent: 'text-green-500' },
-              { label: 'Notas Escritas', value: totalNotes, Icon: FileText, accent: 'text-purple-500' },
-            ];
-
-            return (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+          {activeTab === 'perfil' && (
+            <div className="space-y-8">
 
               {/* ===== A. HEADER DEL PERFIL ===== */}
               <div className="card-premium overflow-hidden">
@@ -373,11 +372,11 @@ const Configuracion: React.FC = () => {
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase text-soft-text/40 ml-3 tracking-widest">Nombre en el Diario</label>
-                    <input value={form.userName} onChange={e => set('userName', e.target.value)} className="w-full bg-white/40 backdrop-blur-sm border-2 border-theme-border/30 rounded-2xl p-5 font-bold text-soft-text outline-none focus:border-theme-primary transition-all" />
+                    <input key="input-userName" value={form.userName} onChange={e => set('userName', e.target.value)} className="w-full bg-white/40 backdrop-blur-sm border-2 border-theme-border/30 rounded-2xl p-5 font-bold text-soft-text outline-none focus:border-theme-primary transition-all" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase text-soft-text/40 ml-3 tracking-widest">Tu frase inspiradora</label>
-                    <textarea value={form.userBio} onChange={e => set('userBio', e.target.value)} rows={3} className="w-full bg-white/40 backdrop-blur-sm border-2 border-theme-border/30 rounded-2xl p-5 font-bold text-soft-text outline-none focus:border-theme-primary transition-all resize-none italic" />
+                    <textarea key="input-userBio" value={form.userBio} onChange={e => set('userBio', e.target.value)} rows={3} className="w-full bg-white/40 backdrop-blur-sm border-2 border-theme-border/30 rounded-2xl p-5 font-bold text-soft-text outline-none focus:border-theme-primary transition-all resize-none italic" />
                   </div>
                 </div>
               </ConfigCard>
@@ -417,11 +416,119 @@ const Configuracion: React.FC = () => {
                 </div>
               </ConfigCard>
             </div>
-            );
-          })()}
+          )}
 
           {activeTab === 'visual' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+
+              {/* ABI-03: Dark Mode OLED */}
+              <ConfigCard title="Modo Oscuro OLED" icon={Moon}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-soft-text">Modo nocturno</p>
+                    <p className="text-[11px] text-soft-text/40 mt-1">Fondo negro puro para pantallas OLED. Ideal para lectura nocturna.</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const newVal = !state?.settings?.darkMode;
+                      updateSettings({ darkMode: newVal });
+                    }}
+                    className={`w-16 h-9 rounded-full relative transition-all duration-300 shrink-0 ml-4 ${
+                      state?.settings?.darkMode
+                        ? 'bg-theme-primary shadow-lg shadow-theme-primary/30'
+                        : 'bg-theme-border/40'
+                    }`}
+                  >
+                    <div className={`absolute top-1 w-7 h-7 rounded-full bg-white shadow-md transition-all duration-300 flex items-center justify-center ${
+                      state?.settings?.darkMode ? 'left-8' : 'left-1'
+                    }`}>
+                      {state?.settings?.darkMode ? <Moon size={14} className="text-theme-primary" /> : <Sun size={14} className="text-soft-text/40" />}
+                    </div>
+                  </button>
+                </div>
+              </ConfigCard>
+
+              {/* ABI-08: Notifications Toggle */}
+              <ConfigCard title="Notificaciones" icon={Bell}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-soft-text">Palabra del Dia</p>
+                    <p className="text-[11px] text-soft-text/40 mt-1">Recibe un recordatorio diario con un versiculo inspirador.</p>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      if (!state?.settings?.notificationsEnabled) {
+                        if ('Notification' in window) {
+                          const perm = await Notification.requestPermission();
+                          if (perm === 'granted') {
+                            updateSettings({ notificationsEnabled: true });
+                            new Notification('Diario de Abigail', {
+                              body: 'Las notificaciones diarias estan activadas.',
+                              icon: '/logo-full.png'
+                            });
+                          }
+                        }
+                      } else {
+                        updateSettings({ notificationsEnabled: false });
+                      }
+                    }}
+                    className={`w-16 h-9 rounded-full relative transition-all duration-300 shrink-0 ml-4 ${
+                      state?.settings?.notificationsEnabled
+                        ? 'bg-theme-primary shadow-lg shadow-theme-primary/30'
+                        : 'bg-theme-border/40'
+                    }`}
+                  >
+                    <div className={`absolute top-1 w-7 h-7 rounded-full bg-white shadow-md transition-all duration-300 flex items-center justify-center ${
+                      state?.settings?.notificationsEnabled ? 'left-8' : 'left-1'
+                    }`}>
+                      {state?.settings?.notificationsEnabled ? <Bell size={14} className="text-theme-primary" /> : <BellOff size={14} className="text-soft-text/40" />}
+                    </div>
+                  </button>
+                </div>
+              </ConfigCard>
+
+              {/* ABI-18: Backup */}
+              <ConfigCard title="Respaldo de Datos" icon={Download}>
+                <div className="space-y-4">
+                  <p className="text-[11px] text-soft-text/40">Descarga una copia completa de tu diario en formato JSON.</p>
+                  {state?.settings?.lastBackup && (
+                    <p className="text-[10px] font-black uppercase tracking-widest text-soft-text/30">
+                      Ultimo respaldo: {new Date(state.settings.lastBackup).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  )}
+                  <button
+                    onClick={() => {
+                      const backup = {
+                        exportDate: new Date().toISOString(),
+                        version: 'v1.5.0',
+                        app: 'Diario de Abigail',
+                        data: {
+                          today: state.today,
+                          history: state.history,
+                          habits: state.habits,
+                          notes: state.notes,
+                          cycle: state.cycle,
+                          user: state.user,
+                          settings: state.settings,
+                          streak: state.streak,
+                        }
+                      };
+                      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `diario-abigail-backup-${new Date().toISOString().slice(0,10)}.json`;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                      updateSettings({ lastBackup: new Date().toISOString() });
+                    }}
+                    className="w-full py-5 rounded-[1.5rem] bg-theme-primary text-white font-black text-xs uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-theme-primary/10 flex items-center justify-center gap-3"
+                  >
+                    <Download size={18} /> Descargar Respaldo
+                  </button>
+                </div>
+              </ConfigCard>
+
               <ConfigCard title="Tipografía Sagrada" icon={Type}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {[
