@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useJournal } from '@/context/JournalContext';
 import { CyclePeriod, DayData, Mood } from '@/types/index';
 import { motion, AnimatePresence } from 'framer-motion';
-import * as THREE from 'three';
-import gsap from 'gsap';
 import {
   Heart, Plus, X, Check, Calendar, Droplets,
   Moon, Sun, Sparkles, TrendingUp, ChevronLeft, ChevronRight,
@@ -245,384 +243,189 @@ function PeriodAlertBanner({ cycleInfo, onQuickLog }: PeriodAlertBannerProps) {
   return null;
 }
 
-// ── Componente 3D Dial (Three.js + GSAP) ─────────────────────
+// ── Componente Donut SVG ──────────────────────────────────────
 
 interface CycleDialProps {
   cycleInfo: CyclePhaseInfo;
   periodLength: number;
+  lastPeriodStart?: string;
+  lastPeriodEnd?: string;
 }
 
-function CycleDial({ cycleInfo, periodLength }: CycleDialProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<{
-    scene: THREE.Scene;
-    camera: THREE.PerspectiveCamera;
-    renderer: THREE.WebGLRenderer;
-    ring: THREE.Group;
-    marker: THREE.Mesh;
-    particles: THREE.Points;
-    glowRing: THREE.Mesh;
-    animId: number;
-  } | null>(null);
-  const prevPhaseRef = useRef<string>('');
+// Colores por fase del donut
+const DONUT_COLORS = {
+  menstruation: '#e11d74',   // rojo/rosa fuerte
+  follicular:  '#f4a261',    // naranja/durazno
+  ovulation:   '#8b5cf6',    // azul/lila
+  luteal:      '#f9a8d4',    // rosa claro
+} as const;
 
-  const { dayInCycle, totalDays, phase, daysLate } = cycleInfo;
-  const isLate = daysLate > 0;
-  const phaseInfo = PHASE_COLORS[phase];
-  const markerColor = isLate ? '#ef4444' : phaseInfo.main;
+function getDonutSegmentColor(day: number, totalDays: number, periodLen: number): string {
+  const ovDay = Math.max(periodLen + 1, totalDays - 14);
+  if (day <= periodLen) return DONUT_COLORS.menstruation;
+  if (day <= ovDay - 2) return DONUT_COLORS.follicular;
+  if (day <= ovDay + 1) return DONUT_COLORS.ovulation;
+  return DONUT_COLORS.luteal;
+}
 
+function CycleDial({ cycleInfo, periodLength, lastPeriodStart, lastPeriodEnd }: CycleDialProps) {
+  const { dayInCycle, totalDays } = cycleInfo;
   const safePeriodLen = Math.max(1, Math.min(10, periodLength));
-  const ovulationDayNum = Math.max(safePeriodLen + 1, totalDays - 14);
-  const fertileStartNum = Math.max(safePeriodLen + 1, ovulationDayNum - 5);
-  const fertileEndNum = ovulationDayNum + 1;
 
-  // Build phase segments data
-  const phaseSegments = useMemo(() => {
-    const all = [
-      { key: 'periodo' as PhaseKey, start: 1, end: safePeriodLen },
-      { key: 'folicular' as PhaseKey, start: safePeriodLen + 1, end: fertileStartNum - 1 },
-      { key: 'fertil' as PhaseKey, start: fertileStartNum, end: ovulationDayNum - 1 },
-      { key: 'ovulacion' as PhaseKey, start: ovulationDayNum, end: ovulationDayNum },
-      { key: 'fertil' as PhaseKey, start: ovulationDayNum + 1, end: fertileEndNum },
-      { key: 'lutea' as PhaseKey, start: fertileEndNum + 1, end: totalDays },
-    ];
-    return all.filter(p => p.start <= p.end && p.start >= 1);
-  }, [safePeriodLen, fertileStartNum, ovulationDayNum, fertileEndNum, totalDays]);
+  // SVG config
+  const size = 340;
+  const cx = size / 2;
+  const cy = size / 2;
+  const outerR = size / 2 - 8;
+  const innerR = outerR * 0.60; // ~60% hueco central
+  const gap = 1.2; // grados de separación entre segmentos
 
-  // Convert hex to THREE.Color
-  const toColor = useCallback((hex: string) => new THREE.Color(hex), []);
+  // Formatear fecha para el centro
+  const todayDate = new Date();
+  const todayFormatted = todayDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
-    const width = container.clientWidth || 340;
-    const height = width; // Square
+  // Rango del período
+  const formatShortDate = (ds: string) => {
+    const d = new Date(ds + 'T00:00:00');
+    return d.toLocaleDateString('es-ES', { month: 'short', day: '2-digit' });
+  };
+  const periodRange = lastPeriodStart && lastPeriodEnd
+    ? `${formatShortDate(lastPeriodStart)} - ${formatShortDate(lastPeriodEnd)}`
+    : '—';
 
-    // ── Scene Setup ──
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-    camera.position.set(0, 0, 5.5);
-
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance',
-    });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0);
-    container.appendChild(renderer.domElement);
-
-    // ── Ambient Light ──
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-
-    const pointLight = new THREE.PointLight(0xffffff, 1.2, 20);
-    pointLight.position.set(2, 3, 5);
-    scene.add(pointLight);
-
-    // ── Ring Group ──
-    const ringGroup = new THREE.Group();
-    scene.add(ringGroup);
-
-    // Phase-colored torus segments
-    const ringRadius = 1.8;
-    const tubeRadius = 0.18;
-
-    phaseSegments.forEach((seg) => {
-      const startAngle = ((seg.start - 1) / totalDays) * Math.PI * 2 - Math.PI / 2;
-      const endAngle = (seg.end / totalDays) * Math.PI * 2 - Math.PI / 2;
-      let arc = endAngle - startAngle;
-      if (arc <= 0) arc += Math.PI * 2;
-
-      const segments = Math.max(16, Math.round(arc * 30));
-      const geometry = new THREE.TorusGeometry(ringRadius, tubeRadius, 16, segments, arc);
-
-      const isActive = seg.key === phase;
-      const color = toColor(PHASE_COLORS[seg.key].main);
-      const material = new THREE.MeshPhysicalMaterial({
-        color,
-        emissive: color,
-        emissiveIntensity: isActive ? 0.4 : 0.08,
-        metalness: 0.3,
-        roughness: 0.25,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.1,
-        transparent: true,
-        opacity: isActive ? 1.0 : 0.55,
-      });
-
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.rotation.z = startAngle + Math.PI / 2;
-      mesh.userData = { phaseKey: seg.key, isActive };
-      ringGroup.add(mesh);
-    });
-
-    // ── Glow Ring (active phase highlight) ──
-    const glowGeometry = new THREE.TorusGeometry(ringRadius, tubeRadius + 0.08, 8, 64);
-    const glowMaterial = new THREE.MeshBasicMaterial({
-      color: toColor(markerColor),
-      transparent: true,
-      opacity: 0.12,
-      side: THREE.DoubleSide,
-    });
-    const glowRing = new THREE.Mesh(glowGeometry, glowMaterial);
-    ringGroup.add(glowRing);
-
-    // Pulse the glow ring
-    gsap.to(glowMaterial, {
-      opacity: 0.25,
-      duration: 1.5,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-    });
-
-    // ── Day Marker (sphere on the ring) ──
-    const markerAngle = ((dayInCycle - 1) / totalDays) * Math.PI * 2 - Math.PI / 2;
-    const markerX = ringRadius * Math.cos(markerAngle);
-    const markerY = ringRadius * Math.sin(markerAngle);
-
-    const markerGeometry = new THREE.SphereGeometry(0.22, 32, 32);
-    const markerMaterial = new THREE.MeshPhysicalMaterial({
-      color: toColor(markerColor),
-      emissive: toColor(markerColor),
-      emissiveIntensity: 0.6,
-      metalness: 0.5,
-      roughness: 0.1,
-      clearcoat: 1.0,
-    });
-    const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-    marker.position.set(markerX, markerY, 0.3);
-    ringGroup.add(marker);
-
-    // Marker pulse
-    gsap.to(marker.scale, {
-      x: 1.3, y: 1.3, z: 1.3,
-      duration: 1.0,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-    });
-
-    // ── Marker Glow (point light at marker) ──
-    const markerLight = new THREE.PointLight(toColor(markerColor), 1.5, 3);
-    markerLight.position.set(markerX, markerY, 0.5);
-    ringGroup.add(markerLight);
-
-    gsap.to(markerLight, {
-      intensity: 0.5,
-      duration: 1.5,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-    });
-
-    // ── Trail Dots ──
-    for (let i = 1; i <= Math.min(dayInCycle - 1, 8); i++) {
-      const trailDay = dayInCycle - i;
-      if (trailDay < 1) break;
-      const tAngle = ((trailDay - 1) / totalDays) * Math.PI * 2 - Math.PI / 2;
-      const tGeo = new THREE.SphereGeometry(0.06 - i * 0.005, 12, 12);
-      const tMat = new THREE.MeshBasicMaterial({
-        color: toColor(markerColor),
-        transparent: true,
-        opacity: 0.5 - i * 0.05,
-      });
-      const tMesh = new THREE.Mesh(tGeo, tMat);
-      tMesh.position.set(
-        ringRadius * Math.cos(tAngle),
-        ringRadius * Math.sin(tAngle),
-        0.15
-      );
-      ringGroup.add(tMesh);
+  // Build segments
+  const segments = useMemo(() => {
+    const segs: { day: number; color: string }[] = [];
+    for (let d = 1; d <= totalDays; d++) {
+      segs.push({ day: d, color: getDonutSegmentColor(d, totalDays, safePeriodLen) });
     }
+    return segs;
+  }, [totalDays, safePeriodLen]);
 
-    // ── Floating Particles ──
-    const particleCount = 80;
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-    const phaseColor = toColor(phaseInfo.main);
+  // Helper: arc path for a donut segment
+  function arcPath(day: number): string {
+    const sliceAngle = 360 / totalDays;
+    const startDeg = (day - 1) * sliceAngle - 90 + gap / 2;
+    const endDeg = day * sliceAngle - 90 - gap / 2;
+    const startRad = (startDeg * Math.PI) / 180;
+    const endRad = (endDeg * Math.PI) / 180;
 
-    for (let i = 0; i < particleCount; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const radius = ringRadius + (Math.random() - 0.5) * 1.2;
-      positions[i * 3] = radius * Math.cos(angle);
-      positions[i * 3 + 1] = radius * Math.sin(angle);
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 0.8;
-      colors[i * 3] = phaseColor.r;
-      colors[i * 3 + 1] = phaseColor.g;
-      colors[i * 3 + 2] = phaseColor.b;
-    }
+    const x1o = cx + outerR * Math.cos(startRad);
+    const y1o = cy + outerR * Math.sin(startRad);
+    const x2o = cx + outerR * Math.cos(endRad);
+    const y2o = cy + outerR * Math.sin(endRad);
+    const x1i = cx + innerR * Math.cos(endRad);
+    const y1i = cy + innerR * Math.sin(endRad);
+    const x2i = cx + innerR * Math.cos(startRad);
+    const y2i = cy + innerR * Math.sin(startRad);
 
-    const particleGeometry = new THREE.BufferGeometry();
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const largeArc = (endDeg - startDeg) > 180 ? 1 : 0;
 
-    const particleMaterial = new THREE.PointsMaterial({
-      size: 0.035,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.6,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
+    return [
+      `M ${x1o} ${y1o}`,
+      `A ${outerR} ${outerR} 0 ${largeArc} 1 ${x2o} ${y2o}`,
+      `L ${x1i} ${y1i}`,
+      `A ${innerR} ${innerR} 0 ${largeArc} 0 ${x2i} ${y2i}`,
+      'Z',
+    ].join(' ');
+  }
 
-    const particles = new THREE.Points(particleGeometry, particleMaterial);
-    ringGroup.add(particles);
+  // Position for day label (middle of the segment arc, middle of ring thickness)
+  function labelPos(day: number): { x: number; y: number } {
+    const sliceAngle = 360 / totalDays;
+    const midDeg = (day - 0.5) * sliceAngle - 90;
+    const midRad = (midDeg * Math.PI) / 180;
+    const midR = (outerR + innerR) / 2;
+    return { x: cx + midR * Math.cos(midRad), y: cy + midR * Math.sin(midRad) };
+  }
 
-    // ── Outer Decorative Ring (thin wireframe) ──
-    const outerRingGeo = new THREE.TorusGeometry(ringRadius + 0.35, 0.01, 8, 128);
-    const outerRingMat = new THREE.MeshBasicMaterial({
-      color: 0xd1d5db,
-      transparent: true,
-      opacity: 0.3,
-    });
-    const outerRing = new THREE.Mesh(outerRingGeo, outerRingMat);
-    ringGroup.add(outerRing);
+  // Droplet icon position (on outer edge of the current day)
+  function dropletPos(day: number): { x: number; y: number } {
+    const sliceAngle = 360 / totalDays;
+    const midDeg = (day - 0.5) * sliceAngle - 90;
+    const midRad = (midDeg * Math.PI) / 180;
+    const r = outerR + 14;
+    return { x: cx + r * Math.cos(midRad), y: cy + r * Math.sin(midRad) };
+  }
 
-    // ── Day Labels (sprites around the ring) ──
-    const labelInterval = totalDays <= 30 ? 7 : 10;
-    for (let d = 1; d <= totalDays; d += labelInterval) {
-      const lAngle = ((d - 1) / totalDays) * Math.PI * 2 - Math.PI / 2;
-      const lRadius = ringRadius + 0.55;
-      const canvas = document.createElement('canvas');
-      canvas.width = 64;
-      canvas.height = 64;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.fillStyle = '#9ca3af';
-        ctx.font = 'bold 28px system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(String(d), 32, 32);
-      }
-      const texture = new THREE.CanvasTexture(canvas);
-      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.6 });
-      const sprite = new THREE.Sprite(spriteMat);
-      sprite.position.set(lRadius * Math.cos(lAngle), lRadius * Math.sin(lAngle), 0);
-      sprite.scale.set(0.35, 0.35, 1);
-      ringGroup.add(sprite);
-    }
-
-    // ── Initial Entrance Animation ──
-    ringGroup.scale.set(0.01, 0.01, 0.01);
-    ringGroup.rotation.x = 0.35;
-    gsap.to(ringGroup.scale, {
-      x: 1, y: 1, z: 1,
-      duration: 1.2,
-      ease: 'elastic.out(1, 0.6)',
-    });
-
-    // ── Gentle idle rotation ──
-    let mouseX = 0;
-    let mouseY = 0;
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 0.3;
-      mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 0.3;
-    };
-    container.addEventListener('mousemove', handleMouseMove);
-
-    // ── Render Loop ──
-    let time = 0;
-    const animate = () => {
-      const animId = requestAnimationFrame(animate);
-      if (sceneRef.current) sceneRef.current.animId = animId;
-      time += 0.008;
-
-      // Gentle idle float
-      ringGroup.rotation.x = 0.35 + Math.sin(time * 0.5) * 0.03 + mouseY * 0.3;
-      ringGroup.rotation.y = Math.sin(time * 0.3) * 0.04 + mouseX * 0.3;
-
-      // Particles orbit
-      particles.rotation.z += 0.001;
-
-      renderer.render(scene, camera);
-    };
-
-    const animId = requestAnimationFrame(animate);
-
-    sceneRef.current = {
-      scene, camera, renderer, ring: ringGroup, marker, particles, glowRing, animId
-    };
-
-    // ── Resize ──
-    const handleResize = () => {
-      const w = container.clientWidth || 340;
-      renderer.setSize(w, w);
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      container.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animId);
-      gsap.killTweensOf(glowMaterial);
-      gsap.killTweensOf(marker.scale);
-      gsap.killTweensOf(markerLight);
-      renderer.dispose();
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
-      }
-    };
-  }, [phaseSegments, dayInCycle, totalDays, phase, markerColor, phaseInfo.main, toColor, daysLate]);
-
-  // ── GSAP Phase Change Transition ──
-  useEffect(() => {
-    if (!sceneRef.current || prevPhaseRef.current === phase) return;
-    prevPhaseRef.current = phase;
-
-    const { ring } = sceneRef.current;
-    // Bounce on phase change
-    gsap.fromTo(ring.scale, { x: 0.92, y: 0.92, z: 0.92 }, {
-      x: 1, y: 1, z: 1,
-      duration: 0.6,
-      ease: 'elastic.out(1.2, 0.5)',
-    });
-  }, [phase]);
+  const dropPos = dropletPos(dayInCycle);
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-full max-w-[340px] sm:max-w-[380px] aspect-square relative">
-        {/* Three.js Canvas */}
-        <div ref={containerRef} className="w-full h-full" style={{ borderRadius: '50%' }} />
-
-        {/* Center overlay (HTML for crisp text) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="text-center" style={{
-            background: 'rgba(255,255,255,0.75)',
-            backdropFilter: 'blur(16px)',
-            borderRadius: '50%',
-            width: '48%',
-            height: '48%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 2px rgba(255,255,255,0.8)',
-            border: '1px solid rgba(255,255,255,0.6)',
-          }}>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: '#9ca3af' }}>
-              {isLate ? 'RETRASO' : 'DIA'}
-            </span>
-            <span className="font-black leading-none" style={{
-              fontSize: 'clamp(2rem, 6vw, 3.2rem)',
-              color: '#1d1d1f',
-              fontFamily: 'system-ui, sans-serif',
-            }}>
-              {isLate ? `+${daysLate}` : dayInCycle}
-            </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.1em] mt-0.5" style={{ color: markerColor }}>
-              {isLate ? 'DIAS DE RETRASO' : phaseInfo.label.toUpperCase()}
-            </span>
-            <Heart
-              size={14}
-              className="mt-1 animate-pulse"
-              style={{ color: markerColor, fill: markerColor, opacity: 0.6 }}
+      <div className="w-full max-w-[360px] aspect-square relative mx-auto">
+        <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full" role="img" aria-label="Ciclo menstrual">
+          {/* Donut segments */}
+          {segments.map(({ day, color }) => (
+            <path
+              key={day}
+              d={arcPath(day)}
+              fill={color}
+              opacity={day === dayInCycle ? 1 : 0.85}
+              stroke={day === dayInCycle ? '#fff' : 'none'}
+              strokeWidth={day === dayInCycle ? 2 : 0}
             />
-          </div>
-        </div>
+          ))}
+
+          {/* Day numbers */}
+          {segments.map(({ day }) => {
+            const pos = labelPos(day);
+            return (
+              <text
+                key={`label-${day}`}
+                x={pos.x}
+                y={pos.y}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill="#fff"
+                fontSize={totalDays <= 30 ? 10 : 8}
+                fontWeight={day === dayInCycle ? 800 : 600}
+                fontFamily="system-ui, sans-serif"
+              >
+                {day}
+              </text>
+            );
+          })}
+
+          {/* Blood drop icon on current day */}
+          <g transform={`translate(${dropPos.x - 8}, ${dropPos.y - 10})`}>
+            <path
+              d="M8 2 C8 2 3 8 3 11.5 C3 14.5 5.2 17 8 17 C10.8 17 13 14.5 13 11.5 C13 8 8 2 8 2Z"
+              fill="#e11d74"
+              stroke="#fff"
+              strokeWidth="1.5"
+            />
+          </g>
+
+          {/* Center white card */}
+          <foreignObject
+            x={cx - innerR * 0.7}
+            y={cy - innerR * 0.7}
+            width={innerR * 1.4}
+            height={innerR * 1.4}
+          >
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#fff',
+                borderRadius: '16px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                padding: '8px',
+              }}
+            >
+              <Calendar size={20} style={{ color: '#e11d74', marginBottom: 4 }} />
+              <span style={{ fontSize: 11, color: '#6b7280', marginBottom: 2 }}>{todayFormatted}</span>
+              <span style={{ fontSize: 13, fontWeight: 800, color: '#1f2937', marginBottom: 2 }}>
+                Días del periodo
+              </span>
+              <span style={{ fontSize: 11, color: '#e11d74', fontWeight: 600 }}>{periodRange}</span>
+            </div>
+          </foreignObject>
+        </svg>
       </div>
     </div>
   );
@@ -1944,7 +1747,12 @@ const Ciclo: React.FC = () => {
           {/* Dial Card */}
           {cycleInfo && (
             <section className="card-premium">
-              <CycleDial cycleInfo={cycleInfo} periodLength={avgPeriodLength} />
+              <CycleDial
+                cycleInfo={cycleInfo}
+                periodLength={avgPeriodLength}
+                lastPeriodStart={periods.length > 0 ? periods[periods.length - 1].start : undefined}
+                lastPeriodEnd={periods.length > 0 ? periods[periods.length - 1].end : undefined}
+              />
               <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-6">
                 {(Object.keys(PHASE_COLORS) as PhaseKey[]).map(key => (
                   <div key={key} className="flex items-center gap-1.5">
