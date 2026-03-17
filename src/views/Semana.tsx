@@ -276,11 +276,11 @@ const Semana: React.FC = () => {
                 key={idx}
                 onClick={() => hasData ? setSelectedDay(day) : null}
                 className={`
-                  flex-1 min-w-[75px] sm:min-w-[85px] aspect-[4/5] sm:aspect-square lg:aspect-auto lg:h-32
+                  flex-1 min-w-[75px] sm:min-w-[85px] h-28
                   rounded-[2rem] p-3 sm:p-4 text-center transition-all flex flex-col justify-between items-center
                   ${hasData ? 'cursor-pointer hover:scale-105 active:scale-95' : 'cursor-default'}
                   ${day.isToday
-                    ? "bg-white border-2 border-theme-primary shadow-md scale-105 z-10"
+                    ? "bg-white border-2 border-theme-primary shadow-lg"
                     : day.data?.mood
                       ? "bg-white/80 border border-theme-border shadow-sm hover:shadow-md"
                       : "bg-white/30 border border-white/40 opacity-60"
